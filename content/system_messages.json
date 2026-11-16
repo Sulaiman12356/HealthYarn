@@ -106,5 +106,23 @@
     "lang": "pcm",
     "text": "I no hear your voice clear right now. Abeg try again or press any health topic wey dey down.",
     "status": "published"
+  },
+  {
+    "key": "hero_intro",
+    "lang": "en",
+    "text": "Ask in your language. Hear an answer you can trust. HealthYarn answers everyday health questions out loud, in Yoruba, Pidgin or English. No reading. No typing. A health professional has checked every answer.",
+    "status": "published"
+  },
+  {
+    "key": "hero_intro",
+    "lang": "yo",
+    "text": "Béèrè ní èdè rẹ. Gbọ́ ìdáhùn tí o lè gbẹ́kẹ̀lé. HealthYarn ń dáhùn ìbéèrè ìlerà pẹ̀lú ohùn, ní Yorùbá, Pidgin tàbí Gẹ̀ẹ́sì. O kò nílò láti kàwé. O kò nílò láti tẹ̀wé. Oníṣẹ́ ìlerà ti ṣàyẹ̀wò gbogbo ìdáhùn.",
+    "status": "published"
+  },
+  {
+    "key": "hero_intro",
+    "lang": "pcm",
+    "text": "Ask for your own language. Hear answer wey you fit trust. HealthYarn dey answer health question with voice, for Yoruba, Pidgin or English. You no need read, you no need type. Health worker don check every answer.",
+    "status": "published"
   }
 ]

@@ -2,21 +2,17 @@
 name: HealthYarn
 description: Nigerian Primary Health Centre (PHC) daylight triage visual system for voice-first multilingual health guidance.
 colors:
-  primary-viridian: "#0f523b"
-  primary-viridian-hover: "#0b3f2d"
-  primary-viridian-soft: "#e4f0ea"
-  sunlit-ground: "#f7f6f2"
+  hy-green: "#0f5c4a"
+  hy-green-deep: "#0a3f33"
+  hy-amber: "#f5a623"
+  hy-cream: "#fff8ec"
+  hy-sand: "#f1e6d2"
+  hy-ink: "#1b1f1d"
+  hy-muted: "#5b655f"
+  hy-alert: "#c8322b"
+  viridian-soft: "#e4f1ed"
   reading-plate: "#ffffff"
-  subtle-layer: "#efece4"
-  limestone-seam: "#d6d3c9"
-  slate-ink: "#141f1a"
-  muted-viridian-ink: "#415249"
-  amber-ochre: "#92400e"
-  amber-surface: "#fef3c7"
-  amber-border: "#d97706"
-  clinical-crimson: "#b91c1c"
-  crimson-deep: "#7f1d1d"
-  crimson-soft: "#fee2e2"
+  seam: "#e2d4bc"
 typography:
   headline:
     fontFamily: '"Noto Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif'
@@ -76,12 +72,12 @@ components:
 
 **Creative North Star: "Nigerian Primary Health Centre Daylight Triage"**
 
-HealthYarn is designed for harsh outdoor daylight viewing on entry-level Android phones (`2 GB` RAM, Chrome) used by Yorùbá-, Igbo-, and English-speaking adults across Nigeria. Rather than dark-mode chatbots or marketing-style card grids, the interface uses a warm sunlit-plaster canvas, crisp white reading plates separated by hairline seams, and oversized touch targets paired with consistent stroke SVG icons and spoken audio cues.
+HealthYarn is designed for outdoor daylight viewing on entry-level Android phones (`2 GB` RAM, Chrome) used by Yorùbá-, Nigerian Pidgin-, and English-speaking adults across Nigeria. Rather than dark-mode chatbots or marketing-style card grids, the interface uses a warm Kola Cream (`#FFF8EC`) & Sand (`#F1E6D2`) canvas, crisp white reading plates, deep Leaf Green (`#0F5C4A`) primary structure, and Sunrise Amber (`#F5A623` paired with Ink `#1B1F1D`) for primary voice focus.
 
 **Key Characteristics:**
-- Sunlit daylight surfaces with high contrast (body ink > 14:1 against primary canvas)
-- Quarantined semantic state colors: viridian for active guidance, ochre for uncertainty/offline notices, crimson reserved strictly for urgent red-flag alerts
-- Zero external font downloads so Yorùbá and Igbo diacritics render immediately offline
+- Warm Kola Cream & Sand surfaces with high contrast (Ink `#1B1F1D` > 15:1 on Kola Cream)
+- Quarantined semantic state colors: Leaf Green for guidance & trusted actions, Sunrise Amber for one primary voice focus per view, Alert Red (`#C8322B`) reserved strictly for danger-sign messaging
+- Self-hosted unified `Noto Sans` (`noto-sans-hy.woff2`, `74.5 KB`, `400..800`) so Yorùbá diacritics and sub-dots render reliably offline
 - Dual-coded voice, icon, and text controls at `>= 48px` touch size
 
 ## Colors

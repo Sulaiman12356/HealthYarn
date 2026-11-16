@@ -6,21 +6,27 @@
     "colorMeta": {
       "primary-viridian": {
         "role": "primary",
-        "displayName": "PHC Primary Viridian",
-        "canonical": "#0f523b",
-        "tonalRamp": ["#06261b", "#0b3f2d", "#0f523b", "#176e51", "#2f8f6f", "#6cb79d", "#b5decb", "#e4f0ea"]
+        "displayName": "Leaf Green",
+        "canonical": "#0f5c4a",
+        "tonalRamp": ["#062820", "#0a3f33", "#0f5c4a", "#177660", "#2f947c", "#6cbca8", "#b5e0d4", "#e4f1ed"]
       },
       "sunlit-ground": {
         "role": "neutral",
-        "displayName": "Sunlit Plaster Ground",
-        "canonical": "#f7f6f2",
-        "tonalRamp": ["#141f1a", "#415249", "#6e7b74", "#9ca9a1", "#c5c3b9", "#d6d3c9", "#efece4", "#f7f6f2"]
+        "displayName": "Kola Cream & Sand",
+        "canonical": "#fff8ec",
+        "tonalRamp": ["#1b1f1d", "#5b655f", "#7a827d", "#a5aca7", "#d3c6af", "#e2d4bc", "#f1e6d2", "#fff8ec"]
+      },
+      "sunrise-amber": {
+        "role": "accent",
+        "displayName": "Sunrise Amber",
+        "canonical": "#f5a623",
+        "tonalRamp": ["#7c4d03", "#a86b08", "#df9214", "#f5a623", "#f8bc54", "#fbd389", "#fef3c7", "#fffbeb"]
       },
       "clinical-crimson": {
         "role": "error",
-        "displayName": "Quarantined Clinical Crimson",
-        "canonical": "#b91c1c",
-        "tonalRamp": ["#450a0a", "#7f1d1d", "#991b1b", "#b91c1c", "#dc2626", "#ef4444", "#fca5a5", "#fee2e2"]
+        "displayName": "Quarantined Alert Red",
+        "canonical": "#c8322b",
+        "tonalRamp": ["#4a0e0b", "#7f1814", "#991f19", "#c8322b", "#dc4841", "#ef6b64", "#fca5a5", "#fee2e2"]
       }
     },
     "typographyMeta": {
@@ -66,17 +72,17 @@
     }
   ],
   "narrative": {
-    "northStar": "Nigerian Primary Health Centre Daylight Triage",
-    "overview": "HealthYarn is designed for harsh outdoor daylight viewing on entry-level Android phones used by Yorùbá-, Igbo-, and English-speaking adults across Nigeria.",
+    "northStar": "Warm Voice-First Health Companion — Kola Cream, Leaf Green & Sunrise Amber",
+    "overview": "HealthYarn is built for Yorùbá-, Nigerian Pidgin-, and English-speaking adults across Nigeria, with a landing page at / and voice guidance PWA at /app.",
     "keyCharacteristics": [
-      "Sunlit daylight surfaces with high contrast",
-      "Quarantined semantic state colors",
-      "Zero external font downloads",
-      "Dual-coded voice, icon, and text controls at >= 48px touch size"
+      "Warm Kola Cream & Sand surfaces with crisp Ink contrast",
+      "Sunrise Amber voice focus paired with Ink or Forest text",
+      "Self-hosted unified Noto Sans woff2 with complete Yorùbá diacritics",
+      "Quarantined Alert Red reserved strictly for danger-sign messaging"
     ],
     "rules": [
-      { "name": "The Crimson Quarantine Rule", "body": "Clinical Crimson (#b91c1c) never appears on resting buttons, badges, or decoration; it owns the entire screen only when a red-flag rule fires.", "section": "colors" },
-      { "name": "The No-Kicker Rule", "body": "Headings stand on their own weight without eyebrow or kicker labels above them.", "section": "colors" }
+      { "name": "The Alert Red Quarantine Rule", "body": "Alert Red (#c8322b) never appears as decoration; it appears only on danger-sign messaging and the emergency alert screen.", "section": "colors" },
+      { "name": "One Amber Focus Rule", "body": "Sunrise Amber (#f5a623) uses Ink (#1b1f1d) or Forest (#0a3f33) text—never white—and highlights at most one primary voice focus per view.", "section": "colors" }
     ],
     "dos": [
       "Do preserve 18px root typography and >= 48px touch targets across every public control.",

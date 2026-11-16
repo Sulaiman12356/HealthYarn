@@ -59,3 +59,19 @@ def test_public_endpoints_never_serve_unpublished_items(client, seeded_session):
         for q in topic["questions"]
     ]
     assert 1 not in all_faq_ids
+
+
+def test_meta_exposes_content_reviewed_and_sample_audio(client, seeded_session):
+    r_meta = client.get("/api/meta")
+    assert r_meta.status_code == 200
+    data = r_meta.json()
+    assert "content_reviewed" in data
+    assert isinstance(data["content_reviewed"], bool)
+    assert set(data["sample_audio"].keys()) == {"en", "pcm", "yo"}
+    assert set(data["hero_audio"].keys()) == {"en", "pcm", "yo"}
+
+    r_bundle = client.get("/api/bundle?lang=pcm")
+    assert r_bundle.status_code == 200
+    bdata = r_bundle.json()
+    assert "content_reviewed" in bdata
+    assert bdata["lang"] == "pcm"

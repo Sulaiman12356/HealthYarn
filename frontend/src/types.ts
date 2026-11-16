@@ -57,6 +57,7 @@ export interface BundleResponse {
   lang: Lang;
   version_hash: string;
   demo_mode: boolean;
+  content_reviewed?: boolean;
   meta: {
     content_last_updated: string;
     clinical_reviewers: string;

@@ -34,6 +34,7 @@ class Settings(BaseSettings):
     STT_TIMEOUT_SECONDS: float = 8.0
     LOG_UNMATCHED_TEXT: bool = False
     DEMO_MODE: bool = False
+    CONTENT_REVIEWED: bool = True
     COOKIE_SECURE: bool = False  # Set true behind HTTPS in production
     DISABLE_HEAVY_EMBEDDINGS: bool = False
 

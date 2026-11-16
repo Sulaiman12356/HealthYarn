@@ -350,27 +350,60 @@ async def ask_question(
 
 @router.get("/meta")
 def read_meta(session: Session = Depends(get_session)) -> dict:
+    settings = get_settings()
     meta = get_meta_dict(session)
+    demo = is_demo_mode(session)
+    content_reviewed = bool(settings.CONTENT_REVIEWED and not demo)
     sys_msgs = session.exec(
         select(SystemMessage).where(
             SystemMessage.status == "published",
-            SystemMessage.key.in_(["welcome", "consent"]),  # type: ignore[attr-defined]
+            SystemMessage.key.in_(["welcome", "consent", "hero_intro"]),  # type: ignore[attr-defined]
         )
     ).all()
     welcome_audio: dict[str, str | None] = {}
     consent_audio: dict[str, str | None] = {}
+    hero_intro_audio: dict[str, str | None] = {}
     for m in sys_msgs:
         if m.key == "welcome":
             welcome_audio[m.lang] = m.audio_url
         elif m.key == "consent":
             consent_audio[m.lang] = m.audio_url
+        elif m.key == "hero_intro":
+            hero_intro_audio[m.lang] = m.audio_url
+
+    hero_audio: dict[str, str | None] = {
+        lang_code: hero_intro_audio.get(lang_code) or welcome_audio.get(lang_code)
+        for lang_code in sorted(SUPPORTED_LANGS)
+    }
+
+    sample_faq = session.exec(
+        select(FAQItem).where(FAQItem.intent_key == "ors_how_to_prepare", FAQItem.is_active == True)  # noqa: E712
+    ).first()
+    if not sample_faq:
+        sample_faq = session.exec(select(FAQItem).where(FAQItem.is_active == True)).first()  # noqa: E712
+
+    sample_audio: dict[str, str | None] = {lang_code: None for lang_code in sorted(SUPPORTED_LANGS)}
+    if sample_faq:
+        sample_trs = session.exec(
+            select(Translation).where(
+                Translation.faq_id == sample_faq.id,
+                Translation.status == "published",
+            )
+        ).all()
+        for tr in sample_trs:
+            if tr.lang in sample_audio:
+                sample_audio[tr.lang] = tr.answer_audio_url
+
     return {
-        "demo_mode": is_demo_mode(session),
+        "demo_mode": demo,
+        "content_reviewed": content_reviewed,
         "content_last_updated": meta.get("content_last_updated", ""),
         "clinical_reviewers": meta.get("clinical_reviewers", "Clinical Review Board"),
         "language_reviewers": meta.get("language_reviewers", "Yorùbá & Nigerian Pidgin Review Team"),
         "welcome_audio": welcome_audio,
         "consent_audio": consent_audio,
+        "hero_audio": hero_audio,
+        "sample_audio": sample_audio,
     }
 
 
@@ -558,11 +591,14 @@ def get_offline_bundle(
         for c in clinics
     ]
 
+    settings = get_settings()
     meta = get_meta_dict(session)
     demo = is_demo_mode(session)
+    content_reviewed = bool(settings.CONTENT_REVIEWED and not demo)
     payload_for_hash = {
         "lang": lang,
         "demo_mode": demo,
+        "content_reviewed": content_reviewed,
         "topics": bundle_topics,
         "system_messages": system_messages,
         "clinics": clinic_list,
@@ -575,6 +611,7 @@ def get_offline_bundle(
         "lang": lang,
         "version_hash": version_hash,
         "demo_mode": demo,
+        "content_reviewed": content_reviewed,
         "meta": {
             "content_last_updated": meta.get("content_last_updated", ""),
             "clinical_reviewers": meta.get("clinical_reviewers", "Clinical Review Board"),

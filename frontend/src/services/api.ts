@@ -9,11 +9,14 @@ import type {
 
 export interface MetaResponse {
   demo_mode: boolean;
+  content_reviewed?: boolean;
   content_last_updated: string;
   clinical_reviewers: string;
   language_reviewers: string;
   welcome_audio?: Partial<Record<Lang, string | null>>;
   consent_audio?: Partial<Record<Lang, string | null>>;
+  hero_audio?: Partial<Record<Lang, string | null>>;
+  sample_audio?: Partial<Record<Lang, string | null>>;
 }
 
 export async function fetchMeta(): Promise<MetaResponse> {

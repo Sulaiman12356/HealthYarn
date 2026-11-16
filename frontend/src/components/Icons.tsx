@@ -115,48 +115,114 @@ export const CheckCircleIcon: React.FC<IconProps> = ({ className = "w-5 h-5" }) 
   </svg>
 );
 
+export const PlayIcon: React.FC<IconProps> = ({ className = "w-5 h-5" }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden="true">
+    <path d="M7 5.25c0-.98 1.08-1.57 1.91-1.05l10.22 6.75c.75.49.75 1.61 0 2.1L8.91 19.8C8.08 20.32 7 19.73 7 18.75V5.25Z" />
+  </svg>
+);
+
+export const PauseIcon: React.FC<IconProps> = ({ className = "w-5 h-5" }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden="true">
+    <rect x="6" y="5" width="4.5" height="14" rx="1.5" />
+    <rect x="13.5" y="5" width="4.5" height="14" rx="1.5" />
+  </svg>
+);
+
+export const ChevronDownIcon: React.FC<IconProps> = ({ className = "w-5 h-5" }) => (
+  <svg viewBox="0 0 24 24" className={className} {...baseProps}>
+    <path d="m6 9 6 6 6-6" />
+  </svg>
+);
+
+export const ShieldCheckIcon: React.FC<IconProps> = ({ className = "w-5 h-5" }) => (
+  <svg viewBox="0 0 24 24" className={className} {...baseProps}>
+    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z" />
+    <path d="m9 12 2 2 4-4" />
+  </svg>
+);
+
+export const LockIcon: React.FC<IconProps> = ({ className = "w-5 h-5" }) => (
+  <svg viewBox="0 0 24 24" className={className} {...baseProps}>
+    <rect width="16" height="11" x="4" y="11" rx="2" />
+    <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+  </svg>
+);
+
 export const TopicIcon: React.FC<{ icon: string; className?: string }> = ({
   icon,
   className = "w-7 h-7"
 }) => {
   switch (icon) {
+    // Malaria: two-colour mosquito line icon
     case "shield-plus":
+    case "malaria":
       return (
         <svg viewBox="0 0 24 24" className={className} {...baseProps}>
-          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z" />
-          <path d="M12 8v8" />
-          <path d="M8 12h8" />
+          <ellipse cx="12" cy="12" rx="2.2" ry="4.5" stroke="#0F5C4A" />
+          <circle cx="12" cy="6" r="1.6" stroke="#F5A623" />
+          <path d="M12 4.4V2" stroke="#F5A623" />
+          <path d="M10 10C6.5 7 3.5 7.5 3.5 10.2c0 2 3.2 2.6 6.3 1.3" stroke="#0F5C4A" />
+          <path d="M14 10c3.5-3 6.5-2.5 6.5.2 0 2-3.2 2.6-6.3 1.3" stroke="#0F5C4A" />
+          <path d="M10 14.5 5.5 19" stroke="#0F5C4A" />
+          <path d="M14 14.5 18.5 19" stroke="#0F5C4A" />
+          <path d="M12 16.5V21" stroke="#F5A623" />
         </svg>
       );
+    // High blood pressure: heart with amber pulse line
     case "heart-pulse":
+    case "hypertension":
       return (
         <svg viewBox="0 0 24 24" className={className} {...baseProps}>
-          <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
-          <path d="M3.22 12H9.5l1.5-3 2 6 1.5-3h5.27" />
+          <path
+            d="M19.5 13.8c1.5-1.5 2.8-3.2 2.8-5.3A5.2 5.2 0 0 0 17 3.3c-1.8 0-3.1.8-4.5 2.2L12 6l-.5-.5C10.1 4.1 8.8 3.3 7 3.3A5.2 5.2 0 0 0 1.7 8.5c0 2.1 1.3 3.8 2.8 5.3L12 21l7.5-7.2Z"
+            stroke="#0F5C4A"
+          />
+          <path d="M5 12h3.5l1.6-3.2 2.4 6.2 1.8-3H19" stroke="#F5A623" />
         </svg>
       );
+    // Running stomach in children & ORS: cup with amber water drop
     case "droplet":
+    case "child-diarrhoea-ors":
       return (
         <svg viewBox="0 0 24 24" className={className} {...baseProps}>
-          <path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7Z" />
+          <path d="M6.5 11.5h11l-1.3 8.2a2 2 0 0 1-2 1.8H9.8a2 2 0 0 1-2-1.8l-1.3-8.2Z" stroke="#0F5C4A" />
+          <path d="M6.8 15.5h10.4" stroke="#0F5C4A" />
+          <path
+            d="M12 3s3.2 3.2 3.2 5.2a3.2 3.2 0 1 1-6.4 0C8.8 6.2 12 3 12 3Z"
+            stroke="#F5A623"
+          />
         </svg>
       );
+    // Danger signs in pregnancy: calm two-colour pregnant silhouette
     case "baby":
+    case "pregnancy-warning-signs":
       return (
         <svg viewBox="0 0 24 24" className={className} {...baseProps}>
-          <circle cx="12" cy="12" r="9" />
-          <path d="M9 12h.01" />
-          <path d="M15 12h.01" />
-          <path d="M10 16c.5.3 1.2.5 2 .5s1.5-.2 2-.5" />
-          <path d="M12 3a3 3 0 0 0 0 6" />
+          <circle cx="11.5" cy="5" r="2.2" stroke="#0F5C4A" />
+          <path
+            d="M10.5 8.5c-2 .5-3 2.5-3 5v6.5h4.2"
+            stroke="#0F5C4A"
+          />
+          <path
+            d="M13 8.5c2 .4 4.8 2.4 4.8 5.3 0 2.4-2 3.8-4.3 4.2v2"
+            stroke="#F5A623"
+          />
+          <path d="M9.5 12.2c1.2.4 2.8.4 4 0" stroke="#0F5C4A" />
         </svg>
       );
+    // Taking medicines safely: pill and clock
     case "pill":
+    case "safe-medicine-use":
     default:
       return (
         <svg viewBox="0 0 24 24" className={className} {...baseProps}>
-          <path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z" />
-          <path d="m8.5 8.5 7 7" />
+          <circle cx="15" cy="14.5" r="6" stroke="#0F5C4A" />
+          <path d="M15 11.8v2.9l2 1.2" stroke="#F5A623" />
+          <path
+            d="M4.2 12.8 10 7a3.2 3.2 0 1 1 4.5 4.5l-1.8 1.8"
+            stroke="#F5A623"
+          />
+          <path d="m7.1 9.9 2.9 2.9" stroke="#0F5C4A" />
         </svg>
       );
   }

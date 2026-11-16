@@ -31,7 +31,7 @@ export const TopicDetailView: React.FC<TopicDetailViewProps> = ({
       </button>
 
       <div className="flex items-start gap-3 mb-6">
-        <div className="w-12 h-12 rounded-xl bg-viridian-soft text-viridian flex items-center justify-center shrink-0 border border-seam">
+        <div className="w-12 h-12 rounded-card bg-hy-sand flex items-center justify-center shrink-0 border border-seam">
           <TopicIcon icon={topic.icon} className="w-7 h-7" />
         </div>
         <div>

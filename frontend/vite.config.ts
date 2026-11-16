@@ -7,16 +7,23 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: "autoUpdate",
-      includeAssets: ["icon-192.png", "icon-512.png", "apple-touch-icon.png"],
+      includeAssets: [
+        "favicon.svg",
+        "icon-192.png",
+        "icon-512.png",
+        "apple-touch-icon.png",
+        "og-image.svg",
+        "fonts/noto-sans-hy.woff2"
+      ],
       manifest: {
-        name: "HealthYarn — Voice Health Guidance",
+        name: "HealthYarn: your health, in your language",
         short_name: "HealthYarn",
         description:
-          "Voice-first health information in Yorùbá, Igbo, and English with offline topic playback.",
-        theme_color: "#0F523B",
-        background_color: "#F7F6F2",
+          "Voice health helper in Yorùbá, Nigerian Pidgin, and English with offline topic playback.",
+        theme_color: "#0F5C4A",
+        background_color: "#FFF8EC",
         display: "standalone",
-        start_url: "/",
+        start_url: "/app",
         icons: [
           {
             src: "/icon-192.png",
@@ -32,7 +39,7 @@ export default defineConfig({
         ]
       },
       workbox: {
-        globPatterns: ["**/*.{js,css,html,png,svg,ico}"],
+        globPatterns: ["**/*.{js,css,html,png,svg,ico,woff2}"],
         navigateFallbackDenylist: [/^\/api\//, /^\/static\//],
         runtimeCaching: [
           {
@@ -72,11 +79,24 @@ export default defineConfig({
     port: 5173,
     proxy: {
       "/api": {
-        target: "http://127.0.0.1:8000",
+        target: process.env.VITE_API_TARGET || "http://127.0.0.1:8000",
         changeOrigin: true
       },
       "/static": {
-        target: "http://127.0.0.1:8000",
+        target: process.env.VITE_API_TARGET || "http://127.0.0.1:8000",
+        changeOrigin: true
+      }
+    }
+  },
+  preview: {
+    port: 4173,
+    proxy: {
+      "/api": {
+        target: process.env.VITE_API_TARGET || "http://127.0.0.1:8000",
+        changeOrigin: true
+      },
+      "/static": {
+        target: process.env.VITE_API_TARGET || "http://127.0.0.1:8000",
         changeOrigin: true
       }
     }

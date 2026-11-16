@@ -66,9 +66,9 @@ export const HomeView: React.FC<HomeViewProps> = ({
         ) : isRecording ? (
           <div className="py-2 flex flex-col items-center gap-4">
             <div className="relative flex items-center justify-center">
-              <div className="w-36 h-36 rounded-full bg-viridian-soft border-2 border-viridian flex flex-col items-center justify-center animate-pulse">
-                <MicIcon className="w-10 h-10 text-viridian mb-1" />
-                <span className="text-2xl font-bold text-viridian tabular-nums">
+              <div className="w-36 h-36 rounded-full bg-hy-amber/25 border-2 border-hy-amber flex flex-col items-center justify-center animate-pulse">
+                <MicIcon className="w-10 h-10 text-hy-ink mb-1" />
+                <span className="text-2xl font-bold text-hy-ink tabular-nums">
                   {remaining}s
                 </span>
               </div>
@@ -82,7 +82,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 type="button"
                 onClick={onStopRecording}
                 aria-label={t(lang, "tapToStop")}
-                className="min-h-[52px] px-6 py-3 rounded-xl bg-viridian text-white font-bold hover:bg-viridian-hover transition-colors"
+                className="min-h-[52px] px-6 py-3 rounded-full bg-viridian text-white font-bold hover:bg-viridian-hover transition-colors"
               >
                 {t(lang, "tapToStop")}
               </button>
@@ -90,7 +90,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 type="button"
                 onClick={onCancelRecording}
                 aria-label={t(lang, "cancel")}
-                className="min-h-[52px] px-5 py-3 rounded-xl bg-ground border border-seam text-ink font-semibold hover:bg-subtle transition-colors"
+                className="min-h-[52px] px-5 py-3 rounded-full bg-ground border border-seam text-ink font-semibold hover:bg-subtle transition-colors"
               >
                 {t(lang, "cancel")}
               </button>
@@ -112,10 +112,10 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 }
               }}
               aria-label={tapMode ? t(lang, "tapToStart") : t(lang, "holdToSpeak")}
-              className="w-36 h-36 rounded-full bg-viridian text-white shadow-md hover:bg-viridian-hover active:scale-95 transition-transform flex flex-col items-center justify-center gap-1.5 disabled:opacity-60 select-none touch-none"
+              className="w-36 h-36 rounded-full bg-hy-amber text-hy-ink border-2 border-hy-ink/10 shadow-md hover:bg-amber-hover active:scale-95 transition-transform flex flex-col items-center justify-center gap-1.5 disabled:opacity-60 select-none touch-none"
             >
               <MicIcon className="w-11 h-11" />
-              <span className="text-xs font-bold px-2 leading-tight">
+              <span className="text-xs font-extrabold px-2 leading-tight">
                 {isSubmittingVoice
                   ? t(lang, "processingVoice")
                   : tapMode
@@ -200,8 +200,8 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 className="w-full min-h-[72px] bg-surface border border-seam rounded-xl px-4 py-3.5 text-left flex items-center justify-between gap-4 hover:border-viridian hover:bg-viridian-soft/40 transition-colors"
               >
                 <div className="flex items-center gap-3.5 min-w-0">
-                  <div className="w-12 h-12 rounded-xl bg-viridian-soft text-viridian flex items-center justify-center shrink-0">
-                    <TopicIcon icon={topic.icon} className="w-6 h-6" />
+                  <div className="w-12 h-12 rounded-card bg-hy-sand flex items-center justify-center shrink-0">
+                    <TopicIcon icon={topic.icon} className="w-7 h-7" />
                   </div>
                   <div className="min-w-0">
                     <div className="text-lg font-bold text-ink leading-snug">{topic.name}</div>

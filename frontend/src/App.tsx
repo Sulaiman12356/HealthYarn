@@ -27,7 +27,9 @@ import type {
   TopicSummary,
   UnsureCandidate
 } from "./types";
+import { BrandLogo } from "./components/BrandSvg";
 import { DemoBanner } from "./components/DemoBanner";
+import { LandingPage } from "./components/landing/LandingPage";
 import { LanguagePicker } from "./components/LanguagePicker";
 import { HomeView } from "./components/HomeView";
 import { TopicDetailView } from "./components/TopicDetailView";
@@ -38,6 +40,8 @@ import { AboutView } from "./components/AboutView";
 import { CheckCircleIcon, VolumeIcon, VolumeMutedIcon, WifiOffIcon } from "./components/Icons";
 
 const AdminPortal = lazy(() => import("./components/AdminPortal"));
+
+type RouteMode = "landing" | "app" | "admin";
 
 type Screen =
   | { name: "welcome" }
@@ -56,11 +60,56 @@ type Screen =
       messageAudioUrl: string | null;
       clinics: Clinic[];
     }
-  | { name: "about" }
-  | { name: "admin" };
+  | { name: "about" };
 
 const LANG_STORAGE_KEY = "healthyarn_lang";
 const AUTOPLAY_STORAGE_KEY = "healthyarn_autoplay";
+
+function detectInitialLang(): { lang: Lang; saved: boolean } {
+  try {
+    const val = localStorage.getItem(LANG_STORAGE_KEY);
+    if (val === "en" || val === "yo" || val === "pcm") {
+      return { lang: val, saved: true };
+    }
+  } catch {
+    // Ignore storage errors
+  }
+  if (typeof navigator !== "undefined" && navigator.language) {
+    if (navigator.language.toLowerCase().startsWith("yo")) {
+      return { lang: "yo", saved: false };
+    }
+  }
+  return { lang: "en", saved: false };
+}
+
+function parseLocationRoute(hasSavedLang: boolean): { mode: RouteMode; initialScreen: Screen } {
+  if (typeof window === "undefined") {
+    return { mode: "landing", initialScreen: { name: "home" } };
+  }
+  const pathname = window.location.pathname;
+  if (pathname.startsWith("/admin")) {
+    return { mode: "admin", initialScreen: { name: "home" } };
+  }
+  if (pathname.startsWith("/app")) {
+    const params = new URLSearchParams(window.location.search);
+    const topicSlug = params.get("topic");
+    const viewParam = params.get("view");
+    if (topicSlug) {
+      return { mode: "app", initialScreen: { name: "topic", slug: topicSlug } };
+    }
+    if (viewParam === "about") {
+      return { mode: "app", initialScreen: { name: "about" } };
+    }
+    if (viewParam === "welcome") {
+      return { mode: "app", initialScreen: { name: "welcome" } };
+    }
+    return {
+      mode: "app",
+      initialScreen: hasSavedLang ? { name: "home" } : { name: "welcome" }
+    };
+  }
+  return { mode: "landing", initialScreen: hasSavedLang ? { name: "home" } : { name: "welcome" } };
+}
 
 function getInitialReducedMotionAutoplay(): boolean {
   try {
@@ -76,23 +125,13 @@ function getInitialReducedMotionAutoplay(): boolean {
 }
 
 export function App() {
-  const savedLang = (() => {
-    try {
-      const val = localStorage.getItem(LANG_STORAGE_KEY);
-      if (val === "en" || val === "yo" || val === "pcm") return val;
-    } catch {
-      // Ignore
-    }
-    return null;
-  })();
+  const [{ lang: initialLang, saved: initiallySaved }] = useState(detectInitialLang);
+  const [{ mode: initialMode, initialScreen }] = useState(() => parseLocationRoute(initiallySaved));
 
-  const [lang, setLang] = useState<Lang>(savedLang || "en");
-  const [hasChosenLang, setHasChosenLang] = useState<boolean>(savedLang !== null);
-  const initialAdminRoute =
-    typeof window !== "undefined" && window.location.pathname.startsWith("/admin");
-  const [screen, setScreen] = useState<Screen>(
-    initialAdminRoute ? { name: "admin" } : savedLang ? { name: "home" } : { name: "welcome" }
-  );
+  const [routeMode, setRouteMode] = useState<RouteMode>(initialMode);
+  const [lang, setLang] = useState<Lang>(initialLang);
+  const [hasChosenLang, setHasChosenLang] = useState<boolean>(initiallySaved);
+  const [screen, setScreen] = useState<Screen>(initialScreen);
 
   const [topics, setTopics] = useState<TopicSummary[]>([]);
   const [bundle, setBundle] = useState<BundleResponse | null>(null);
@@ -102,7 +141,18 @@ export function App() {
   const [consentAudioByLang, setConsentAudioByLang] = useState<
     Partial<Record<Lang, string | null>>
   >({});
+  const [heroAudioByLang, setHeroAudioByLang] = useState<
+    Partial<Record<Lang, string | null>>
+  >({});
+  const [sampleAudioByLang, setSampleAudioByLang] = useState<
+    Partial<Record<Lang, string | null>>
+  >({});
   const [demoMode, setDemoMode] = useState<boolean>(false);
+  const [contentReviewed, setContentReviewed] = useState<boolean>(true);
+  const [metaReviewers, setMetaReviewers] = useState<{
+    clinical?: string;
+    language?: string;
+  }>({});
   const [loading, setLoading] = useState<boolean>(false);
   const [cachingOffline, setCachingOffline] = useState<boolean>(false);
   const [offlineReady, setOfflineReady] = useState<boolean>(false);
@@ -114,6 +164,25 @@ export function App() {
   const [voiceError, setVoiceError] = useState<string | null>(null);
 
   const audio = useAudioQueue();
+
+  // Keep <html lang="..."> synced with selected language at all times
+  useEffect(() => {
+    if (typeof document !== "undefined") {
+      document.documentElement.lang = lang;
+    }
+  }, [lang]);
+
+  // Handle browser back/forward across /, /app, /admin
+  useEffect(() => {
+    const onPopState = () => {
+      const parsed = parseLocationRoute(hasChosenLang || Boolean(localStorage.getItem(LANG_STORAGE_KEY)));
+      setRouteMode(parsed.mode);
+      setScreen(parsed.initialScreen);
+      audio.stop();
+    };
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, [audio, hasChosenLang]);
 
   const handleAskResult = useCallback(
     (res: AskResponse) => {
@@ -214,8 +283,19 @@ export function App() {
       .then((m) => {
         if (!active) return;
         setDemoMode((prev) => prev || m.demo_mode);
+        if (typeof m.content_reviewed === "boolean") {
+          setContentReviewed(m.content_reviewed && !m.demo_mode);
+        } else if (m.demo_mode) {
+          setContentReviewed(false);
+        }
+        setMetaReviewers({
+          clinical: m.clinical_reviewers,
+          language: m.language_reviewers
+        });
         if (m.welcome_audio) setWelcomeAudioByLang(m.welcome_audio);
         if (m.consent_audio) setConsentAudioByLang(m.consent_audio);
+        if (m.hero_audio) setHeroAudioByLang(m.hero_audio);
+        if (m.sample_audio) setSampleAudioByLang(m.sample_audio);
       })
       .catch(() => {});
     return () => {
@@ -223,13 +303,18 @@ export function App() {
     };
   }, []);
 
+  // Load offline bundle + precache audio only inside /app (keeping landing page < 300 KB before audio)
   useEffect(() => {
+    if (routeMode !== "app") return;
     let active = true;
     const cached = getCachedBundle(lang);
     if (cached) {
       setBundle(cached);
       setTopics(bundleToTopicSummaries(cached));
       setDemoMode(cached.demo_mode);
+      if (typeof cached.content_reviewed === "boolean") {
+        setContentReviewed(cached.content_reviewed && !cached.demo_mode);
+      }
       setOfflineReady(true);
     }
 
@@ -239,7 +324,11 @@ export function App() {
         const [topicsRes, bundleRes] = await Promise.all([fetchTopics(lang), fetchBundle(lang)]);
         if (!active) return;
         setTopics(topicsRes.topics);
-        setDemoMode(topicsRes.demo_mode || bundleRes.demo_mode);
+        const isDemo = topicsRes.demo_mode || bundleRes.demo_mode;
+        setDemoMode(isDemo);
+        if (typeof bundleRes.content_reviewed === "boolean") {
+          setContentReviewed(bundleRes.content_reviewed && !isDemo);
+        }
         setBundle(bundleRes);
         saveCachedBundle(bundleRes);
 
@@ -261,9 +350,9 @@ export function App() {
     return () => {
       active = false;
     };
-  }, [lang]);
+  }, [lang, routeMode]);
 
-  const handleSelectLanguage = (nextLang: Lang) => {
+  const persistLang = (nextLang: Lang) => {
     setLang(nextLang);
     setHasChosenLang(true);
     setVoiceError(null);
@@ -272,7 +361,41 @@ export function App() {
     } catch {
       // Ignore
     }
-    setScreen({ name: "home" });
+  };
+
+  const handleSelectLanguage = (nextLang: Lang) => {
+    persistLang(nextLang);
+    if (routeMode === "app") {
+      setScreen({ name: "home" });
+    }
+  };
+
+  const handleOpenAppFromLanding = (topicSlug?: string, view?: "home" | "about") => {
+    persistLang(lang);
+    let targetPath = "/app";
+    let nextScreen: Screen = { name: "home" };
+    if (topicSlug) {
+      targetPath = `/app?topic=${encodeURIComponent(topicSlug)}`;
+      nextScreen = { name: "topic", slug: topicSlug };
+    } else if (view === "about") {
+      targetPath = "/app?view=about";
+      nextScreen = { name: "about" };
+    }
+    if (typeof window !== "undefined") {
+      window.history.pushState({}, "", targetPath);
+      window.scrollTo({ top: 0, behavior: "auto" });
+    }
+    setRouteMode("app");
+    setScreen(nextScreen);
+  };
+
+  const handleNavigateLanding = () => {
+    audio.stop();
+    if (typeof window !== "undefined") {
+      window.history.pushState({}, "", "/");
+      window.scrollTo({ top: 0, behavior: "auto" });
+    }
+    setRouteMode("landing");
   };
 
   const handleToggleAutoplay = () => {
@@ -338,18 +461,34 @@ export function App() {
     audio.playSequence([q.question_audio_url]);
   };
 
-  if (screen.name === "admin") {
+  if (routeMode === "admin") {
     return (
       <Suspense fallback={<div className="p-6 text-ink">{t(lang, "loading")}</div>}>
         <AdminPortal
           onExit={() => {
             if (typeof window !== "undefined" && window.location.pathname.startsWith("/admin")) {
-              window.history.pushState({}, "", "/");
+              window.history.pushState({}, "", "/app");
             }
+            setRouteMode("app");
             setScreen(hasChosenLang ? { name: "home" } : { name: "welcome" });
           }}
         />
       </Suspense>
+    );
+  }
+
+  if (routeMode === "landing") {
+    return (
+      <LandingPage
+        lang={lang}
+        contentReviewed={contentReviewed}
+        heroAudioByLang={heroAudioByLang}
+        sampleAudioByLang={sampleAudioByLang}
+        clinicalReviewers={metaReviewers.clinical}
+        languageReviewers={metaReviewers.language}
+        onSelectLang={handleSelectLanguage}
+        onOpenApp={handleOpenAppFromLanding}
+      />
     );
   }
 
@@ -384,26 +523,14 @@ export function App() {
               setScreen(hasChosenLang ? { name: "home" } : { name: "welcome" });
             }}
             aria-label={t(lang, "appName")}
-            className="min-h-[48px] px-2 flex items-center gap-2 font-bold text-lg tracking-tight rounded-lg hover:bg-viridian-hover transition-colors"
+            className="min-h-[48px] px-2 flex items-center gap-2 rounded-lg hover:bg-viridian-hover transition-colors"
           >
-            <svg
-              viewBox="0 0 24 24"
-              className="w-6 h-6 shrink-0"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2.2}
-              aria-hidden="true"
-            >
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z" />
-              <path d="M12 8v8" />
-              <path d="M8 12h8" />
-            </svg>
-            <span>{t(lang, "appName")}</span>
+            <BrandLogo variant="onGreen" markSize="w-7 h-7" textSize="text-lg" />
           </button>
 
           <div className="flex items-center gap-1.5">
             <div
-              className="flex items-center rounded-lg bg-viridian-hover p-1"
+              className="flex items-center rounded-full bg-viridian-hover p-1"
               role="group"
               aria-label={t(lang, "welcomeTitle")}
             >
@@ -414,10 +541,10 @@ export function App() {
                   onClick={() => handleSelectLanguage(code)}
                   aria-label={code === "pcm" ? "Nigerian Pidgin" : code.toUpperCase()}
                   aria-pressed={lang === code}
-                  className={`min-h-[40px] min-w-[40px] px-2.5 rounded-md text-xs font-bold uppercase transition-colors ${
+                  className={`min-h-[40px] min-w-[40px] px-2.5 rounded-full text-xs font-bold uppercase transition-colors ${
                     lang === code
-                      ? "bg-white text-viridian"
-                      : "text-emerald-100 hover:text-white"
+                      ? "bg-hy-amber text-hy-ink"
+                      : "text-hy-cream hover:text-white"
                   }`}
                 >
                   {code === "pcm" ? "PIDGIN" : code}
@@ -435,8 +562,17 @@ export function App() {
               {autoplayEnabled ? (
                 <VolumeIcon className="w-5 h-5" />
               ) : (
-                <VolumeMutedIcon className="w-5 h-5 text-emerald-200" />
+                <VolumeMutedIcon className="w-5 h-5 text-hy-cream/70" />
               )}
+            </button>
+
+            <button
+              type="button"
+              onClick={handleNavigateLanding}
+              aria-label={t(lang, "navLanding")}
+              className="min-h-[48px] px-3 rounded-lg text-sm font-semibold hover:bg-viridian-hover transition-colors"
+            >
+              {t(lang, "navLanding")}
             </button>
 
             <button
@@ -455,10 +591,13 @@ export function App() {
               type="button"
               onClick={() => {
                 audio.stop();
-                setScreen({ name: "admin" });
+                if (typeof window !== "undefined") {
+                  window.history.pushState({}, "", "/admin");
+                }
+                setRouteMode("admin");
               }}
               aria-label={t(lang, "staffLink")}
-              className="min-h-[48px] px-3 rounded-lg text-sm font-semibold text-emerald-100 hover:text-white hover:bg-viridian-hover transition-colors"
+              className="min-h-[48px] px-3 rounded-lg text-sm font-semibold text-hy-cream hover:text-white hover:bg-viridian-hover transition-colors"
             >
               {t(lang, "staffLink")}
             </button>
@@ -523,17 +662,23 @@ export function App() {
           />
         )}
 
-        {screen.name === "topic" && currentTopic && (
-          <TopicDetailView
-            lang={lang}
-            topic={currentTopic}
-            onBack={() => {
-              audio.stop();
-              setScreen({ name: "home" });
-            }}
-            onSelectQuestion={handleOpenQuestion}
-            onPlayQuestionAudio={handlePlayQuestionAudio}
-          />
+        {screen.name === "topic" && (
+          currentTopic ? (
+            <TopicDetailView
+              lang={lang}
+              topic={currentTopic}
+              onBack={() => {
+                audio.stop();
+                setScreen({ name: "home" });
+              }}
+              onSelectQuestion={handleOpenQuestion}
+              onPlayQuestionAudio={handlePlayQuestionAudio}
+            />
+          ) : (
+            <div className="max-w-2xl mx-auto px-4 py-8 text-center text-ink-muted">
+              {t(lang, "loading")}
+            </div>
+          )
         )}
 
         {screen.name === "answer" && (
@@ -582,8 +727,8 @@ export function App() {
             meta={
               bundle?.meta || {
                 content_last_updated: "2026-11-16",
-                clinical_reviewers: "Dr. Adebayo O. & Clinical Review Team",
-                language_reviewers: "Yorùbá & Nigerian Pidgin Linguistic Team"
+                clinical_reviewers: metaReviewers.clinical || "Dr. Adebayo O. & Clinical Review Team",
+                language_reviewers: metaReviewers.language || "Yorùbá & Nigerian Pidgin Linguistic Team"
               }
             }
             onBack={() => {

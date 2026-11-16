@@ -2,11 +2,34 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: "Noto Sans";
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url("/fonts/noto-sans-hy.woff2") format("woff2");
+}
+
+:root {
+  --hy-green: #0f5c4a;
+  --hy-green-deep: #0a3f33;
+  --hy-amber: #f5a623;
+  --hy-cream: #fff8ec;
+  --hy-sand: #f1e6d2;
+  --hy-ink: #1b1f1d;
+  --hy-muted: #5b655f;
+  --hy-alert: #c8322b;
+  --hy-seam: #e2d4bc;
+  --hy-radius-card: 16px;
+  --hy-shadow-soft: 0 2px 12px rgba(27, 31, 29, 0.06);
+  --hy-shadow-lift: 0 12px 30px rgba(10, 63, 51, 0.16);
+}
+
 @layer base {
   html {
     font-size: 18px;
-    background-color: #f7f6f2;
-    color: #141f1a;
+    background-color: var(--hy-cream);
+    color: var(--hy-ink);
     scroll-behavior: smooth;
   }
 
@@ -14,17 +37,17 @@
     margin: 0;
     min-height: 100vh;
     font-family: "Noto Sans", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    line-height: 1.55;
-    caret-color: #0f523b;
+    line-height: 1.6;
+    caret-color: var(--hy-green);
   }
 
   ::selection {
-    background-color: #0f523b;
+    background-color: var(--hy-green);
     color: #ffffff;
   }
 
   :focus-visible {
-    outline: 3px solid #0f523b;
+    outline: 3px solid var(--hy-green);
     outline-offset: 2px;
   }
 
@@ -35,6 +58,7 @@
   h1,
   h2,
   h3 {
+    font-family: "Noto Sans", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     text-wrap: balance;
   }
 }
@@ -47,24 +71,60 @@
   max-width: 68ch;
 }
 
-/* Custom subtle scrollbar aligned with PHC daylight surfaces */
+.hero-green-wash {
+  background: linear-gradient(155deg, #0f5c4a 0%, #0a3f33 100%);
+}
+
+@keyframes hy-wave-breathe {
+  0%,
+  100% {
+    transform: scaleY(0.92);
+  }
+  50% {
+    transform: scaleY(1.06);
+  }
+}
+
+@keyframes hy-wave-play {
+  0%,
+  100% {
+    transform: scaleY(0.55);
+  }
+  50% {
+    transform: scaleY(1.18);
+  }
+}
+
+.hy-wave-bar {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hy-wave-breathe 3.4s ease-in-out infinite;
+}
+
+.hy-wave-bar-active {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hy-wave-play 0.65s ease-in-out infinite;
+}
+
+/* Custom subtle scrollbar aligned with Kola Cream & Sand surfaces */
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #efece4;
+  background: var(--hy-sand);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #9ca9a1;
+  background: #9ca69f;
   border-radius: 9999px;
-  border: 2px solid #efece4;
+  border: 2px solid var(--hy-sand);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #415249;
+  background: var(--hy-muted);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -75,5 +135,124 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* Explicit CSS-variable utility classes so HMR & CSS consumers always get exact brand tokens */
+@layer utilities {
+  .bg-hy-green {
+    background-color: var(--hy-green);
+  }
+  .bg-hy-forest {
+    background-color: var(--hy-green-deep);
+  }
+  .bg-hy-amber {
+    background-color: var(--hy-amber);
+  }
+  .bg-hy-cream {
+    background-color: var(--hy-cream);
+  }
+  .bg-hy-sand {
+    background-color: var(--hy-sand);
+  }
+  .bg-hy-sand\/70 {
+    background-color: rgba(241, 230, 210, 0.7);
+  }
+  .bg-hy-sand\/40 {
+    background-color: rgba(241, 230, 210, 0.4);
+  }
+  .bg-hy-amber\/25 {
+    background-color: rgba(245, 166, 35, 0.25);
+  }
+  .bg-hy-alert {
+    background-color: var(--hy-alert);
+  }
+  .bg-ground {
+    background-color: var(--hy-cream);
+  }
+  .bg-subtle {
+    background-color: var(--hy-sand);
+  }
+  .bg-viridian {
+    background-color: var(--hy-green);
+  }
+  .bg-viridian-soft {
+    background-color: #e4f1ed;
+  }
+  .hover\:bg-viridian-hover:hover,
+  .bg-viridian-hover {
+    background-color: var(--hy-green-deep);
+  }
+  .bg-crimson {
+    background-color: var(--hy-alert);
+  }
+  .text-ink {
+    color: var(--hy-ink);
+  }
+  .text-ink-muted {
+    color: var(--hy-muted);
+  }
+  .text-viridian {
+    color: var(--hy-green);
+  }
+  .border-seam {
+    border-color: var(--hy-seam);
+  }
+  .hover\:bg-hy-forest:hover {
+    background-color: var(--hy-green-deep);
+  }
+  .hover\:bg-amber-hover:hover {
+    background-color: #df9214;
+  }
+  .hover\:bg-hy-sand:hover {
+    background-color: var(--hy-sand);
+  }
+  .text-hy-green {
+    color: var(--hy-green);
+  }
+  .text-hy-forest {
+    color: var(--hy-green-deep);
+  }
+  .text-hy-amber {
+    color: var(--hy-amber);
+  }
+  .text-hy-cream {
+    color: var(--hy-cream);
+  }
+  .text-hy-ink {
+    color: var(--hy-ink);
+  }
+  .text-hy-muted {
+    color: var(--hy-muted);
+  }
+  .text-hy-alert {
+    color: var(--hy-alert);
+  }
+  .border-hy-green {
+    border-color: var(--hy-green);
+  }
+  .border-hy-amber {
+    border-color: var(--hy-amber);
+  }
+  .border-hy-ink\/10 {
+    border-color: rgba(27, 31, 29, 0.1);
+  }
+  .hover\:border-hy-green:hover {
+    border-color: var(--hy-green);
+  }
+  .hover\:text-hy-green:hover {
+    color: var(--hy-green);
+  }
+  .hover\:text-hy-forest:hover {
+    color: var(--hy-green-deep);
+  }
+  .rounded-card {
+    border-radius: var(--hy-radius-card);
+  }
+  .shadow-soft {
+    box-shadow: var(--hy-shadow-soft);
+  }
+  .shadow-lift {
+    box-shadow: var(--hy-shadow-lift);
   }
 }
