@@ -122,7 +122,7 @@
   "topicsBandHeading": "Ohun tí o lè béèrè nípa rẹ̀ lónìí.",
   "topicsMore": "Àwọn àkòrí míràn ń bọ̀.",
   "languagesHeading": "Ó ń dún bíi ohùn ilé.",
-  "languagesBody": "Spitch ló ṣe àwọn ohùn wọ̀nyí fún àwọn èdè Nàìjíríà. Tẹ̀ ẹ́ láti gbọ́ ìdáhùn kan náà ní èdè kọ̀ọ̀kan.",
+  "languagesBody": "Spitch àti YarnGPT ló ṣe àwọn ohùn wọ̀nyí fún àwọn èdè Nàìjíríà. Tẹ̀ ẹ́ láti gbọ́ ìdáhùn kan náà ní èdè kọ̀ọ̀kan.",
   "langCardYo": "Yorùbá",
   "langCardPcm": "Pidgin",
   "langCardEn": "Gẹ̀ẹ́sì",
@@ -156,5 +156,5 @@
   "footerPrivacyLink": "Ààbò",
   "footerContactLink": "Ìkànnì",
   "footerDisclaimer": "HealthYarn ń fúnni ní ìmọ̀ràn ìlera gbogbogbò nìkan. Kò rọ́pò dókítà, nọ́ọ̀sì tàbí oníṣẹ́ oògùn. Nígbà pàjáwìrì, lọ sí ilé ìwòsàn tó súnmọ́ ọ.",
-  "footerCredits": "Ohùn láti ọwọ́ Spitch. A kọ́ ọ fún ìdíje NCS IT Development Contest 2026."
+  "footerCredits": "Ohùn láti ọwọ́ Spitch àti YarnGPT. A kọ́ ọ fún ìdíje NCS IT Development Contest 2026."
 }

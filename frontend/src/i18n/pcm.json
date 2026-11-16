@@ -122,7 +122,7 @@
   "topicsBandHeading": "Wetin you fit ask about today.",
   "topicsMore": "More health topics still dey come.",
   "languagesHeading": "E sound like house.",
-  "languagesBody": "Na Spitch we use build the voices for Nigerian languages. Press make you hear the same answer for each language.",
+  "languagesBody": "Na Spitch and YarnGPT we use build the voices for Nigerian languages. Press make you hear the same answer for each language.",
   "langCardYo": "Yorùbá",
   "langCardPcm": "Pidgin",
   "langCardEn": "English",
@@ -156,5 +156,5 @@
   "footerPrivacyLink": "Privacy",
   "footerContactLink": "Contact",
   "footerDisclaimer": "HealthYarn dey give general health information only. E no dey replace doctor, nurse or pharmacist. For emergency, go nearest hospital or clinic sharp-sharp.",
-  "footerCredits": "Voices by Spitch. Built for the NCS IT Development Contest 2026."
+  "footerCredits": "Voices by Spitch & YarnGPT. Built for the NCS IT Development Contest 2026."
 }

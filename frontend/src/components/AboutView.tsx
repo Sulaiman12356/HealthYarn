@@ -58,7 +58,7 @@ export const AboutView: React.FC<AboutViewProps> = ({ lang, meta, onBack }) => {
               <span className="font-semibold">Spitch Speech AI:</span> West African Speech-to-Text and offline Nigerian voice synthesis (sade, ufoma, remi)
             </li>
             <li>
-              <span className="font-semibold">YarnGPT TTS Support:</span> Saheed Azeez (YarnGPT2b) — Apache-2.0 / Open Weights
+              <span className="font-semibold">YarnGPT (Saheed Azeez):</span> Nigerian-accented Text-to-Speech synthesis (idera) &amp; open-weight YarnGPT2b (Apache-2.0)
             </li>
             <li>
               <span className="font-semibold">Multilingual Matching:</span> sentence-transformers/LaBSE (Apache-2.0) + RapidFuzz (MIT)
