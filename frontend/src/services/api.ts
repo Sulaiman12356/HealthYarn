@@ -1,4 +1,11 @@
-import type { AnswerPayload, BundleResponse, Clinic, Lang, TopicSummary } from "../types";
+import type {
+  AnswerPayload,
+  AskResponse,
+  BundleResponse,
+  Clinic,
+  Lang,
+  TopicSummary
+} from "../types";
 
 export interface MetaResponse {
   demo_mode: boolean;
@@ -61,4 +68,36 @@ export async function sendFeedback(payload: {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload)
   });
+}
+
+export async function askVoice(
+  audioBlob: Blob,
+  lang: Lang,
+  durationSeconds: number
+): Promise<AskResponse> {
+  const form = new FormData();
+  const ext = audioBlob.type.includes("ogg") ? "ogg" : "webm";
+  form.append("audio", audioBlob, `question.${ext}`);
+  form.append("lang", lang);
+  form.append("duration_seconds", String(durationSeconds));
+  const res = await fetch("/api/ask", {
+    method: "POST",
+    body: form
+  });
+  if (!res.ok) {
+    throw new Error("Voice upload failed");
+  }
+  return res.json();
+}
+
+export async function askText(text: string, lang: Lang): Promise<AskResponse> {
+  const res = await fetch("/api/ask", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ text, lang })
+  });
+  if (!res.ok) {
+    throw new Error("Question request failed");
+  }
+  return res.json();
 }

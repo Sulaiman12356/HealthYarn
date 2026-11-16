@@ -1,7 +1,16 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { t } from "./i18n";
 import { useAudioQueue } from "./hooks/useAudioQueue";
-import { fetchAnswer, fetchBundle, fetchMeta, fetchTopics, sendFeedback } from "./services/api";
+import { useVoiceRecorder } from "./hooks/useVoiceRecorder";
+import {
+  askText,
+  askVoice,
+  fetchAnswer,
+  fetchBundle,
+  fetchMeta,
+  fetchTopics,
+  sendFeedback
+} from "./services/api";
 import {
   bundleToTopicSummaries,
   getCachedBundle,
@@ -10,16 +19,21 @@ import {
 } from "./services/offlineCache";
 import type {
   AnswerPayload,
+  AskResponse,
   BundleResponse,
+  Clinic,
   Lang,
   QuestionSummary,
-  TopicSummary
+  TopicSummary,
+  UnsureCandidate
 } from "./types";
 import { DemoBanner } from "./components/DemoBanner";
 import { LanguagePicker } from "./components/LanguagePicker";
 import { HomeView } from "./components/HomeView";
 import { TopicDetailView } from "./components/TopicDetailView";
 import { AnswerView } from "./components/AnswerView";
+import { UnsureView } from "./components/UnsureView";
+import { RedFlagAlertView } from "./components/RedFlagAlertView";
 import { AboutView } from "./components/AboutView";
 import { CheckCircleIcon, VolumeIcon, VolumeMutedIcon, WifiOffIcon } from "./components/Icons";
 
@@ -28,6 +42,18 @@ type Screen =
   | { name: "home" }
   | { name: "topic"; slug: string }
   | { name: "answer"; payload: AnswerPayload }
+  | {
+      name: "unsure";
+      messageText: string;
+      messageAudioUrl: string | null;
+      candidates: UnsureCandidate[];
+    }
+  | {
+      name: "red_flag";
+      messageText: string;
+      messageAudioUrl: string | null;
+      clinics: Clinic[];
+    }
   | { name: "about" };
 
 const LANG_STORAGE_KEY = "healthyarn_lang";
@@ -63,8 +89,12 @@ export function App() {
 
   const [topics, setTopics] = useState<TopicSummary[]>([]);
   const [bundle, setBundle] = useState<BundleResponse | null>(null);
-  const [welcomeAudioByLang, setWelcomeAudioByLang] = useState<Partial<Record<Lang, string | null>>>({});
-  const [consentAudioByLang, setConsentAudioByLang] = useState<Partial<Record<Lang, string | null>>>({});
+  const [welcomeAudioByLang, setWelcomeAudioByLang] = useState<
+    Partial<Record<Lang, string | null>>
+  >({});
+  const [consentAudioByLang, setConsentAudioByLang] = useState<
+    Partial<Record<Lang, string | null>>
+  >({});
   const [demoMode, setDemoMode] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [cachingOffline, setCachingOffline] = useState<boolean>(false);
@@ -73,8 +103,92 @@ export function App() {
     typeof navigator !== "undefined" ? !navigator.onLine : false
   );
   const [autoplayEnabled, setAutoplayEnabled] = useState<boolean>(getInitialReducedMotionAutoplay);
+  const [isSubmittingVoice, setIsSubmittingVoice] = useState<boolean>(false);
+  const [voiceError, setVoiceError] = useState<string | null>(null);
 
   const audio = useAudioQueue();
+
+  const handleAskResult = useCallback(
+    (res: AskResponse) => {
+      if (res.type === "red_flag") {
+        setScreen({
+          name: "red_flag",
+          messageText: res.message_text,
+          messageAudioUrl: res.message_audio_url,
+          clinics: res.clinics
+        });
+        return;
+      }
+      if (res.type === "answer") {
+        setScreen({
+          name: "answer",
+          payload: {
+            faq_id: res.faq_id,
+            intent_key: `faq_${res.faq_id}`,
+            lang,
+            question: res.question,
+            answer_text: res.answer_text,
+            question_audio_url: null,
+            answer_audio_url: res.answer_audio_url,
+            disclaimer_text: res.disclaimer_text,
+            disclaimer_audio_url: res.disclaimer_audio_url,
+            source_reference: res.source_reference,
+            confidence: res.confidence,
+            log_id: res.log_id
+          }
+        });
+        return;
+      }
+      if (res.type === "unsure") {
+        setScreen({
+          name: "unsure",
+          messageText: res.message_text || t(lang, "unsureTitle"),
+          messageAudioUrl: res.message_audio_url ?? null,
+          candidates: res.candidates
+        });
+        return;
+      }
+      setVoiceError(res.message_text || t(lang, "sttFailedMessage"));
+      if (autoplayEnabled && res.message_audio_url) {
+        audio.playSequence([res.message_audio_url]);
+      }
+    },
+    [audio, autoplayEnabled, lang]
+  );
+
+  const handleVoiceBlob = useCallback(
+    async (blob: Blob, durationSeconds: number) => {
+      setVoiceError(null);
+      setIsSubmittingVoice(true);
+      try {
+        const res = await askVoice(blob, lang, durationSeconds);
+        handleAskResult(res);
+      } catch {
+        setVoiceError(t(lang, "sttFailedMessage"));
+      } finally {
+        setIsSubmittingVoice(false);
+      }
+    },
+    [handleAskResult, lang]
+  );
+
+  const handleTypedQuestion = useCallback(
+    async (text: string) => {
+      setVoiceError(null);
+      setIsSubmittingVoice(true);
+      try {
+        const res = await askText(text, lang);
+        handleAskResult(res);
+      } catch {
+        setVoiceError(t(lang, "sttFailedMessage"));
+      } finally {
+        setIsSubmittingVoice(false);
+      }
+    },
+    [handleAskResult, lang]
+  );
+
+  const recorder = useVoiceRecorder(handleVoiceBlob, 15);
 
   useEffect(() => {
     const handleOnline = () => setIsOffline(false);
@@ -115,10 +229,7 @@ export function App() {
     async function loadContent() {
       setLoading(!cached);
       try {
-        const [topicsRes, bundleRes] = await Promise.all([
-          fetchTopics(lang),
-          fetchBundle(lang)
-        ]);
+        const [topicsRes, bundleRes] = await Promise.all([fetchTopics(lang), fetchBundle(lang)]);
         if (!active) return;
         setTopics(topicsRes.topics);
         setDemoMode(topicsRes.demo_mode || bundleRes.demo_mode);
@@ -148,6 +259,7 @@ export function App() {
   const handleSelectLanguage = (nextLang: Lang) => {
     setLang(nextLang);
     setHasChosenLang(true);
+    setVoiceError(null);
     try {
       localStorage.setItem(LANG_STORAGE_KEY, nextLang);
     } catch {
@@ -218,6 +330,23 @@ export function App() {
   const handlePlayQuestionAudio = (q: QuestionSummary) => {
     audio.playSequence([q.question_audio_url]);
   };
+
+  if (screen.name === "red_flag") {
+    return (
+      <RedFlagAlertView
+        lang={lang}
+        messageText={screen.messageText}
+        messageAudioUrl={screen.messageAudioUrl}
+        clinics={screen.clinics}
+        autoplayEnabled={autoplayEnabled}
+        onPlayClip={(url) => audio.playSequence([url])}
+        onDismiss={() => {
+          audio.stop();
+          setScreen({ name: "home" });
+        }}
+      />
+    );
+  }
 
   const currentTopic =
     screen.name === "topic" ? topics.find((tp) => tp.slug === screen.slug) : undefined;
@@ -345,13 +474,14 @@ export function App() {
             topics={topics}
             loading={loading}
             isOffline={isOffline}
-            isRecording={false}
-            recordingSeconds={0}
-            isSubmittingVoice={false}
-            voiceError={null}
-            onStartRecording={() => {}}
-            onStopRecording={() => {}}
-            onCancelRecording={() => {}}
+            isRecording={recorder.isRecording}
+            recordingSeconds={recorder.recordingSeconds}
+            isSubmittingVoice={isSubmittingVoice}
+            voiceError={voiceError || recorder.micError}
+            onStartRecording={recorder.startRecording}
+            onStopRecording={recorder.stopRecording}
+            onCancelRecording={recorder.cancelRecording}
+            onSubmitTypedText={handleTypedQuestion}
             onSelectTopic={(slug) => {
               audio.stop();
               setScreen({ name: "topic", slug });
@@ -390,6 +520,22 @@ export function App() {
               });
             }}
             onResetHome={() => {
+              audio.stop();
+              setScreen({ name: "home" });
+            }}
+          />
+        )}
+
+        {screen.name === "unsure" && (
+          <UnsureView
+            lang={lang}
+            messageText={screen.messageText}
+            messageAudioUrl={screen.messageAudioUrl}
+            candidates={screen.candidates}
+            autoplayEnabled={autoplayEnabled}
+            onPlayClip={(url) => audio.playSequence([url])}
+            onSelectCandidate={handleOpenQuestion}
+            onBackHome={() => {
               audio.stop();
               setScreen({ name: "home" });
             }}
