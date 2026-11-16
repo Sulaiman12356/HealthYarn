@@ -55,7 +55,7 @@
   },
   {
     "lang": "ig",
-    "pattern": "(odido|ihu na-ama jijiji|amaghị onwe ya|amaghi onwe|dara mba|iku ume na-esiri ike|ume na-aku|obara ogbugba.*ime|obara.*di ime|enweghi ike inu ara|na-agbo agbo ihe niile|obi mgbu|nnu ogwu gabiga)",
+    "pattern": "(odido|ihu na-ama jijiji|amaghị onwe ya|amaghi onwe|dara mba|iku ume na-esiri ike|ume na-aku|obara.*(ogbugba|agba|di ime|afo ime)|enweghi ike inu ara|na-agbo agbo ihe niile|obi mgbu|nnu ogwu gabiga)",
     "severity": "urgent",
     "status": "draft"
   }

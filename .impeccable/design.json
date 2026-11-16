@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-16T12:40:00+01:00",
+  "title": "Design System: HealthYarn",
+  "extensions": {
+    "colorMeta": {
+      "primary-viridian": {
+        "role": "primary",
+        "displayName": "PHC Primary Viridian",
+        "canonical": "#0f523b",
+        "tonalRamp": ["#06261b", "#0b3f2d", "#0f523b", "#176e51", "#2f8f6f", "#6cb79d", "#b5decb", "#e4f0ea"]
+      },
+      "sunlit-ground": {
+        "role": "neutral",
+        "displayName": "Sunlit Plaster Ground",
+        "canonical": "#f7f6f2",
+        "tonalRamp": ["#141f1a", "#415249", "#6e7b74", "#9ca9a1", "#c5c3b9", "#d6d3c9", "#efece4", "#f7f6f2"]
+      },
+      "clinical-crimson": {
+        "role": "error",
+        "displayName": "Quarantined Clinical Crimson",
+        "canonical": "#b91c1c",
+        "tonalRamp": ["#450a0a", "#7f1d1d", "#991b1b", "#b91c1c", "#dc2626", "#ef4444", "#fca5a5", "#fee2e2"]
+      }
+    },
+    "typographyMeta": {
+      "headline": { "displayName": "Headline", "purpose": "Screen titles with balanced wrapping." },
+      "body": { "displayName": "Body", "purpose": "18px root reading prose constrained to 68ch." }
+    },
+    "shadows": [
+      { "name": "plate-subtle", "value": "0 1px 2px rgba(20, 31, 26, 0.06)", "purpose": "Restful reading plate lift." },
+      { "name": "mic-tactile", "value": "0 4px 10px rgba(15, 82, 59, 0.22)", "purpose": "Primary voice trigger prominence." }
+    ],
+    "motion": [
+      { "name": "state-transition", "value": "150ms cubic-bezier(0.2, 0, 0, 1)", "purpose": "Crisp button and border state changes; disabled under prefers-reduced-motion." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Action Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Primary action control with >= 48px touch target.",
+      "html": "<button class=\"ds-btn-primary\">Replay answer</button>",
+      "css": ".ds-btn-primary { min-height: 48px; padding: 10px 16px; border-radius: 8px; background: #0f523b; color: #ffffff; font-weight: 600; border: none; cursor: pointer; transition: background 0.15s; } .ds-btn-primary:hover { background: #0b3f2d; } .ds-btn-primary:focus-visible { outline: 3px solid #0f523b; outline-offset: 2px; }"
+    },
+    {
+      "name": "Hold-to-Speak Microphone Trigger",
+      "kind": "custom",
+      "refersTo": "button-mic-trigger",
+      "description": "Oversized circular voice capture control.",
+      "html": "<button class=\"ds-mic-btn\">Hold to speak</button>",
+      "css": ".ds-mic-btn { width: 144px; height: 144px; border-radius: 9999px; background: #0f523b; color: #ffffff; font-weight: 700; border: none; box-shadow: 0 4px 10px rgba(15, 82, 59, 0.22); cursor: pointer; } .ds-mic-btn:hover { background: #0b3f2d; }"
+    },
+    {
+      "name": "Reading Plate",
+      "kind": "card",
+      "refersTo": "surface-plate",
+      "description": "Daylight high-contrast white reading surface.",
+      "html": "<div class=\"ds-plate\"><h3>How do I prepare ORS?</h3><p>Mix one packet in 1 litre of clean water.</p></div>",
+      "css": ".ds-plate { background: #ffffff; color: #141f1a; border: 1px solid #d6d3c9; border-radius: 12px; padding: 24px; max-width: 68ch; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Nigerian Primary Health Centre Daylight Triage",
+    "overview": "HealthYarn is designed for harsh outdoor daylight viewing on entry-level Android phones used by Yorùbá-, Igbo-, and English-speaking adults across Nigeria.",
+    "keyCharacteristics": [
+      "Sunlit daylight surfaces with high contrast",
+      "Quarantined semantic state colors",
+      "Zero external font downloads",
+      "Dual-coded voice, icon, and text controls at >= 48px touch size"
+    ],
+    "rules": [
+      { "name": "The Crimson Quarantine Rule", "body": "Clinical Crimson (#b91c1c) never appears on resting buttons, badges, or decoration; it owns the entire screen only when a red-flag rule fires.", "section": "colors" },
+      { "name": "The No-Kicker Rule", "body": "Headings stand on their own weight without eyebrow or kicker labels above them.", "section": "colors" }
+    ],
+    "dos": [
+      "Do preserve 18px root typography and >= 48px touch targets across every public control.",
+      "Do keep consistent strokeWidth=2 SVG icons beside spoken audio buttons for low-literacy users.",
+      "Do respect prefers-reduced-motion and provide an explicit autoplay mute toggle in the top header."
+    ],
+    "donts": [
+      "Don't add eyebrow/kicker text above headings, gradient text, decorative glass blur, or emojis standing in for UI icons.",
+      "Don't use Clinical Crimson (#b91c1c) outside urgent Red-Flag alerts or destructive rejection controls in /admin."
+    ]
+  }
+}
