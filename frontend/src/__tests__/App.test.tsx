@@ -302,4 +302,23 @@ describe("HealthYarn Landing & App Core Flows", () => {
       expect(screen.getByText("Mix one sachet in 1L clean water.")).toBeInTheDocument();
     });
   });
+
+  it("clears stale English topics if switching to Pidgin fails or has no cache", async () => {
+    window.history.pushState({}, "", "/app");
+    localStorage.setItem("healthyarn_lang", "en");
+
+    render(<App />);
+    expect(await screen.findByRole("button", { name: /Child Diarrhoea & ORS/i })).toBeInTheDocument();
+
+    // Simulate backend rejecting lang=pcm (e.g., stale server)
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => new Response('{"detail":"Unsupported language"}', { status: 400 }))
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Nigerian Pidgin" }));
+    await waitFor(() => {
+      expect(screen.queryByRole("button", { name: /Child Diarrhoea & ORS/i })).toBeNull();
+    });
+  });
 });

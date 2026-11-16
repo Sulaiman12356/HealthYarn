@@ -316,6 +316,11 @@ export function App() {
         setContentReviewed(cached.content_reviewed && !cached.demo_mode);
       }
       setOfflineReady(true);
+    } else {
+      // Never show stale previous-language questions/audio while switching languages
+      setBundle(null);
+      setTopics([]);
+      setOfflineReady(false);
     }
 
     async function loadContent() {
