@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import inspect
 import json
 import math
 import re
@@ -42,6 +43,13 @@ from app.models import PLACEHOLDER_PREFIX, FAQItem, SystemMessage, Translation, 
 DEFAULT_VOICE_MAP: dict[str, list[str]] = {
     "yo": ["folake", "aisha", "abayomi"],
     "ig": ["chioma", "adanna", "obinna"],
+    "en": ["idera", "emma", "jude", "umar"],
+}
+
+# Verified JSON speaker filenames in saheedniyi02/yarngpt (AudioTokenizerV2)
+LOCAL_GPU_VOICE_MAP: dict[str, list[str]] = {
+    "yo": ["yoruba_female1", "yoruba_female2", "yoruba_male2"],
+    "ig": ["igbo_female1", "igbo_female2", "igbo_male2"],
     "en": ["idera", "emma", "jude", "umar"],
 }
 
@@ -414,30 +422,42 @@ def synthesize_demo_chunk(chunk: str, lang: str, take_idx: int, sample_rate: int
     return np.concatenate(parts) if parts else np.zeros(int(sample_rate * 0.3), dtype=np.float32)
 
 
-def build_yarngpt_synthesizer() -> Callable[[str, str, str], tuple[np.ndarray, int]]:
-    """Load YarnGPT model (saheedniyi/YarnGPT2b or yarngpt package) for local/Colab GPU inference."""
+def _find_wavtokenizer_paths() -> tuple[str, str]:
+    cfg_name = "wavtokenizer_mediumdata_frame75_3s_nq1_code4096_dim512_kmeans200_attn.yaml"
+    ckpt_name = "wavtokenizer_large_speech_320_24k.ckpt"
+    search_dirs = [
+        Path.cwd(),
+        Path("/content"),
+        Path.home() / ".yarngpt" / "models",
+    ]
+    cfg_path = next((str(d / cfg_name) for d in search_dirs if (d / cfg_name).exists()), cfg_name)
+    ckpt_path = next((str(d / ckpt_name) for d in search_dirs if (d / ckpt_name).exists()), ckpt_name)
+    return cfg_path, ckpt_path
+
+
+def _import_audio_tokenizer_v2():
+    yarngpt_repo = Path("/content/yarngpt_repo")
+    if yarngpt_repo.exists() and str(yarngpt_repo) not in sys.path:
+        sys.path.insert(0, str(yarngpt_repo))
     try:
-        from yarngpt import generate_speech  # type: ignore
+        from audiotokenizer import AudioTokenizerV2  # type: ignore
 
-        def _synth(chunk: str, lang: str, voice: str) -> tuple[np.ndarray, int]:
-            audio = generate_speech(
-                chunk,
-                speaker=voice,
-                language=YARNGPT_LANG_NAMES.get(lang, "english"),
-                temperature=0.1,
-            )
-            arr = audio.detach().cpu().numpy().squeeze() if hasattr(audio, "detach") else np.asarray(audio)
-            return arr.astype(np.float32), 24000
-
-        return _synth
+        return AudioTokenizerV2
     except ImportError:
-        import torch  # type: ignore
-        from transformers import AutoModelForCausalLM  # type: ignore
         from yarngpt.audiotokenizer import AudioTokenizerV2  # type: ignore
 
+        return AudioTokenizerV2
+
+
+def build_yarngpt_synthesizer() -> Callable[[str, str, str], tuple[np.ndarray, int]]:
+    """Load multilingual YarnGPT2b (AudioTokenizerV2) once onto GPU, with v1 fallback."""
+    try:
+        AudioTokenizerV2 = _import_audio_tokenizer_v2()
+        import torch  # type: ignore
+        from transformers import AutoModelForCausalLM  # type: ignore
+
         model_id = "saheedniyi/YarnGPT2b"
-        wav_cfg = "wavtokenizer_mediumdata_frame75_3s_nq1_code4096_dim512_kmeans200_attn.yaml"
-        wav_ckpt = "wavtokenizer_large_speech_320_24k.ckpt"
+        wav_cfg, wav_ckpt = _find_wavtokenizer_paths()
         audio_tok = AudioTokenizerV2(model_id, wav_ckpt, wav_cfg)
         model = AutoModelForCausalLM.from_pretrained(model_id, torch_dtype="auto").to(audio_tok.device)
 
@@ -456,7 +476,28 @@ def build_yarngpt_synthesizer() -> Callable[[str, str, str], tuple[np.ndarray, i
                     max_length=4000,
                 )
             codes = audio_tok.get_codes(output)
+            if not codes:
+                return np.zeros(int(24000 * 0.25), dtype=np.float32), 24000
             audio = audio_tok.get_audio(codes)
+            arr = audio.detach().cpu().numpy().squeeze() if hasattr(audio, "detach") else np.asarray(audio)
+            return np.atleast_1d(arr).astype(np.float32), 24000
+
+        return _synth
+    except ImportError:
+        from yarngpt import generate_speech  # type: ignore
+
+        sig = inspect.signature(generate_speech)
+        supports_lang = "language" in sig.parameters
+        v1_speakers = {"idera", "jude", "joke", "umar", "osagie", "onye"}
+
+        def _synth(chunk: str, lang: str, voice: str) -> tuple[np.ndarray, int]:
+            kwargs: dict = {
+                "speaker": voice if (supports_lang or voice in v1_speakers) else "idera",
+                "temperature": 0.1,
+            }
+            if supports_lang:
+                kwargs["language"] = YARNGPT_LANG_NAMES.get(lang, "english")
+            audio = generate_speech(chunk, **kwargs)
             arr = audio.detach().cpu().numpy().squeeze() if hasattr(audio, "detach") else np.asarray(audio)
             return arr.astype(np.float32), 24000
 
@@ -646,11 +687,16 @@ def run_generation(
             tr_query = tr_query.where(Translation.lang == lang_filter)
         translations = session.exec(tr_query).all()
 
-        for tr in translations:
+        total_trs = len(translations)
+        for idx, tr in enumerate(translations, start=1):
             faq = faqs.get(tr.faq_id)
             if not faq:
                 continue
-            voices = DEFAULT_VOICE_MAP.get(tr.lang, ["idera"])
+            voices = (DEFAULT_VOICE_MAP if (use_api or demo_synth) else LOCAL_GPU_VOICE_MAP).get(
+                tr.lang, ["idera"]
+            )
+            if not demo_synth:
+                print(f"[{idx}/{total_trs}] {faq.intent_key} ({tr.lang})", flush=True)
 
             # Question audio
             q_digest = text_hash(tr.question_text)
@@ -752,7 +798,9 @@ def run_generation(
             msg_query = msg_query.where(SystemMessage.lang == lang_filter)
         sys_msgs = session.exec(msg_query).all()
         for msg in sys_msgs:
-            voices = DEFAULT_VOICE_MAP.get(msg.lang, ["idera"])
+            voices = (DEFAULT_VOICE_MAP if (use_api or demo_synth) else LOCAL_GPU_VOICE_MAP).get(
+                msg.lang, ["idera"]
+            )
             m_digest = text_hash(msg.text)
             needs_m = not only_missing or not _target_exists_for_digest(
                 msg.audio_url, m_digest, out_root, msg.lang, expected_ext

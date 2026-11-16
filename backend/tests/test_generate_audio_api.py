@@ -5,7 +5,38 @@ import httpx
 from sqlmodel import select
 
 from app.models import FAQItem, SystemMessage, Translation
-from scripts.generate_audio import YarnGPTAPIClient, run_generation
+from scripts.generate_audio import (
+    LOCAL_GPU_VOICE_MAP,
+    YarnGPTAPIClient,
+    run_generation,
+)
+
+
+def test_local_gpu_uses_v2_speaker_names(tmp_path, seeded_session, monkeypatch):
+    seen_calls: list[tuple[str, str, str]] = []
+
+    def fake_synth(chunk: str, lang: str, voice: str):
+        seen_calls.append((chunk, lang, voice))
+        import numpy as np
+
+        return np.zeros(2400, dtype=np.float32), 24000
+
+    monkeypatch.setattr("scripts.generate_audio.build_yarngpt_synthesizer", lambda: fake_synth)
+
+    summary = run_generation(
+        seeded_session,
+        out_root=tmp_path,
+        only_missing=False,
+        lang_filter="yo",
+        takes=2,
+        demo_synth=False,
+        use_api=False,
+    )
+    assert summary["mode"] == "local_gpu"
+    assert summary["files_created"] > 0
+    used_voices = {v for _, _, v in seen_calls}
+    assert used_voices.issubset(set(LOCAL_GPU_VOICE_MAP["yo"]))
+    assert "folake" not in used_voices  # Hosted API names must not be sent to local AudioTokenizerV2
 
 
 def test_yarngpt_api_prepare_stream_with_303_and_dynamic_voices(tmp_path, seeded_session):
