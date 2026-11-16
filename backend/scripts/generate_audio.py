@@ -41,7 +41,7 @@ from app.models import PLACEHOLDER_PREFIX, FAQItem, SystemMessage, Translation, 
 
 # Preferred speaker names (resolved dynamically against GET /api/v1/voices in API mode)
 DEFAULT_VOICE_MAP: dict[str, list[str]] = {
-    "yo": ["folake", "aisha", "abayomi"],
+    "yo": ["folake", "wura", "idera"],
     "pcm": ["idera", "emma", "jude"],
     "en": ["idera", "emma", "jude", "umar"],
 }
