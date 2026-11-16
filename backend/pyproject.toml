@@ -1,0 +1,13 @@
+[project]
+name = "healthyarn-backend"
+version = "0.1.0"
+description = "Voice-first multilingual health information backend for HealthYarn (ITDC 2026)"
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"

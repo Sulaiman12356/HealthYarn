@@ -1,0 +1,79 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-size: 18px;
+    background-color: #f7f6f2;
+    color: #141f1a;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: "Noto Sans", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.55;
+    caret-color: #0f523b;
+  }
+
+  ::selection {
+    background-color: #0f523b;
+    color: #ffffff;
+  }
+
+  :focus-visible {
+    outline: 3px solid #0f523b;
+    outline-offset: 2px;
+  }
+
+  a {
+    text-underline-offset: 0.2em;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+.prose-measure {
+  max-width: 68ch;
+}
+
+/* Custom subtle scrollbar aligned with PHC daylight surfaces */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #efece4;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #9ca9a1;
+  border-radius: 9999px;
+  border: 2px solid #efece4;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #415249;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

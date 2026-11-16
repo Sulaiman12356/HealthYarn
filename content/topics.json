@@ -1,0 +1,77 @@
+[
+  {
+    "slug": "malaria",
+    "icon": "shield-plus",
+    "sort_order": 1,
+    "names": {
+      "en": "Malaria & Fever",
+      "yo": "Ibà & Àrùn Malárìà",
+      "ig": "Ịba & Ahụ Ọkụ"
+    },
+    "descriptions": {
+      "en": "Testing before treatment, completing ACT doses, and preventing mosquito bites.",
+      "yo": "Àyẹ̀wò kí o tó lo oògùn, píparí oògùn ibà, àti dídènà ìjẹ ẹ̀fọn.",
+      "ig": "Nnwale tupu ọgwụgwọ, imechacha ọgwụ ịba, na igbochi anwụnta."
+    }
+  },
+  {
+    "slug": "hypertension",
+    "icon": "heart-pulse",
+    "sort_order": 2,
+    "names": {
+      "en": "Blood Pressure",
+      "yo": "Ìfúnpá Gíga",
+      "ig": "Ọbara Mgbali Elu"
+    },
+    "descriptions": {
+      "en": "Checking blood pressure regularly, daily medicines, and salt reduction.",
+      "yo": "Ṣíṣàyẹ̀wò ìfúnpá déédéé, oògùn ojoojúmọ́, àti dídín iyọ̀ kù.",
+      "ig": "Ịlele ọbara mgbali elu mgbe niile, ọgwụ kwa ụbọchị, na ibelata nnu."
+    }
+  },
+  {
+    "slug": "child_diarrhoea_ors",
+    "icon": "droplet",
+    "sort_order": 3,
+    "names": {
+      "en": "Child Diarrhoea & ORS",
+      "yo": "Ìgbẹ́ Gbuuru Ọmọ & ORS",
+      "ig": "Afọ Ọsịsa Ụmụaka & ORS"
+    },
+    "descriptions": {
+      "en": "Mixing ORS sachets safely, zinc guidance, and feeding a child with diarrhoea.",
+      "yo": "Pípò omi iyọ̀ ORS lọ́nà tó tọ́, oògùn zinc, àti fífún ọmọ lóúnjẹ.",
+      "ig": "Ịgwọ mmiri ORS nke ọma, ọgwụ zinc, na inye nwatakịrị nri."
+    }
+  },
+  {
+    "slug": "pregnancy_danger_signs",
+    "icon": "baby",
+    "sort_order": 4,
+    "names": {
+      "en": "Pregnancy Care & Signs",
+      "yo": "Ìtọ́jú Aláboyún & Àmì Ewu",
+      "ig": "Nlekọta Dị Ime & Mgbaàmà Ihe Egwu"
+    },
+    "descriptions": {
+      "en": "Antenatal visits, danger signs that need immediate hospital care, and safe habits.",
+      "yo": "Lílọ sí ilé ìwòsàn aláboyún, àmì ewu kíákíá, àti ìlera oyún.",
+      "ig": "Ịga nlekọta afọ ime, mgbaàmà ihe egwu ozugbo, na ndụmọdụ ahụike."
+    }
+  },
+  {
+    "slug": "safe_medicine_use",
+    "icon": "pill",
+    "sort_order": 5,
+    "names": {
+      "en": "Safe Medicine Use",
+      "yo": "Lílo Oògùn Lọ́nà Ààbò",
+      "ig": "Iji Ọgwụ N'ụzọ Nchekwa"
+    },
+    "descriptions": {
+      "en": "Checking NAFDAC numbers, avoiding leftover antibiotics, and storing medicines safely.",
+      "yo": "Yíyẹ nọ́ńbà NAFDAC wò, píparí oògùn, àti títọ́jú oògùn pamọ́.",
+      "ig": "Ịlele nọmba NAFDAC, izere ọgwụ fọdụrụ, na idobe ọgwụ ebe dị mma."
+    }
+  }
+]

@@ -1,0 +1,794 @@
+[
+  {
+    "intent_key": "malaria_test_before_treat",
+    "topic": "malaria",
+    "source_reference": "WHO Malaria Guidelines / Nigeria FMoH National Malaria Policy (TODO exact doc)",
+    "translations": {
+      "en": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] Should I take malaria drugs before getting tested?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] General placeholder information: health authorities recommend confirming malaria with a rapid diagnostic test (RDT) or blood test at a clinic or pharmacy before starting treatment, because not every fever is malaria.",
+        "status": "draft"
+      },
+      "yo": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] Ṣé ó yẹ kí n lo oògùn ibà kí n tó ṣe àyẹ̀wò ẹ̀jẹ̀?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] Àlàyé àpẹẹrẹ: àwọn òṣìṣẹ́ ìlera máa ń gba ni níyànjú láti ṣe àyẹ̀wò ibà RDT tàbí àyẹ̀wò ẹ̀jẹ̀ kí a tó bẹ̀rẹ̀ oògùn ibà, nítorí kì í ṣe gbogbo ibà ni ó jẹ́ malárìà.",
+        "status": "draft"
+      },
+      "ig": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] M ga-aṅụ ọgwụ ịba tupu m mee nnwale ọbara?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] Ozi nlele: ndị ọrụ ahụike na-adụ ọdụ ka e buru ụzọ mee nnwale ịba RDT ma ọ bụ nnwale ọbara tupu a malite ọgwụgwọ, n'ihi na ọ bụghị ahụ ọkụ niile bụ ịba.",
+        "status": "draft"
+      }
+    },
+    "samples": {
+      "en": [
+        "should i test for malaria before taking drugs",
+        "can i just buy malaria medicine without test",
+        "i have fever should i take act straight away",
+        "why do i need a malaria blood test"
+      ],
+      "yo": [
+        "se kin lo ogun iba lai se ayewo",
+        "mo ni iba se mo le ra ogun lasan",
+        "ayewo iba rdt ko to bere ogun",
+        "se gbogbo iba ni malaria"
+      ],
+      "ig": [
+        "m ga-anu ogwu iba n'emezighi test",
+        "ahu na-ekpo m oku m nwere ike inu ogwu iba",
+        "gini mere m ji eme nnwale iba tupu ogwu",
+        "nnwale obara maka iba"
+      ]
+    }
+  },
+  {
+    "intent_key": "malaria_complete_act_dose",
+    "topic": "malaria",
+    "source_reference": "Nigeria FMoH Malaria Case Management Guide (TODO exact doc)",
+    "translations": {
+      "en": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] Why must I finish all my malaria medicine even if I feel better?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] General placeholder information: stopping malaria tablets early when fever drops can leave parasites in the blood, causing the illness to return and encouraging drug resistance.",
+        "status": "draft"
+      },
+      "yo": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] Kí ló dé tí mo gbọ́dọ̀ parí oògùn ibà mi bí ara mi bá ti yá?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] Àlàyé àpẹẹrẹ: dídáwọ́ oògùn ibà dúró ní kíákíá lè jẹ́ kí kòkòrò ibà ṣẹ́kù nínú ẹ̀jẹ̀, kí àrùn náà tún padà wá.",
+        "status": "draft"
+      },
+      "ig": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] Gini mere m ga-eji mechapụ ọgwụ ịba m ọ bụladị ma ahụ dị m mma?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] Ozi nlele: ịkwụsị ọgwụ ịba n'ụzọ nwere ike ịhapụ nje ịba n'ime ọbara, nke na-eme ka ọrịa ahụ lọghachi ma sie ike ọgwụgwọ.",
+        "status": "draft"
+      }
+    },
+    "samples": {
+      "en": [
+        "i feel better can i stop taking malaria medicine",
+        "must i finish my act tablets",
+        "malaria tablets remaining after fever stopped",
+        "why finish malaria dose"
+      ],
+      "yo": [
+        "ara mi ti ya se mo le da ogun iba duro",
+        "se mo gbodo pari ogun iba mi",
+        "oogun iba ku leyin ti ara ya"
+      ],
+      "ig": [
+        "ahu adila m mma m nwere ike ikwusi ogwu iba",
+        "m ga-emecha ogwu iba niile",
+        "ife ogwu iba fọdụrụ"
+      ]
+    }
+  },
+  {
+    "intent_key": "malaria_mosquito_net_prevention",
+    "topic": "malaria",
+    "source_reference": "WHO Vector Control Guidance (TODO exact doc)",
+    "translations": {
+      "en": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] How can my family prevent malaria at home?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] General placeholder information: sleeping every night under an insecticide-treated mosquito net, clearing standing water around the compound, and fitting window screens reduce mosquito bites.",
+        "status": "draft"
+      },
+      "yo": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] Báwo ni ẹbí mi ṣe lè dènà àrùn ibà nílé?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] Àlàyé àpẹẹrẹ: sísùn lábẹ́ àwọ̀n ẹ̀fọn tí a fi oògùn tọ́jú lóòjọ́ àti rírọ́ omi àdágún kúrò ní àyíká ilé máa ń dín ìjẹ ẹ̀fọn kù.",
+        "status": "draft"
+      },
+      "ig": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] Kedu ka ezinụlọ m ga-esi gbochie ịba n'ụlọ?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] Ozi nlele: ihi ụra n'okpuru netị anwụnta nwere ọgwụ kwa abalị na ikpochapụ mmiri kwụrụ ebe n'ezi na-ebelata ịta anwụnta.",
+        "status": "draft"
+      }
+    },
+    "samples": {
+      "en": [
+        "how do we prevent malaria at home",
+        "does sleeping under mosquito net prevent malaria",
+        "how to stop mosquitoes and malaria",
+        "malaria prevention tips for family"
+      ],
+      "yo": [
+        "bawo la se le dena iba nile",
+        "se awon efon n dena malaria",
+        "idena arun iba fun ebi"
+      ],
+      "ig": [
+        "kedu otu esi egbochi iba",
+        "neti anwunta o na-egbochi iba",
+        "uzo mgbochi iba n'ulo"
+      ]
+    }
+  },
+  {
+    "intent_key": "malaria_fever_home_care",
+    "topic": "malaria",
+    "source_reference": "Nigeria PHC Standing Orders (TODO exact doc)",
+    "translations": {
+      "en": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] What should I do when someone starts having a fever and chills?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] General placeholder information: keep the person hydrated with clean water, dress them lightly, and visit the nearest clinic promptly for an assessment rather than self-medicating.",
+        "status": "draft"
+      },
+      "yo": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] Kí ni mo yẹ kí n ṣe tí ẹni kan bá ní ibà àti òtútù?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] Àlàyé àpẹẹrẹ: fún wọn ní omi mímọ́ mu déédéé, wọ aṣọ fẹ́lẹ́fẹ́lẹ́ fún wọn, kí o sì lọ sí ilé ìwòsàn tí ó súnmọ́ fún àyẹ̀wò.",
+        "status": "draft"
+      },
+      "ig": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] Gini ka m ga-eme ma mmadụ nwee ahụ ọkụ na oyi?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] Ozi nlele: nye ha mmiri dị ọcha ka ha ṅụọ, yikwasị ha uwe dị mfe, ma gaa ụlọọgwụ kacha nso maka nnwale.",
+        "status": "draft"
+      }
+    },
+    "samples": {
+      "en": [
+        "what to do for fever and chills",
+        "my body is hot and shivering",
+        "how to care for fever before clinic"
+      ],
+      "yo": [
+        "kini kin se ti ara ba n gbona ti otutu n mu",
+        "ara n gbona mi mo si n gbon",
+        "itoju iba ni ile ki n to lo ile iwosan"
+      ],
+      "ig": [
+        "gini ka m ga-eme maka ahu oku na oyi",
+        "ahu na-ekpo m oku ma na-ama m jijiji",
+        "nlekota ahu oku tupu ulogwu"
+      ]
+    }
+  },
+  {
+    "intent_key": "hypertension_no_symptoms",
+    "topic": "hypertension",
+    "source_reference": "WHO HEARTS / Nigeria FMoH Hypertension Guide (TODO exact doc)",
+    "translations": {
+      "en": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] Can I have high blood pressure without feeling sick?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] General placeholder information: yes, high blood pressure often causes no obvious symptoms, which is why regular blood pressure checks at a health centre or pharmacy are important.",
+        "status": "draft"
+      },
+      "yo": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] Ṣé ènìyàn lè ní ìfúnpá gíga láì rí àmì àìsàn kankan?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] Àlàyé àpẹẹrẹ: bẹ́ẹ̀ ni, ìfúnpá gíga kì í sábà fi àmì hàn ní àárọ̀, ìdí nìyí tí àyẹ̀wò ìfúnpá déédéé fi ṣe pàtàkì.",
+        "status": "draft"
+      },
+      "ig": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] Mmadụ nwere ike inwe ọbara mgbali elu n'enweghị mgbaàmà ọ bụla?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] Ozi nlele: ee, ọbara mgbali elu anaghị egosipụta mgbaàmà n'oge ụfọdụ, ya mere ịlele ọbara mgbali elu mgbe niile dị mkpa.",
+        "status": "draft"
+      }
+    },
+    "samples": {
+      "en": [
+        "can high blood pressure have no symptoms",
+        "i feel fine do i still need blood pressure check",
+        "why is hypertension called silent",
+        "how often should i check my bp"
+      ],
+      "yo": [
+        "se ifunpa giga ma n se aisi ami",
+        "ara mi ya se mo si nilo ayewo ifunpa",
+        "kini idi ti ifunpa giga fi n farasin"
+      ],
+      "ig": [
+        "obara mgbali elu o nwere ike inweghi mgbaama",
+        "ahu di m mma m kwesiri ilele bp",
+        "gini mere bp ji adi nwayo"
+      ]
+    }
+  },
+  {
+    "intent_key": "hypertension_daily_medication",
+    "topic": "hypertension",
+    "source_reference": "Nigeria FMoH NCD Guidelines (TODO exact doc)",
+    "translations": {
+      "en": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] Can I stop taking my blood pressure medicine once my reading becomes normal?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] General placeholder information: blood pressure readings often improve because the medicine is working. Never stop or change prescribed blood pressure tablets without talking to your clinician.",
+        "status": "draft"
+      },
+      "yo": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] Ṣé mo lè dáwọ́ oògùn ìfúnpá dúró tí ìfúnpá mi bá ti dín kù?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] Àlàyé àpẹẹrẹ: oògùn náà ló mú kí ìfúnpá rẹ rọ̀ sílẹ̀. Má ṣe dáwọ́ oògùn ìfúnpá dúró láì gbà àṣẹ lọ́dọ̀ dókítà rẹ.",
+        "status": "draft"
+      },
+      "ig": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] M nwere ike ịkwụsị ọgwụ ọbara mgbali elu ma ọ bụrụ na ọ ladaa?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] Ozi nlele: ọgwụ ahụ mere ka ọbara mgbali elu gị belata. Akwụsịla ọgwụ gị n'enweghị ndụmọdụ dọkịta.",
+        "status": "draft"
+      }
+    },
+    "samples": {
+      "en": [
+        "can i stop my blood pressure medicine when bp is normal",
+        "my bp is okay now should i continue tablets",
+        "do i take hypertension drugs every day"
+      ],
+      "yo": [
+        "se mo le da ogun ifunpa duro ti bp ba lo sile",
+        "ifunpa mi ti ro se kin pari ogun",
+        "se ojoojumo ni ma n lo ogun ifunpa"
+      ],
+      "ig": [
+        "bp m aladala m kwesiri ikwusi ogwu",
+        "m ga na-anu ogwu bp kwa ubochi",
+        "akwusila ogwu obara mgbali elu"
+      ]
+    }
+  },
+  {
+    "intent_key": "hypertension_salt_lifestyle",
+    "topic": "hypertension",
+    "source_reference": "WHO Salt Reduction & Hypertension Fact Sheet (TODO exact doc)",
+    "translations": {
+      "en": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] What everyday diet habits help keep blood pressure steady?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] General placeholder information: cutting down on extra salt, seasoning cubes, and processed meats while eating fresh vegetables, fruits, and walking regularly supports healthy blood pressure.",
+        "status": "draft"
+      },
+      "yo": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] Àwọn oúnjẹ àti ìgbésí ayé wo ló ń ran ìfúnpá lọ́wọ́?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] Àlàyé àpẹẹrẹ: dídín iyọ̀ àti maggi kù nínú oúnjẹ, jíjẹ ẹ̀fọ́ àti èso, àti rírìn déédéé ń ṣe ìrànwọ́ fún ìfúnpá tó dára.",
+        "status": "draft"
+      },
+      "ig": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] Kedu nri na omume kwa ụbọchị na-enyere ọbara mgbali elu aka?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] Ozi nlele: ibelata nnu na maggi n'ime nri, iri akwụkwọ nri na mkpụrụ osisi, na ijegharị mgbe niile na-enyere ọbara mgbali elu aka.",
+        "status": "draft"
+      }
+    },
+    "samples": {
+      "en": [
+        "what food helps lower blood pressure",
+        "does too much salt and maggi raise bp",
+        "diet tips for hypertension"
+      ],
+      "yo": [
+        "ounje wo lo dara fun ifunpa giga",
+        "se iyo ati maggi pupo n fa ifunpa giga",
+        "bawo la se le din iyo ku fun bp"
+      ],
+      "ig": [
+        "nri ndi na-enyere obara mgbali elu aka",
+        "nnu o na-akpata bp",
+        "akwukwo nri maka obara mgbali elu"
+      ]
+    }
+  },
+  {
+    "intent_key": "hypertension_herbal_mix_warning",
+    "topic": "hypertension",
+    "source_reference": "Nigeria FMoH Clinical Pharmacy Note (TODO exact doc)",
+    "translations": {
+      "en": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] Is it safe to mix herbal agbo with prescribed blood pressure tablets?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] General placeholder information: unmeasured herbal mixtures can interact unpredictably with prescribed tablets or strain the kidneys and liver. Always tell your doctor before taking any herbal mix.",
+        "status": "draft"
+      },
+      "yo": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] Ṣé ó dára láti mu àgbo pọ̀ mọ́ oògùn ìfúnpá ilé ìwòsàn?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] Àlàyé àpẹẹrẹ: dídàpọ̀ àgbo mọ́ oògùn òyìnbó lè fa ìṣòro fún kídìnrín tàbí ẹ̀dọ̀. Sọ fún dókítà rẹ kí o tó mu àgbo kankan.",
+        "status": "draft"
+      },
+      "ig": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] Ọ dị mma ịgwakọta ọgwụ mgbọrọgwụ na ọgwụ ọbara mgbali elu?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] Ozi nlele: ịgwakọta ọgwụ mgbọrọgwụ na ọgwụ ụlọọgwụ nwere ike imerụ akụrụ ma ọ bụ imeju. Gwa dọkịta gị tupu ị ṅụọ ọgwụ ọ bụla ọzọ.",
+        "status": "draft"
+      }
+    },
+    "samples": {
+      "en": [
+        "can i drink agbo with my bp medicine",
+        "herbal mixture and blood pressure pills",
+        "is herbal medicine safe with hypertension drugs"
+      ],
+      "yo": [
+        "se mo le mu agbo pelu ogun ifunpa",
+        "agbo ati ogun oyinbo fun bp",
+        "se agbo le ba ogun ifunpa ja"
+      ],
+      "ig": [
+        "m nwere ike inu agbo na ogwu bp",
+        "ogwu mgborogwu na ogwu obara mgbali elu",
+        "o di mma igwakota ogwu"
+      ]
+    }
+  },
+  {
+    "intent_key": "ors_how_to_prepare",
+    "topic": "child_diarrhoea_ors",
+    "source_reference": "WHO / Nigeria FMoH Diarrhoea Treatment Guidelines (TODO exact doc)",
+    "translations": {
+      "en": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] How do I prepare ORS for my child?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] General placeholder information: wash your hands with soap, pour one full sachet of standard ORS into 1 litre of clean drinking water (check sachet instructions), stir until dissolved, and discard unused mix after 24 hours.",
+        "status": "draft"
+      },
+      "yo": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] Báwo ni mo ṣe lè pò omi iyọ̀ ORS fún ọmọ mi?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] Àlàyé àpẹẹrẹ: fọ ọwọ́ rẹ̀ pẹ̀lú ọṣẹ, tú àpò ORS kan sínú lítà kan omi mímọ́ (wo ìtọ́nisọ́nà lórí àpò), rò ó kí ó yọ́, má sì lo èyí tó bá ju wákàtí mẹ́rìnlélógún lọ.",
+        "status": "draft"
+      },
+      "ig": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] Kedu ka m ga-esi gwọọ mmiri ORS maka nwa m?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] Ozi nlele: jiri ncha saa aka gị, wụnye otu akpa ORS n'ime otu lita mmiri ọṅụṅụ dị ọcha, gbarie ya nke ọma, ma tụfuo nke fọdụrụ mgbe awa iri abụọ na anọ gachara.",
+        "status": "draft"
+      }
+    },
+    "samples": {
+      "en": [
+        "how to mix ors",
+        "how do i prepare oral rehydration salt for my child",
+        "my child is stooling what do i give",
+        "how much water for one packet of ors"
+      ],
+      "yo": [
+        "bawo ni a se n po ors",
+        "omo mi n ya igbe gbuuru kini kin fun",
+        "elo ni omi ti a n fi po ors",
+        "bi a se n se omi iyo fun omode"
+      ],
+      "ig": [
+        "kedu otu esi agwo ors",
+        "nwa m na-asa afo gini ka m ga-enye ya",
+        "mmiri ole ka eji agwo otu akpa ors",
+        "otu esi eme mmiri nnu na shuga"
+      ]
+    }
+  },
+  {
+    "intent_key": "ors_give_after_each_stool",
+    "topic": "child_diarrhoea_ors",
+    "source_reference": "WHO IMCI Diarrhoea Chart (TODO exact doc)",
+    "translations": {
+      "en": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] How should I give ORS if my child keeps stooling or vomiting?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] General placeholder information: give small frequent sips from a cup or spoon rather than forcing a full cup at once. If the child vomits, wait 10 minutes and resume slowly.",
+        "status": "draft"
+      },
+      "yo": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] Báwo ni mo ṣe máa fún ọmọ ní ORS bí ó bá ń bì tàbí tí ìgbẹ́ gbuuru bá ń bá a lọ?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] Àlàyé àpẹẹrẹ: fún un ní ṣíbí tàbí ìkòkò díẹ̀díẹ̀ lẹ́yìn ìgbẹ́ kọ̀ọ̀kan. Tí ọmọ bá bì, dúró fún ìṣẹ́jú mẹ́wàá kí o tó tún bẹ̀rẹ̀ díẹ̀díẹ̀.",
+        "status": "draft"
+      },
+      "ig": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] Kedu ka m ga-esi na-enye nwa m ORS ma ọ bụrụ na ọ na-agbọ agbọ ma ọ bụ na-asa afọ?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] Ozi nlele: jiri ngaji na-enye ya ntakịrị ntakịrị mgbe niile. Ọ bụrụ na nwatakịrị agbọọ agbọ, chere nkeji iri tupu ị malite ọzọ nwayọọ.",
+        "status": "draft"
+      }
+    },
+    "samples": {
+      "en": [
+        "child vomiting after drinking ors",
+        "how often to give ors when stooling",
+        "should i give small sips of ors"
+      ],
+      "yo": [
+        "omo n bi leyin to mu ors",
+        "igba melo ni ma fun omo ni ors",
+        "se die die la n fun omo ni ors"
+      ],
+      "ig": [
+        "nwa m na-agbo agbo mgbe o nuru ors",
+        "ugboro ole ka m ga-enye ors",
+        "inye ors na ngaji ntakiri"
+      ]
+    }
+  },
+  {
+    "intent_key": "ors_zinc_role",
+    "topic": "child_diarrhoea_ors",
+    "source_reference": "WHO / UNICEF Zinc + ORS Joint Statement (TODO exact doc)",
+    "translations": {
+      "en": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] Why do health workers give zinc together with ORS for child diarrhoea?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] General placeholder information: zinc supplements help shorten the duration and severity of diarrhoea episodes and protect the child's gut for the following months when taken for the full course advised.",
+        "status": "draft"
+      },
+      "yo": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] Kí ló dé tí wọ́n fi máa ń fún ọmọ ní oògùn zinc pẹ̀lú ORS?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] Àlàyé àpẹẹrẹ: oògùn zinc ń ran ikùn ọmọ lọ́wọ́ láti dín ìgbẹ́ gbuuru kù ní kíákíá, ó sì ń dáàbò bo ọmọ lọ́jọ́ iwájú.",
+        "status": "draft"
+      },
+      "ig": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] Gini mere ndị ọrụ ahụike ji enye ọgwụ zinc na ORS maka afọ ọsịsa?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] Ozi nlele: ọgwụ zinc na-ebelata oge na ike afọ ọsịsa ahụ ma chebe afọ nwatakịrị mgbe e mechara ya dịka e kwuru.",
+        "status": "draft"
+      }
+    },
+    "samples": {
+      "en": [
+        "why did clinic give zinc tablet with ors",
+        "what does zinc do for child diarrhoea",
+        "ors and zinc for baby stooling"
+      ],
+      "yo": [
+        "kini anfani zinc pelu ors",
+        "se zinc dara fun igbe gbuuru omo",
+        "ors ati zinc fun omode"
+      ],
+      "ig": [
+        "gini ka ogwu zinc na-eme maka afo osisa",
+        "ors na zinc maka nwatakiri",
+        "uru ogwu zinc bara"
+      ]
+    }
+  },
+  {
+    "intent_key": "ors_continue_breastfeeding",
+    "topic": "child_diarrhoea_ors",
+    "source_reference": "WHO Child Feeding During Illness Guide (TODO exact doc)",
+    "translations": {
+      "en": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] Should I stop breastfeeding or feeding my child during diarrhoea?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] General placeholder information: no, continue breastfeeding more frequently and keep offering soft nutritious foods alongside ORS so the child does not lose strength.",
+        "status": "draft"
+      },
+      "yo": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] Ṣé ó yẹ kí n dáwọ́ ọmú tàbí oúnjẹ dúró nígbà tí ọmọ bá ń ya ìgbẹ́ gbuuru?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] Àlàyé àpẹẹrẹ: rárá, máa fún ọmọ ní ọmú sí i àti oúnjẹ rírọ̀ pẹ̀lú ORS kí okun má ṣe tán nínú ara ọmọ.",
+        "status": "draft"
+      },
+      "ig": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] M ga-akwụsị inye nwa m ara ma ọ bụ nri mgbe ọ na-asa afọ?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] Ozi nlele: mba, gaa n'ihu na-enye ya ara ugboro ugboro ma na-enye ya nri dị nro yana ORS ka ike ghara igwu ya.",
+        "status": "draft"
+      }
+    },
+    "samples": {
+      "en": [
+        "should i stop breastfeeding when baby has diarrhoea",
+        "what food to feed child with running stomach",
+        "can i give breastmilk during stooling"
+      ],
+      "yo": [
+        "se kin da omu duro ti omo ba n ya igbe",
+        "ounje wo ni ma fun omo to n ya igbe gbuuru",
+        "fifi omu fun omo nigba aisan"
+      ],
+      "ig": [
+        "m kwesiri ikwusi inye nwa ara mgbe afo na-asa ya",
+        "kedu nri m ga-enye nwa nwere afo osisa",
+        "inye ara na ors"
+      ]
+    }
+  },
+  {
+    "intent_key": "pregnancy_antenatal_visits",
+    "topic": "pregnancy_danger_signs",
+    "source_reference": "WHO Antenatal Care Recommendations / Nigeria FMoH (TODO exact doc)",
+    "translations": {
+      "en": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] When should a pregnant woman start antenatal clinic visits?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] General placeholder information: register for antenatal care as soon as pregnancy is suspected or confirmed, so blood pressure, blood levels, and baby growth can be monitored throughout.",
+        "status": "draft"
+      },
+      "yo": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] Ìgbà wo ni obìnrin tó lóyún yẹ kí ó bẹ̀rẹ̀ ìwòsàn aláboyún?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] Àlàyé àpẹẹrẹ: bẹ̀rẹ̀ ìwòsàn aláboyún kíákíá nígbà tí o bá ti fura tàbí mọ̀ pé o lóyún láti máa yẹ ìfúnpá àti ìlera ọmọ wò.",
+        "status": "draft"
+      },
+      "ig": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] Olee mgbe nwanyị dị ime kwesịrị ịmalite ịga nlekọta afọ ime?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] Ozi nlele: bido ịga nlekọta afọ ime ozugbo ị matara na ị dị ime, ka e wee na-elele ọbara mgbali elu gị na nwa nọ n'afọ.",
+        "status": "draft"
+      }
+    },
+    "samples": {
+      "en": [
+        "when to start antenatal clinic in pregnancy",
+        "how early should a pregnant woman register at clinic",
+        "why are antenatal visits important"
+      ],
+      "yo": [
+        "igba wo ni alaboyun ma bere clinic",
+        "gbogbo igba wo la n lo itoju alaboyun",
+        "anfani lilo si ile iwosan alaboyun"
+      ],
+      "ig": [
+        "mgbe ole ka nwanyi di ime ga-amalite antenatal",
+        "nlekota afo ime n'ulogwu",
+        "uru antenatal bara"
+      ]
+    }
+  },
+  {
+    "intent_key": "pregnancy_danger_signs_overview",
+    "topic": "pregnancy_danger_signs",
+    "source_reference": "Nigeria FMoH Safe Motherhood Guidelines (TODO exact doc)",
+    "translations": {
+      "en": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] Which warning signs in pregnancy need urgent clinic care?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] General placeholder information: any vaginal bleeding, severe headache with blurred vision, sudden swelling of face or hands, high fever, or reduced baby movement requires immediate hospital care.",
+        "status": "draft"
+      },
+      "yo": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] Àwọn àmì ìkìlọ̀ wo nínú oyún ló nílò ìtọ́jú ilé ìwòsàn ní kíákíá?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] Àlàyé àpẹẹrẹ: ìṣàn ẹ̀jẹ̀, orí fífọ́ líle pẹ̀lú ojú ríru, wíwú ojú tàbí ọwọ́, ibà gíga, tàbí àìrìn ọmọ nínú ikùn nílò ilé ìwòsàn kíákíá.",
+        "status": "draft"
+      },
+      "ig": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] Kedu mgbaàmà ịdọ aka ná ntị n'afọ ime chọrọ nlekọta ụlọọgwụ ngwa ngwa?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] Ozi nlele: ọbara ọgbụgba ọ bụla, isi ọwụwa siri ike na anya mgbagwoju anya, ihu ma ọ bụ aka fụrụ afụ, ahụ ọkụ dị elu, ma ọ bụ nwa anaghị emegharị ahụ chọrọ ụlọọgwụ ozugbo.",
+        "status": "draft"
+      }
+    },
+    "samples": {
+      "en": [
+        "what are danger signs in pregnancy",
+        "pregnant woman headache and swollen face",
+        "baby not moving much in pregnancy",
+        "when should a pregnant woman go to hospital immediately"
+      ],
+      "yo": [
+        "kini awon ami ewu fun alaboyun",
+        "ori n fo alaboyun oju si n wu",
+        "omo ko rin ninu oyun",
+        "ami ikilo ninu oyun"
+      ],
+      "ig": [
+        "kedu mgbaama ihe egwu n'afo ime",
+        "isi na-awa nwanyi di ime ihu afuo ya",
+        "nwa anaghi emeghari n'afo",
+        "mgbe nwanyi di ime ga-aga ulogwu ozugbo"
+      ]
+    }
+  },
+  {
+    "intent_key": "pregnancy_swelling_headache",
+    "topic": "pregnancy_danger_signs",
+    "source_reference": "WHO Pre-eclampsia Screening Guide (TODO exact doc)",
+    "translations": {
+      "en": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] Why are sudden hand or face swelling and severe headache checked carefully in pregnancy?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] General placeholder information: sudden swelling of the face or hands paired with a strong headache or blurred vision can signal dangerously high blood pressure in pregnancy and needs prompt checking.",
+        "status": "draft"
+      },
+      "yo": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] Kí ló dé tí wíwú ojú tàbí ọwọ́ àti orí fífọ́ líle fi ṣe pàtàkì nígbà oyún?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] Àlàyé àpẹẹrẹ: wíwú ojú àti ọwọ́ pẹ̀lú orí fífọ́ líle lè jẹ́ àmì ìfúnpá gíga nínú oyún, ó sì yẹ kí dókítà yẹ̀ ẹ́ wò lẹ́sẹ̀kẹsẹ̀.",
+        "status": "draft"
+      },
+      "ig": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] Gini mere e ji eleba anya nke ọma ma ihu ma ọ bụ aka fụọ afụ na isi ọwụwa n'afọ ime?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] Ozi nlele: ihu ma ọ bụ aka ịfụ afụ na mberede yana isi ọwụwa siri ike nwere ike ịbụ mgbaàmà ọbara mgbali elu dị egwu n'oge afọ ime.",
+        "status": "draft"
+      }
+    },
+    "samples": {
+      "en": [
+        "my face and hands are swollen during pregnancy",
+        "severe headache and blurred vision while pregnant",
+        "high blood pressure in pregnancy swelling"
+      ],
+      "yo": [
+        "oju ati owo mi wu ninu oyun",
+        "ori fifo lile ati oju riru fun alaboyun",
+        "ifunpa giga ninu oyun"
+      ],
+      "ig": [
+        "ihu na aka m furu afu n'afo ime",
+        "isi owuwa siri ike n'oge afo ime",
+        "obara mgbali elu n'afo ime"
+      ]
+    }
+  },
+  {
+    "intent_key": "pregnancy_iron_folate_food",
+    "topic": "pregnancy_danger_signs",
+    "source_reference": "Nigeria FMoH Maternal Nutrition Guide (TODO exact doc)",
+    "translations": {
+      "en": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] What foods and routine clinic tablets support healthy blood levels in pregnancy?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] General placeholder information: clinics routinely provide iron and folic acid support during antenatal visits; eating dark leafy greens, beans, eggs, and fish also helps maintain healthy blood.",
+        "status": "draft"
+      },
+      "yo": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] Àwọn oúnjẹ àti oògùn ilé ìwòsàn wo ló ń ṣe ìrànwọ́ fún ẹ̀jẹ̀ tó dára nígbà oyún?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] Àlàyé àpẹẹrẹ: ilé ìwòsàn máa ń fún aláboyún ní oògùn ẹ̀jẹ̀ àti folic acid; jíjẹ ẹ̀fọ́, ẹ̀wà, ẹyin, àti ẹja náà ń ran ẹ̀jẹ̀ lọ́wọ́.",
+        "status": "draft"
+      },
+      "ig": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] Kedu nri na ọgwụ ụlọọgwụ na-enyere ọbara aka n'oge afọ ime?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] Ozi nlele: ụlọọgwụ na-enye ọgwụ iron na folic acid n'oge antenatal; iri akwụkwọ nri, agwa, akwa, na azụ na-enyekwara ọbara aka.",
+        "status": "draft"
+      }
+    },
+    "samples": {
+      "en": [
+        "what should a pregnant woman eat for strong blood",
+        "iron and folic acid during pregnancy",
+        "routine vitamins in antenatal care"
+      ],
+      "yo": [
+        "ounje ti o n mu eje po fun alaboyun",
+        "ogun eje ati folic acid ninu oyun",
+        "ohun ti alaboyun gbodo je"
+      ],
+      "ig": [
+        "nri na-enye obara maka nwanyi di ime",
+        "ogwu iron na folic acid n'afo ime",
+        "ihe nwanyi di ime kwesiri iri"
+      ]
+    }
+  },
+  {
+    "intent_key": "medicine_check_nafdac_expiry",
+    "topic": "safe_medicine_use",
+    "source_reference": "NAFDAC Public Safety Checklist (TODO exact doc)",
+    "translations": {
+      "en": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] How can I check if a medicine packet is genuine and not expired?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] General placeholder information: buy medicines from licensed pharmacies, inspect the NAFDAC registration number, verify the expiry date and intact seal, and reject loose unlabelled tablets.",
+        "status": "draft"
+      },
+      "yo": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] Báwo ni mo ṣe lè mọ̀ bóyá oògùn jẹ́ ojúlówó tí kò sì tíì bàjẹ́?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] Àlàyé àpẹẹrẹ: ra oògùn ní ilé oògùn tó ní ìwé àṣẹ, yẹ nọ́ńbà NAFDAC àti ọjọ́ ìparí wò, má sì ra oògùn tí kò ní àpò tàbí àmì.",
+        "status": "draft"
+      },
+      "ig": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] Kedu ka m ga-esi mata ma ọgwụ ọ bụ ezigbo ma ọ bụrụ na o mebiela?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] Ozi nlele: zụta ọgwụ n'ụlọ ọgwụ nwere ikikere, lelee nọmba NAFDAC na ụbọchị mmebi ya, ma zere ọgwụ na-enweghị mkpuchi.",
+        "status": "draft"
+      }
+    },
+    "samples": {
+      "en": [
+        "how to check if medicine is fake or expired",
+        "verify nafdac number on drug pack",
+        "should i buy loose unlabelled pills"
+      ],
+      "yo": [
+        "bawo la se n ye ogun wo fun nafdac",
+        "ogun to ti baje tabi ayederu",
+        "se o dara lati ra ogun lai ni apo"
+      ],
+      "ig": [
+        "kedu otu esi elele nomba nafdac n'ogwu",
+        "ogwu adigboroja ma o bu ogwu mebiri emebi",
+        "izuta ogwu enweghi akpa"
+      ]
+    }
+  },
+  {
+    "intent_key": "medicine_avoid_leftover_antibiotics",
+    "topic": "safe_medicine_use",
+    "source_reference": "WHO Antimicrobial Stewardship / Nigeria CDC (TODO exact doc)",
+    "translations": {
+      "en": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] Can I share leftover antibiotics or use them for another sickness?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] General placeholder information: never share antibiotics or take leftover capsules for a new symptom. Wrong antibiotic use fails to treat the actual illness and breeds resistant infections.",
+        "status": "draft"
+      },
+      "yo": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] Ṣé mo lè fún ẹlòmíràn ní oògùn antibiotics tó ṣẹ́kù tàbí lò ó fún àìsàn mìíràn?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] Àlàyé àpẹẹrẹ: má ṣe pín antibiotics pẹ̀lú ẹlòmíràn tàbí lo èyí tó ṣẹ́kù fún àìsàn tuntun; lílo rẹ̀ lọ́nà tí kò tọ́ ń mú kí kòkòrò àrùn le sí i.",
+        "status": "draft"
+      },
+      "ig": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] M nwere ike ịnye onye ọzọ ọgwụ antibiotics fọdụrụ ma ọ bụ jiri ya maka ọrịa ọzọ?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] Ozi nlele: ekenyela onye ọzọ ọgwụ antibiotics ma ọ bụ jiri nke fọdụrụ maka ọrịa ọhụrụ, n'ihi na ọ nwere ike ime ka nje sie ike karịa.",
+        "status": "draft"
+      }
+    },
+    "samples": {
+      "en": [
+        "can i take leftover antibiotics for a new cough",
+        "sharing antibiotics with family member",
+        "why not use old ampicillin capsules"
+      ],
+      "yo": [
+        "se mo le lo ogun antibiotics to ku fun aisan miran",
+        "pipin ogun antibiotics pelu elomiran",
+        "lilo ogun to seku nile"
+      ],
+      "ig": [
+        "m nwere ike inu antibiotics foduru",
+        "ike ogwu antibiotics nye onye ozo",
+        "iji ogwu ochie gwọọ ọrịa ọhụrụ"
+      ]
+    }
+  },
+  {
+    "intent_key": "medicine_safe_storage_children",
+    "topic": "safe_medicine_use",
+    "source_reference": "WHO Safe Medicine Storage Guide (TODO exact doc)",
+    "translations": {
+      "en": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] Where should medicines be stored at home away from children?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] General placeholder information: store medicines in their original labelled containers in a cool, dry place locked or high out of children's reach—never in soft-drink bottles or hot sunlit corners.",
+        "status": "draft"
+      },
+      "yo": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] Ibo ni mo yẹ kí n tọ́jú oògùn sí nílé kí ó jìnnà sí àwọn ọmọdé?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] Àlàyé àpẹẹrẹ: tọ́jú oògùn sínú àpò rẹ̀ ní ibi tó tutù tí ó sì gbẹ, ní ibi gíga tí ọwọ́ ọmọdé kò lè tọ́.",
+        "status": "draft"
+      },
+      "ig": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] Ebee ka m kwesịrị idobe ọgwụ n'ụlọ ka ụmụaka ghara iru ya?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] Ozi nlele: dobe ọgwụ n'ime akpa ha mbụ n'ebe kpọrọ nkụ ma dị jụụ, dị elu ma ọ bụ kpọchie ya ebe aka ụmụaka na-agaghị eru.",
+        "status": "draft"
+      }
+    },
+    "samples": {
+      "en": [
+        "how to store drugs safely away from children",
+        "can i keep syrup in sunlight or heat",
+        "keep medicines out of reach of kids"
+      ],
+      "yo": [
+        "ibi ti a ti n toju ogun jina si omode",
+        "bawo la se n fi ogun pamo nile",
+        "ma fi ogun sinu oorun"
+      ],
+      "ig": [
+        "ebe esi edobe ogwu n'ulo",
+        "izere ogwu n'aka umuaka",
+        "idobe ogwu ebe di oyi"
+      ]
+    }
+  },
+  {
+    "intent_key": "medicine_ask_before_mixing",
+    "topic": "safe_medicine_use",
+    "source_reference": "Nigeria Pharmacy Council Patient Safety Note (TODO exact doc)",
+    "translations": {
+      "en": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] Why should I tell the pharmacist or doctor about all medicines I already take?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] General placeholder information: different brand-name drugs can contain the same active ingredient (like paracetamol) or clash with one another. Sharing your current list prevents accidental double dosing.",
+        "status": "draft"
+      },
+      "yo": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] Kí ló dé tí mo fi gbọ́dọ̀ sọ gbogbo oògùn tí mò ń lò fún oníṣègùn?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] Àlàyé àpẹẹrẹ: orúkọ oògùn méjì ọ̀tọ̀ọ̀tọ̀ lè ní ohun kan náà nínú, bíi paracetamol. Sísọ fún dókítà tàbí pharmacist ń dènà lílo oògùn pọ̀ jù.",
+        "status": "draft"
+      },
+      "ig": {
+        "question": "[PLACEHOLDER – NOT REVIEWED] Gini mere m ga-eji gwa dọkịta ma ọ bụ pharmacist ọgwụ niile m na-aṅụ ugbu a?",
+        "answer": "[PLACEHOLDER – NOT REVIEWED] Ozi nlele: ọgwụ abụọ dị iche iche nwere ike inwe otu ihe dị n'ime ha ma ọ bụ lụso onwe ha ọgụ. Ịkọrọ ha na-egbochi ịṅụ ọgwụ gabiga ókè.",
+        "status": "draft"
+      }
+    },
+    "samples": {
+      "en": [
+        "why tell pharmacist about other drugs i take",
+        "can two medicines have the same ingredient",
+        "avoiding double dose of paracetamol"
+      ],
+      "yo": [
+        "kini idi ti ma fi so ogun ti mo n lo fun doctor",
+        "lilo ogun meji to ni eroja kanna",
+        "idena lilo paracetamol ju"
+      ],
+      "ig": [
+        "gini mere m ji akoro pharmacist ogwu m na-anu",
+        "igbochi inu ogwu abuo yiri onwe ha",
+        "ogwu ndi na-adakọrịta"
+      ]
+    }
+  }
+]

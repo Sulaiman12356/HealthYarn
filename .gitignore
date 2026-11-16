@@ -1,0 +1,43 @@
+# Environment & Secrets
+.env
+*.local.env
+
+# Python / Backend
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+*.db
+*.sqlite
+*.sqlite3
+backend/healthyarn.db
+healthyarn.db
+
+# Node / Frontend
+node_modules/
+frontend/dist/
+frontend/.vite/
+*.tsbuildinfo
+
+# Generated audio artifacts (keep .gitkeep)
+backend/static/audio/**/*.ogg
+backend/static/audio/**/*.wav
+backend/static/audio/**/*.mp3
+
+# Impeccable runtime artifacts (keep PRODUCT.md, DESIGN.md, config.json, surfaces/, design.json)
+.impeccable/questions/
+.impeccable/mocks/
+.impeccable/review/
+.impeccable/build/
+.impeccable/config.local.json
+.impeccable/critique/snapshots/
+
+# OS / Editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

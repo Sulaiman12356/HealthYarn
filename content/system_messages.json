@@ -1,0 +1,110 @@
+[
+  {
+    "key": "welcome",
+    "lang": "en",
+    "text": "Welcome to HealthYarn. Tap English to ask a health question or browse topics.",
+    "status": "draft"
+  },
+  {
+    "key": "welcome",
+    "lang": "yo",
+    "text": "Ẹ káàbọ̀ sí HealthYarn. Tẹ Yorùbá láti béèrè ìbéèrè ìlera tàbí wo àwọn àkòrí.",
+    "status": "draft"
+  },
+  {
+    "key": "welcome",
+    "lang": "ig",
+    "text": "Nnọọ na HealthYarn. Pịa Igbo ka ị jụọ ajụjụ ahụike ma ọ bụ lelee isiokwu.",
+    "status": "draft"
+  },
+  {
+    "key": "consent",
+    "lang": "en",
+    "text": "Your voice is used only to understand your question and is not saved.",
+    "status": "draft"
+  },
+  {
+    "key": "consent",
+    "lang": "yo",
+    "text": "Ohùn rẹ wà fún lílóye ìbéèrè rẹ nìkan, a kò sì fi pamọ́.",
+    "status": "draft"
+  },
+  {
+    "key": "consent",
+    "lang": "ig",
+    "text": "A na-eji olu gị naanị ịghọta ajụjụ gị, anaghị echekwa ya.",
+    "status": "draft"
+  },
+  {
+    "key": "red_flag_alert",
+    "lang": "en",
+    "text": "This may be an urgent medical danger sign. Please go immediately to the nearest health centre or call an emergency clinic below.",
+    "status": "draft"
+  },
+  {
+    "key": "red_flag_alert",
+    "lang": "yo",
+    "text": "Èyí lè jẹ́ àmì ewu ìlera tó lágbára. Jọ̀wọ́ lọ sí ilé ìwòsàn tó súnmọ́ ọ lẹ́sẹ̀kẹsẹ̀ tàbí pe àwọn ilé ìwòsàn ìsàlẹ̀ yìí.",
+    "status": "draft"
+  },
+  {
+    "key": "red_flag_alert",
+    "lang": "ig",
+    "text": "Nke a nwere ike ịbụ mgbaàmà ihe egwu ahụike ngwa ngwa. Biko gaa ụlọọgwụ kacha nso ozugbo ma ọ bụ kpọọ ụlọọgwụ dị n'okpuru.",
+    "status": "draft"
+  },
+  {
+    "key": "disclaimer",
+    "lang": "en",
+    "text": "This guidance provides general health information only and does not replace seeing a doctor or health worker.",
+    "status": "draft"
+  },
+  {
+    "key": "disclaimer",
+    "lang": "yo",
+    "text": "Ìmọ̀ràn yìí jẹ́ àlàyé ìlera gbogbogbò nìkan, kò rọ́pò rírí dókítà tàbí òṣìṣẹ́ ìlera.",
+    "status": "draft"
+  },
+  {
+    "key": "disclaimer",
+    "lang": "ig",
+    "text": "Ndụmọdụ a bụ naanị ozi ahụike izugbe ma ọ naghị anọchi ịhụ dọkịta ma ọ bụ onye ọrụ ahụike.",
+    "status": "draft"
+  },
+  {
+    "key": "unsure",
+    "lang": "en",
+    "text": "I am not completely sure what you asked. Did you mean one of these three questions?",
+    "status": "draft"
+  },
+  {
+    "key": "unsure",
+    "lang": "yo",
+    "text": "N kò dá mi lójú pátápátá ohun tí o béèrè. Ṣé ọ̀kan nínú àwọn ìbéèrè mẹ́ta yìí ni o túmọ̀ sí?",
+    "status": "draft"
+  },
+  {
+    "key": "unsure",
+    "lang": "ig",
+    "text": "Amaghị m nke ọma ihe ị jụrụ. Ị pụtara otu n'ime ajụjụ atọ ndị a?",
+    "status": "draft"
+  },
+  {
+    "key": "stt_failed",
+    "lang": "en",
+    "text": "I could not hear your voice clearly right now. Please try again or tap one of the health topics below.",
+    "status": "draft"
+  },
+  {
+    "key": "stt_failed",
+    "lang": "yo",
+    "text": "N kò lè gbọ́ ohùn rẹ dáadáa lọ́wọ́lọ́wọ́. Jọ̀wọ́ gbìyànjú lẹ́ẹ̀kan sí i tàbí tẹ ọ̀kan nínú àwọn àkòrí ìsàlẹ̀.",
+    "status": "draft"
+  },
+  {
+    "key": "stt_failed",
+    "lang": "ig",
+    "text": "Enweghị m ike ịnụ olu gị nke ọma ugbu a. Biko nwaa ọzọ ma ọ bụ pịa otu n'ime isiokwu dị n'okpuru.",
+    "status": "draft"
+  }
+]
