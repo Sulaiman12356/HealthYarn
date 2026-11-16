@@ -67,13 +67,13 @@ class ItemCreateRequest(BaseModel):
     topic_id: int
     intent_key: str = PydanticField(min_length=2, max_length=120)
     source_reference: str = ""
-    translations: dict[Literal["en", "yo", "ig"], TranslationPayload]
+    translations: dict[Literal["en", "yo", "pcm"], TranslationPayload]
 
 
 class ItemUpdateRequest(BaseModel):
     source_reference: Optional[str] = None
     is_active: Optional[bool] = None
-    translations: dict[Literal["en", "yo", "ig"], TranslationPayload]
+    translations: dict[Literal["en", "yo", "pcm"], TranslationPayload]
 
 
 class ReviewActionRequest(BaseModel):

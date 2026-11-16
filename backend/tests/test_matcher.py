@@ -17,7 +17,7 @@ def test_known_phrasings_match_expected_faq(seeded_session):
         ("en", "how do i prepare oral rehydration salt for my child", "ors_how_to_prepare"),
         ("en", "should i test for malaria before taking drugs", "malaria_test_before_treat"),
         ("yo", "bawo ni a se n po ors", "ors_how_to_prepare"),
-        ("ig", "kedu otu esi agwo ors", "ors_how_to_prepare"),
+        ("pcm", "how i go mix ors water for my pikin wey dey purge", "ors_how_to_prepare"),
         ("en", "can i drink agbo with my bp medicine", "hypertension_herbal_mix_warning"),
     ]
     for lang, query, expected_key in cases:

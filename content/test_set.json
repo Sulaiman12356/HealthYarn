@@ -29,13 +29,13 @@
   {"lang": "yo", "text_or_audio_path": "igba wo ni alaboyun ma bere clinic", "expected_faq_id": "pregnancy_antenatal_visits"},
   {"lang": "yo", "text_or_audio_path": "bawo la se n ye nafdac number ogun wo", "expected_faq_id": "medicine_check_nafdac_expiry"},
 
-  {"lang": "ig", "text_or_audio_path": "m ga-anu ogwu iba n'emezighi test", "expected_faq_id": "malaria_test_before_treat"},
-  {"lang": "ig", "text_or_audio_path": "kedu otu esi egbochi iba na neti anwunta", "expected_faq_id": "malaria_mosquito_net_prevention"},
-  {"lang": "ig", "text_or_audio_path": "kedu otu esi agwo mmiri ors maka afo osisa", "expected_faq_id": "ors_how_to_prepare"},
-  {"lang": "ig", "text_or_audio_path": "obara mgbali elu o nwere ike inweghi mgbaama", "expected_faq_id": "hypertension_no_symptoms"},
-  {"lang": "ig", "text_or_audio_path": "bp m aladala m kwesiri ikwusi ogwu", "expected_faq_id": "hypertension_daily_medication"},
-  {"lang": "ig", "text_or_audio_path": "mgbe ole ka nwanyi di ime ga-amalite antenatal", "expected_faq_id": "pregnancy_antenatal_visits"},
-  {"lang": "ig", "text_or_audio_path": "kedu otu esi elele nomba nafdac n'ogwu", "expected_faq_id": "medicine_check_nafdac_expiry"},
+  {"lang": "pcm", "text_or_audio_path": "i fit buy malaria drug without doing test", "expected_faq_id": "malaria_test_before_treat"},
+  {"lang": "pcm", "text_or_audio_path": "how we fit stop mosquito and malaria for house", "expected_faq_id": "malaria_mosquito_net_prevention"},
+  {"lang": "pcm", "text_or_audio_path": "how i go mix ors water for my pikin wey dey purge", "expected_faq_id": "ors_how_to_prepare"},
+  {"lang": "pcm", "text_or_audio_path": "bp fit high even if body no dey pain person", "expected_faq_id": "hypertension_no_symptoms"},
+  {"lang": "pcm", "text_or_audio_path": "my bp don normal now i fit stop drug", "expected_faq_id": "hypertension_daily_medication"},
+  {"lang": "pcm", "text_or_audio_path": "when belle woman suppose start antenatal", "expected_faq_id": "pregnancy_antenatal_visits"},
+  {"lang": "pcm", "text_or_audio_path": "how to check nafdac number and expiry date", "expected_faq_id": "medicine_check_nafdac_expiry"},
 
   {"lang": "en", "text_or_audio_path": "My child is having convulsions and jerking right now", "expected_faq_id": "RED_FLAG"},
   {"lang": "en", "text_or_audio_path": "I am pregnant and having heavy bleeding", "expected_faq_id": "RED_FLAG"},
@@ -44,10 +44,10 @@
   {"lang": "en", "text_or_audio_path": "I have crushing chest pain radiating to my left arm", "expected_faq_id": "RED_FLAG"},
   {"lang": "yo", "text_or_audio_path": "Omo mi n se giri o si n gbon bayi", "expected_faq_id": "RED_FLAG"},
   {"lang": "yo", "text_or_audio_path": "Eje n da ninu oyun mi bayi", "expected_faq_id": "RED_FLAG"},
-  {"lang": "ig", "text_or_audio_path": "Nwa m na-ama odido o nweghi ike iku ume", "expected_faq_id": "RED_FLAG"},
-  {"lang": "ig", "text_or_audio_path": "Obara na-agba m n'ime afo ime ugbu a", "expected_faq_id": "RED_FLAG"},
+  {"lang": "pcm", "text_or_audio_path": "My pikin body dey shake and e no fit breathe", "expected_faq_id": "RED_FLAG"},
+  {"lang": "pcm", "text_or_audio_path": "Blood dey comot from my belle during pregnancy", "expected_faq_id": "RED_FLAG"},
 
   {"lang": "en", "text_or_audio_path": "What is the price of tomatoes in Mile 12 market today?", "expected_faq_id": "NONE"},
   {"lang": "yo", "text_or_audio_path": "Elo ni owo moto lati Eko lo si Ibadan loni?", "expected_faq_id": "NONE"},
-  {"lang": "ig", "text_or_audio_path": "Kedu oge egwu boolu ga-amalite taa?", "expected_faq_id": "NONE"}
+  {"lang": "pcm", "text_or_audio_path": "How much be bag of rice for market today?", "expected_faq_id": "NONE"}
 ]

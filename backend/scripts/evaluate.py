@@ -38,7 +38,7 @@ def evaluate_once(
     per_lang: dict[str, dict[str, int]] = {
         "en": {"total_faq": 0, "correct": 0, "wrong": 0, "unsure": 0},
         "yo": {"total_faq": 0, "correct": 0, "wrong": 0, "unsure": 0},
-        "ig": {"total_faq": 0, "correct": 0, "wrong": 0, "unsure": 0},
+        "pcm": {"total_faq": 0, "correct": 0, "wrong": 0, "unsure": 0},
     }
     rf_tp = rf_fn = rf_fp = 0
     none_total = none_correct = 0

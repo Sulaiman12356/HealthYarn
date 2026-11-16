@@ -2,7 +2,7 @@
 
 from sqlmodel import select
 
-from app.models import AuditLog, Translation
+from app.models import PLACEHOLDER_PREFIX, AuditLog, Translation
 
 
 def _login_as(client, email: str, password: str) -> str:
@@ -45,10 +45,10 @@ def test_rbac_matrix_and_approval_pipeline(client, seeded_session):
                     "answer_text": "Se ayewo RDT ki o to lo ogun iba.",
                     "samples": ["ayewo iba rdt"],
                 },
-                "ig": {
-                    "question_text": "M ga-eme nnwale iba?",
-                    "answer_text": "Mee nnwale obara RDT tupu i nuo ogwu iba.",
-                    "samples": ["nnwale iba rdt"],
+                "pcm": {
+                    "question_text": "I suppose test before malaria drug?",
+                    "answer_text": "Do RDT test before you start malaria drug.",
+                    "samples": ["test before malaria drug"],
                 },
             },
         },
@@ -124,6 +124,10 @@ def test_rbac_matrix_and_approval_pipeline(client, seeded_session):
         select(Translation).where(Translation.faq_id == 2, Translation.lang == "en")
     ).first()
     assert placeholder_tr is not None
+    placeholder_tr.question_text = f"{PLACEHOLDER_PREFIX} Sample question?"
+    placeholder_tr.status = "language_ok"
+    seeded_session.add(placeholder_tr)
+    seeded_session.commit()
     r_pub_placeholder = client.post(
         f"/api/admin/translations/{placeholder_tr.id}/publish",
         headers={"X-CSRF-Token": csrf_adm},

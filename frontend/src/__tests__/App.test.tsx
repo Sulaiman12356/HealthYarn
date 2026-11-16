@@ -7,7 +7,7 @@ import { AnswerView } from "../components/AnswerView";
 const MOCK_BUNDLE = {
   lang: "en",
   version_hash: "abc123",
-  demo_mode: true,
+  demo_mode: false,
   meta: {
     content_last_updated: "2026-11-16",
     clinical_reviewers: "Dr. Test",
@@ -26,10 +26,10 @@ const MOCK_BUNDLE = {
           faq_id: 9,
           intent_key: "ors_how_to_prepare",
           source_reference: "WHO ORS Guide",
-          question: "[PLACEHOLDER – NOT REVIEWED] How do I prepare ORS for my child?",
-          answer_text: "[PLACEHOLDER – NOT REVIEWED] Mix one sachet in 1L clean water.",
-          question_audio_url: "/static/audio/en/ors_q.wav",
-          answer_audio_url: "/static/audio/en/ors_a.wav"
+          question: "How do I prepare ORS for my child?",
+          answer_text: "Mix one sachet in 1L clean water.",
+          question_audio_url: "/static/audio/en/ors_q.ogg",
+          answer_audio_url: "/static/audio/en/ors_a.ogg"
         }
       ]
     }
@@ -223,14 +223,12 @@ describe("HealthYarn Frontend Core Flows", () => {
     fireEvent.click(topicBtn);
 
     const qBtn = await screen.findByRole("button", {
-      name: /Open answer: \[PLACEHOLDER – NOT REVIEWED\] How do I prepare ORS/i
+      name: /Open answer: How do I prepare ORS/i
     });
     fireEvent.click(qBtn);
 
     await waitFor(() => {
-      expect(
-        screen.getByText("[PLACEHOLDER – NOT REVIEWED] Mix one sachet in 1L clean water.")
-      ).toBeInTheDocument();
+      expect(screen.getByText("Mix one sachet in 1L clean water.")).toBeInTheDocument();
     });
   });
 });

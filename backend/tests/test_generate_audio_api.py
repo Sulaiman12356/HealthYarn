@@ -7,9 +7,50 @@ from sqlmodel import select
 from app.models import FAQItem, SystemMessage, Translation
 from scripts.generate_audio import (
     LOCAL_GPU_VOICE_MAP,
+    SPITCH_VOICE_MAP,
+    SpitchTTSClient,
     YarnGPTAPIClient,
     run_generation,
 )
+
+
+def test_spitch_tts_generates_ogg_and_maps_pcm_to_en(tmp_path, seeded_session):
+    calls: list[dict] = []
+
+    class FakeResp:
+        def __init__(self, data: bytes):
+            self._data = data
+
+        def read(self) -> bytes:
+            return self._data
+
+    class FakeSpeech:
+        def generate(self, **kwargs):
+            calls.append(kwargs)
+            return FakeResp(b"OggS" + (b"\x01" * 120))
+
+    class FakeSpitchSDK:
+        speech = FakeSpeech()
+
+    client = SpitchTTSClient.__new__(SpitchTTSClient)
+    client._client = FakeSpitchSDK()
+    client.sleep_fn = lambda _: None
+
+    summary = run_generation(
+        seeded_session,
+        out_root=tmp_path,
+        only_missing=True,
+        lang_filter="pcm",
+        takes=1,
+        use_spitch=True,
+        spitch_client=client,
+    )
+    assert summary["mode"] == "spitch"
+    assert summary["format"] == "ogg"
+    assert summary["files_created"] > 0
+    assert all(c["language"] == "en" for c in calls)
+    assert all(c["voice"] == SPITCH_VOICE_MAP["pcm"][0] for c in calls)
+    assert all(c["format"] == "ogg_opus" for c in calls)
 
 
 def test_local_gpu_uses_v2_speaker_names(tmp_path, seeded_session, monkeypatch):

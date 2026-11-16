@@ -42,14 +42,21 @@ from app.models import PLACEHOLDER_PREFIX, FAQItem, SystemMessage, Translation, 
 # Preferred speaker names (resolved dynamically against GET /api/v1/voices in API mode)
 DEFAULT_VOICE_MAP: dict[str, list[str]] = {
     "yo": ["folake", "aisha", "abayomi"],
-    "ig": ["chioma", "adanna", "obinna"],
+    "pcm": ["idera", "emma", "jude"],
     "en": ["idera", "emma", "jude", "umar"],
+}
+
+# Verified Spitch TTS voices (sade/funmi/segun for yo; ufoma/boma/tega for pcm; remi/lina/jude for en)
+SPITCH_VOICE_MAP: dict[str, list[str]] = {
+    "yo": ["sade", "funmi", "segun"],
+    "pcm": ["ufoma", "boma", "tega"],
+    "en": ["remi", "lina", "jude"],
 }
 
 # Verified JSON speaker filenames in saheedniyi02/yarngpt (AudioTokenizerV2)
 LOCAL_GPU_VOICE_MAP: dict[str, list[str]] = {
     "yo": ["yoruba_female1", "yoruba_female2", "yoruba_male2"],
-    "ig": ["igbo_female1", "igbo_female2", "igbo_male2"],
+    "pcm": ["idera", "emma", "jude"],
     "en": ["idera", "emma", "jude", "umar"],
 }
 
@@ -378,6 +385,73 @@ class YarnGPTAPIClient:
         raise YarnGPTAPIError(f"Timed out waiting for TTS job {job_id}")
 
 
+class SpitchTTSClient:
+    """Offline batch TTS using official Spitch SDK (`client.speech.generate`)."""
+
+    def __init__(self, api_key: str, *, sleep_fn: Callable[[float], None] = time.sleep) -> None:
+        if not api_key or api_key == "TODO":
+            raise ValueError("SPITCH_API_KEY is not configured. Set it in .env.")
+        from spitch import Spitch  # type: ignore
+
+        self._client = Spitch(api_key=api_key.strip())
+        self.sleep_fn = sleep_fn
+
+    def synthesize(self, text: str, *, lang: str, voice: str) -> bytes:
+        clean_text = strip_placeholder_prefix(text)
+        api_lang = "en" if lang == "pcm" else lang
+        last_exc: Exception | None = None
+        for attempt in range(3):
+            try:
+                resp = self._client.speech.generate(
+                    text=clean_text,
+                    voice=voice,  # type: ignore[arg-type]
+                    language=api_lang,
+                    format="ogg_opus",
+                )
+                audio_bytes = resp.read()
+                if len(audio_bytes) <= 64:
+                    raise YarnGPTAPIError("Spitch TTS returned empty audio payload")
+                return audio_bytes
+            except Exception as exc:
+                last_exc = exc
+                status_code = getattr(exc, "status_code", None)
+                err_text = str(exc).lower()
+                if status_code in (400, 401, 402, 403, 404, 422) or "insufficient_credits" in err_text:
+                    raise YarnGPTAPIError(f"Spitch TTS failed: {exc}") from exc
+                if attempt < 2:
+                    self.sleep_fn(1.5 * (attempt + 1))
+                    continue
+        raise YarnGPTAPIError(f"Spitch TTS failed after retries: {last_exc}")
+
+
+def render_text_via_spitch(
+    client: SpitchTTSClient,
+    text: str,
+    lang: str,
+    intent_key: str,
+    kind: str,
+    voice: str,
+    take_idx: int,
+    out_root: Path,
+    *,
+    reuse_existing: bool = False,
+) -> tuple[str, Path]:
+    digest = text_hash(text)
+    take_suffix = f"_take{take_idx + 1}" if take_idx > 0 else ""
+    base_name = f"{intent_key}_{kind}_{digest}{take_suffix}"
+    target_dir = out_root / lang
+    target_dir.mkdir(parents=True, exist_ok=True)
+    out_file = target_dir / f"{base_name}.ogg"
+
+    if reuse_existing and out_file.exists() and out_file.stat().st_size > 64:
+        return f"/static/audio/{lang}/{out_file.name}", out_file
+
+    audio_bytes = client.synthesize(text, lang=lang, voice=voice)
+    out_file.write_bytes(audio_bytes)
+    url = f"/static/audio/{lang}/{out_file.name}"
+    return url, out_file
+
+
 def normalize_waveform(samples: np.ndarray, target_peak: float = 0.85) -> np.ndarray:
     if samples.size == 0:
         return samples
@@ -400,7 +474,7 @@ def write_wav(path: Path, samples: np.ndarray, sample_rate: int = 24000) -> None
 def synthesize_demo_chunk(chunk: str, lang: str, take_idx: int, sample_rate: int = 16000) -> np.ndarray:
     """Create a gentle, distinct, speech-cadence tone sequence for local offline demos."""
     words = max(2, min(14, len(chunk.split())))
-    base_freq = {"yo": 220.0, "ig": 246.94, "en": 196.0}.get(lang, 220.0)
+    base_freq = {"yo": 220.0, "pcm": 246.94, "en": 196.0}.get(lang, 220.0)
     base_freq += take_idx * 18.0
     parts: list[np.ndarray] = []
     rng = int(hashlib.sha1(chunk.encode("utf-8")).hexdigest()[:6], 16)
@@ -655,13 +729,20 @@ def run_generation(
     api_mode: str = "prepare",
     output_format: str = "opus",
     api_client: Optional[YarnGPTAPIClient] = None,
+    use_spitch: bool = False,
+    spitch_client: Optional[SpitchTTSClient] = None,
 ) -> dict:
     has_ffmpeg = bool(shutil.which("ffmpeg"))
     yarngpt_fn = None
     catalogue: list[dict] = []
     owns_client = False
 
-    if use_api:
+    if use_spitch:
+        if spitch_client is None:
+            settings = get_settings()
+            spitch_client = SpitchTTSClient(api_key=settings.SPITCH_API_KEY)
+        expected_ext: Optional[str] = "ogg"
+    elif use_api:
         if api_client is None:
             settings = get_settings()
             api_client = YarnGPTAPIClient(
@@ -671,7 +752,7 @@ def run_generation(
             owns_client = True
         catalogue = api_client.list_voices()
         effective_format = "mp3" if (api_mode == "job" and output_format == "opus") else output_format
-        expected_ext: Optional[str] = API_FORMAT_TO_EXT.get(effective_format, "ogg")
+        expected_ext = API_FORMAT_TO_EXT.get(effective_format, "ogg")
     elif not demo_synth:
         yarngpt_fn = build_yarngpt_synthesizer()
         expected_ext = "ogg" if has_ffmpeg else "wav"
@@ -692,9 +773,13 @@ def run_generation(
             faq = faqs.get(tr.faq_id)
             if not faq:
                 continue
-            voices = (DEFAULT_VOICE_MAP if (use_api or demo_synth) else LOCAL_GPU_VOICE_MAP).get(
-                tr.lang, ["idera"]
-            )
+            if use_spitch:
+                voices = SPITCH_VOICE_MAP.get(tr.lang, ["remi"])
+            elif use_api or demo_synth:
+                voices = DEFAULT_VOICE_MAP.get(tr.lang, ["idera"])
+            else:
+                voices = LOCAL_GPU_VOICE_MAP.get(tr.lang, ["idera"])
+
             if not demo_synth:
                 print(f"[{idx}/{total_trs}] {faq.intent_key} ({tr.lang})", flush=True)
 
@@ -708,7 +793,20 @@ def run_generation(
                 )
             )
             if needs_q:
-                if use_api:
+                if use_spitch:
+                    assert spitch_client is not None
+                    q_url, q_path = render_text_via_spitch(
+                        spitch_client,
+                        tr.question_text,
+                        tr.lang,
+                        faq.intent_key,
+                        "question",
+                        voices[0],
+                        0,
+                        out_root,
+                        reuse_existing=only_missing and not tr.regen_requested,
+                    )
+                elif use_api:
                     assert api_client is not None
                     q_url, q_path, _ = render_text_via_api(
                         api_client,
@@ -736,6 +834,9 @@ def run_generation(
                         has_ffmpeg,
                     )
                 tr.question_audio_url = q_url
+                tr.updated_at = utc_now()
+                session.add(tr)
+                session.commit()
                 created_files.append(q_path)
 
             # Answer audio (supports multiple takes)
@@ -751,7 +852,23 @@ def run_generation(
                 take_urls: list[str] = []
                 used_voice: Optional[str] = voices[0]
                 for t_idx in range(max(1, takes)):
-                    if use_api:
+                    if use_spitch:
+                        assert spitch_client is not None
+                        voice = voices[t_idx % len(voices)]
+                        a_url, a_path = render_text_via_spitch(
+                            spitch_client,
+                            tr.answer_text,
+                            tr.lang,
+                            faq.intent_key,
+                            "answer",
+                            voice,
+                            t_idx,
+                            out_root,
+                            reuse_existing=only_missing and not tr.regen_requested,
+                        )
+                        if t_idx == 0:
+                            used_voice = voice
+                    elif use_api:
                         assert api_client is not None
                         a_url, a_path, resolved_v = render_text_via_api(
                             api_client,
@@ -791,22 +908,41 @@ def run_generation(
                 tr.regen_requested = False
                 tr.updated_at = utc_now()
                 session.add(tr)
+                session.commit()
 
         # System messages
         msg_query = select(SystemMessage)
         if lang_filter:
             msg_query = msg_query.where(SystemMessage.lang == lang_filter)
         sys_msgs = session.exec(msg_query).all()
-        for msg in sys_msgs:
-            voices = (DEFAULT_VOICE_MAP if (use_api or demo_synth) else LOCAL_GPU_VOICE_MAP).get(
-                msg.lang, ["idera"]
-            )
+        for idx, msg in enumerate(sys_msgs, start=1):
+            if use_spitch:
+                voices = SPITCH_VOICE_MAP.get(msg.lang, ["remi"])
+            elif use_api or demo_synth:
+                voices = DEFAULT_VOICE_MAP.get(msg.lang, ["idera"])
+            else:
+                voices = LOCAL_GPU_VOICE_MAP.get(msg.lang, ["idera"])
+
             m_digest = text_hash(msg.text)
             needs_m = not only_missing or not _target_exists_for_digest(
                 msg.audio_url, m_digest, out_root, msg.lang, expected_ext
             )
             if needs_m:
-                if use_api:
+                if use_spitch:
+                    assert spitch_client is not None
+                    print(f"[sys {idx}/{len(sys_msgs)}] {msg.key} ({msg.lang})", flush=True)
+                    m_url, m_path = render_text_via_spitch(
+                        spitch_client,
+                        msg.text,
+                        msg.lang,
+                        f"sys_{msg.key}",
+                        "prompt",
+                        voices[0],
+                        0,
+                        out_root,
+                        reuse_existing=only_missing,
+                    )
+                elif use_api:
                     assert api_client is not None
                     m_url, m_path, _ = render_text_via_api(
                         api_client,
@@ -835,6 +971,7 @@ def run_generation(
                     )
                 msg.audio_url = m_url
                 session.add(msg)
+                session.commit()
                 created_files.append(m_path)
 
         session.commit()
@@ -845,22 +982,32 @@ def run_generation(
     total_bytes = sum(p.stat().st_size for p in created_files if p.exists())
     count = len(created_files)
     avg_kb = (total_bytes / count / 1024.0) if count else 0.0
+    mode_label = (
+        "spitch"
+        if use_spitch
+        else ("api" if use_api else ("demo_synth" if demo_synth else "local_gpu"))
+    )
     return {
         "files_created": count,
         "total_kb": round(total_bytes / 1024.0, 2),
         "average_kb": round(avg_kb, 2),
-        "mode": "api" if use_api else ("demo_synth" if demo_synth else "local_gpu"),
+        "mode": mode_label,
         "format": expected_ext,
     }
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Batch-generate audio clips with YarnGPT API, local/Colab YarnGPT GPU, or --demo-synth."
+        description="Batch-generate audio clips with Spitch TTS, YarnGPT API, local/Colab GPU, or --demo-synth."
     )
     parser.add_argument("--only-missing", action="store_true", help="Skip items whose hashed target audio already exists.")
-    parser.add_argument("--lang", choices=["en", "yo", "ig"], default=None, help="Filter to a single language.")
+    parser.add_argument("--lang", choices=["en", "yo", "pcm"], default=None, help="Filter to a single language.")
     parser.add_argument("--takes", type=int, default=1, help="Number of voice takes per answer.")
+    parser.add_argument(
+        "--spitch",
+        action="store_true",
+        help="Synthesise Opus .ogg clips using Spitch TTS (requires SPITCH_API_KEY).",
+    )
     parser.add_argument(
         "--api",
         action="store_true",
@@ -901,8 +1048,19 @@ def main() -> None:
             client.close()
         return
 
-    use_api = args.api or (not args.demo_synth and bool(settings.YARNGPT_API_KEY and settings.YARNGPT_API_KEY != "TODO"))
+    use_spitch = args.spitch or (
+        not args.demo_synth
+        and not args.api
+        and bool(settings.SPITCH_API_KEY and settings.SPITCH_API_KEY != "TODO")
+        and not (settings.YARNGPT_API_KEY and settings.YARNGPT_API_KEY != "TODO")
+    )
+    use_api = args.api or (
+        not args.demo_synth
+        and not use_spitch
+        and bool(settings.YARNGPT_API_KEY and settings.YARNGPT_API_KEY != "TODO")
+    )
     if args.demo_synth:
+        use_spitch = False
         use_api = False
 
     init_db(engine)
@@ -918,6 +1076,7 @@ def main() -> None:
                 use_api=use_api,
                 api_mode=args.api_mode,
                 output_format=args.format,
+                use_spitch=use_spitch,
             )
     except (YarnGPTAPIError, ValueError) as exc:
         print(f"Error: {exc}", file=sys.stderr)

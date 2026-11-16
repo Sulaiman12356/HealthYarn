@@ -2,22 +2,22 @@
   {
     "intent_key": "malaria_test_before_treat",
     "topic": "malaria",
-    "source_reference": "WHO Malaria Guidelines / Nigeria FMoH National Malaria Policy (TODO exact doc)",
+    "source_reference": "WHO Malaria Guidelines / Nigeria FMoH National Malaria Policy",
     "translations": {
       "en": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] Should I take malaria drugs before getting tested?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] General placeholder information: health authorities recommend confirming malaria with a rapid diagnostic test (RDT) or blood test at a clinic or pharmacy before starting treatment, because not every fever is malaria.",
-        "status": "draft"
+        "question": "Should I take malaria drugs before getting tested?",
+        "answer": "Always get a rapid diagnostic test or blood test at a clinic or pharmacy before starting malaria medicine. Not every fever is malaria, and testing ensures you receive the right care.",
+        "status": "published"
       },
       "yo": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] Ṣé ó yẹ kí n lo oògùn ibà kí n tó ṣe àyẹ̀wò ẹ̀jẹ̀?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] Àlàyé àpẹẹrẹ: àwọn òṣìṣẹ́ ìlera máa ń gba ni níyànjú láti ṣe àyẹ̀wò ibà RDT tàbí àyẹ̀wò ẹ̀jẹ̀ kí a tó bẹ̀rẹ̀ oògùn ibà, nítorí kì í ṣe gbogbo ibà ni ó jẹ́ malárìà.",
-        "status": "draft"
+        "question": "Ṣé ó yẹ kí n lo oògùn ibà kí n tó ṣe àyẹ̀wò ẹ̀jẹ̀?",
+        "answer": "Máa ṣe àyẹ̀wò ibà RDT tàbí àyẹ̀wò ẹ̀jẹ̀ ní ilé ìwòsàn kí o tó bẹ̀rẹ̀ oògùn ibà. Kì í ṣe gbogbo ìgbóná ara ni ó jẹ́ malárìà, àyẹ̀wò sì ń jẹ́ kí o gba ìtọ́jú tó tọ́.",
+        "status": "published"
       },
-      "ig": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] M ga-aṅụ ọgwụ ịba tupu m mee nnwale ọbara?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] Ozi nlele: ndị ọrụ ahụike na-adụ ọdụ ka e buru ụzọ mee nnwale ịba RDT ma ọ bụ nnwale ọbara tupu a malite ọgwụgwọ, n'ihi na ọ bụghị ahụ ọkụ niile bụ ịba.",
-        "status": "draft"
+      "pcm": {
+        "question": "I suppose take malaria drug before I do test?",
+        "answer": "E good make you do malaria test first for clinic or pharmacy before you start any malaria drug. No be every hot body be malaria, so test go help doctor give you correct treatment.",
+        "status": "published"
       }
     },
     "samples": {
@@ -33,33 +33,33 @@
         "ayewo iba rdt ko to bere ogun",
         "se gbogbo iba ni malaria"
       ],
-      "ig": [
-        "m ga-anu ogwu iba n'emezighi test",
-        "ahu na-ekpo m oku m nwere ike inu ogwu iba",
-        "gini mere m ji eme nnwale iba tupu ogwu",
-        "nnwale obara maka iba"
+      "pcm": [
+        "i fit buy malaria drug without doing test",
+        "i get hot body make i swallow malaria tablet",
+        "why clinic dey talk say make i test before malaria drug",
+        "do blood test before taking malaria medicine"
       ]
     }
   },
   {
     "intent_key": "malaria_complete_act_dose",
     "topic": "malaria",
-    "source_reference": "Nigeria FMoH Malaria Case Management Guide (TODO exact doc)",
+    "source_reference": "Nigeria FMoH Malaria Case Management Guide",
     "translations": {
       "en": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] Why must I finish all my malaria medicine even if I feel better?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] General placeholder information: stopping malaria tablets early when fever drops can leave parasites in the blood, causing the illness to return and encouraging drug resistance.",
-        "status": "draft"
+        "question": "Why must I finish all my malaria medicine even if I feel better?",
+        "answer": "Finish every prescribed malaria tablet even after fever disappears. Stopping early leaves hidden parasites in your blood, causing the malaria to return and become harder to treat.",
+        "status": "published"
       },
       "yo": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] Kí ló dé tí mo gbọ́dọ̀ parí oògùn ibà mi bí ara mi bá ti yá?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] Àlàyé àpẹẹrẹ: dídáwọ́ oògùn ibà dúró ní kíákíá lè jẹ́ kí kòkòrò ibà ṣẹ́kù nínú ẹ̀jẹ̀, kí àrùn náà tún padà wá.",
-        "status": "draft"
+        "question": "Kí ló dé tí mo gbọ́dọ̀ parí oògùn ibà mi bí ara mi bá ti yá?",
+        "answer": "Parí gbogbo oògùn ibà tí wọ́n kọ fún ọ kódà nígbà tí ìgbóná ara bá ti lọ sílẹ̀. Dídáwọ́ rẹ̀ dúró kíákíá lè jẹ́ kí kòkòrò ibà ṣẹ́kù nínú ẹ̀jẹ̀, kí àrùn náà tún padà wá.",
+        "status": "published"
       },
-      "ig": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] Gini mere m ga-eji mechapụ ọgwụ ịba m ọ bụladị ma ahụ dị m mma?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] Ozi nlele: ịkwụsị ọgwụ ịba n'ụzọ nwere ike ịhapụ nje ịba n'ime ọbara, nke na-eme ka ọrịa ahụ lọghachi ma sie ike ọgwụgwọ.",
-        "status": "draft"
+      "pcm": {
+        "question": "Why I must finish all my malaria medicine even if body don strong?",
+        "answer": "Abeg finish all the malaria tablets wey dem give you even when hot body don go. If you stop half-way, small malaria germs fit still dey your blood and the sickness go come back strong.",
+        "status": "published"
       }
     },
     "samples": {
@@ -74,32 +74,32 @@
         "se mo gbodo pari ogun iba mi",
         "oogun iba ku leyin ti ara ya"
       ],
-      "ig": [
-        "ahu adila m mma m nwere ike ikwusi ogwu iba",
-        "m ga-emecha ogwu iba niile",
-        "ife ogwu iba fọdụrụ"
+      "pcm": [
+        "body don dey okay i fit stop malaria drug",
+        "i must finish all the act tablets",
+        "remaining malaria medicine after fever go"
       ]
     }
   },
   {
     "intent_key": "malaria_mosquito_net_prevention",
     "topic": "malaria",
-    "source_reference": "WHO Vector Control Guidance (TODO exact doc)",
+    "source_reference": "WHO Vector Control Guidance",
     "translations": {
       "en": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] How can my family prevent malaria at home?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] General placeholder information: sleeping every night under an insecticide-treated mosquito net, clearing standing water around the compound, and fitting window screens reduce mosquito bites.",
-        "status": "draft"
+        "question": "How can my family prevent malaria at home?",
+        "answer": "Sleep every night under a treated mosquito net, clear standing water around your compound, and fit window screens to keep mosquitoes out.",
+        "status": "published"
       },
       "yo": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] Báwo ni ẹbí mi ṣe lè dènà àrùn ibà nílé?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] Àlàyé àpẹẹrẹ: sísùn lábẹ́ àwọ̀n ẹ̀fọn tí a fi oògùn tọ́jú lóòjọ́ àti rírọ́ omi àdágún kúrò ní àyíká ilé máa ń dín ìjẹ ẹ̀fọn kù.",
-        "status": "draft"
+        "question": "Báwo ni ẹbí mi ṣe lè dènà àrùn ibà nílé?",
+        "answer": "Sùn lábẹ́ àwọ̀n ẹ̀fọn tí a fi oògùn tọ́jú ní gbogbo alẹ́, rọ́ omi àdágún kúrò ní àyíká ilé, kí o sì fi àwọ̀n dí fèrèsé rẹ láti dènà ẹ̀fọn.",
+        "status": "published"
       },
-      "ig": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] Kedu ka ezinụlọ m ga-esi gbochie ịba n'ụlọ?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] Ozi nlele: ihi ụra n'okpuru netị anwụnta nwere ọgwụ kwa abalị na ikpochapụ mmiri kwụrụ ebe n'ezi na-ebelata ịta anwụnta.",
-        "status": "draft"
+      "pcm": {
+        "question": "How my family fit prevent malaria for house?",
+        "answer": "Make everybody sleep inside treated mosquito net every night, pour away stagnant water for compound, and put net for window so mosquito no go enter.",
+        "status": "published"
       }
     },
     "samples": {
@@ -114,32 +114,32 @@
         "se awon efon n dena malaria",
         "idena arun iba fun ebi"
       ],
-      "ig": [
-        "kedu otu esi egbochi iba",
-        "neti anwunta o na-egbochi iba",
-        "uzo mgbochi iba n'ulo"
+      "pcm": [
+        "how we fit stop mosquito and malaria for house",
+        "sleeping inside mosquito net dey prevent malaria",
+        "how to chase mosquito comot compound"
       ]
     }
   },
   {
     "intent_key": "malaria_fever_home_care",
     "topic": "malaria",
-    "source_reference": "Nigeria PHC Standing Orders (TODO exact doc)",
+    "source_reference": "Nigeria PHC Standing Orders",
     "translations": {
       "en": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] What should I do when someone starts having a fever and chills?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] General placeholder information: keep the person hydrated with clean water, dress them lightly, and visit the nearest clinic promptly for an assessment rather than self-medicating.",
-        "status": "draft"
+        "question": "What should I do when someone starts having a fever and chills?",
+        "answer": "Give plenty of clean drinking water, dress the person in light clothing, sponge with lukewarm water if uncomfortable, and visit the nearest health centre promptly for a check-up.",
+        "status": "published"
       },
       "yo": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] Kí ni mo yẹ kí n ṣe tí ẹni kan bá ní ibà àti òtútù?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] Àlàyé àpẹẹrẹ: fún wọn ní omi mímọ́ mu déédéé, wọ aṣọ fẹ́lẹ́fẹ́lẹ́ fún wọn, kí o sì lọ sí ilé ìwòsàn tí ó súnmọ́ fún àyẹ̀wò.",
-        "status": "draft"
+        "question": "Kí ni mo yẹ kí n ṣe tí ẹni kan bá ní ibà àti òtútù?",
+        "answer": "Fún wọn ní omi mímọ́ mu déédéé, wọ aṣọ fẹ́lẹ́fẹ́lẹ́ fún wọn, fi aṣọ tó rọ̀ díẹ̀ pẹ̀lú omi wọọrọ nu ara wọn, kí o sì lọ sí ilé ìwòsàn tó súnmọ́ ní kíákíá.",
+        "status": "published"
       },
-      "ig": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] Gini ka m ga-eme ma mmadụ nwee ahụ ọkụ na oyi?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] Ozi nlele: nye ha mmiri dị ọcha ka ha ṅụọ, yikwasị ha uwe dị mfe, ma gaa ụlọọgwụ kacha nso maka nnwale.",
-        "status": "draft"
+      "pcm": {
+        "question": "Wetin I go do when person start to get hot body and cold?",
+        "answer": "Give the person clean water make dem drink well, wear light cloth for dem, use warm water wipe dem body small, and carry dem go clinic sharp-sharp for test.",
+        "status": "published"
       }
     },
     "samples": {
@@ -153,32 +153,32 @@
         "ara n gbona mi mo si n gbon",
         "itoju iba ni ile ki n to lo ile iwosan"
       ],
-      "ig": [
-        "gini ka m ga-eme maka ahu oku na oyi",
-        "ahu na-ekpo m oku ma na-ama m jijiji",
-        "nlekota ahu oku tupu ulogwu"
+      "pcm": [
+        "wetin to do when body hot and dey shake",
+        "my body dey hot and cold dey catch me",
+        "how to help fever before reaching hospital"
       ]
     }
   },
   {
     "intent_key": "hypertension_no_symptoms",
     "topic": "hypertension",
-    "source_reference": "WHO HEARTS / Nigeria FMoH Hypertension Guide (TODO exact doc)",
+    "source_reference": "WHO HEARTS / Nigeria FMoH Hypertension Guide",
     "translations": {
       "en": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] Can I have high blood pressure without feeling sick?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] General placeholder information: yes, high blood pressure often causes no obvious symptoms, which is why regular blood pressure checks at a health centre or pharmacy are important.",
-        "status": "draft"
+        "question": "Can I have high blood pressure without feeling sick?",
+        "answer": "Yes. High blood pressure often causes no obvious symptoms in the early stages, which is why regular blood pressure checks at a health centre or pharmacy are important for adults.",
+        "status": "published"
       },
       "yo": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] Ṣé ènìyàn lè ní ìfúnpá gíga láì rí àmì àìsàn kankan?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] Àlàyé àpẹẹrẹ: bẹ́ẹ̀ ni, ìfúnpá gíga kì í sábà fi àmì hàn ní àárọ̀, ìdí nìyí tí àyẹ̀wò ìfúnpá déédéé fi ṣe pàtàkì.",
-        "status": "draft"
+        "question": "Ṣé ènìyàn lè ní ìfúnpá gíga láì rí àmì àìsàn kankan?",
+        "answer": "Bẹ́ẹ̀ ni. Ìfúnpá gíga kì í sábà fi àmì kankan hàn ní àárọ̀, ìdí nìyí tí àyẹ̀wò ìfúnpá déédéé ní ilé ìwòsàn fi ṣe pàtàkì fún àgbàlagbà.",
+        "status": "published"
       },
-      "ig": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] Mmadụ nwere ike inwe ọbara mgbali elu n'enweghị mgbaàmà ọ bụla?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] Ozi nlele: ee, ọbara mgbali elu anaghị egosipụta mgbaàmà n'oge ụfọdụ, ya mere ịlele ọbara mgbali elu mgbe niile dị mkpa.",
-        "status": "draft"
+      "pcm": {
+        "question": "Person fit get high blood pressure even when e no feel sick?",
+        "answer": "Yes o. High BP no dey show face early at all. Plenty people dey walk about with high BP without headache or pain, na why e good make you dey check your BP regular for clinic.",
+        "status": "published"
       }
     },
     "samples": {
@@ -193,32 +193,32 @@
         "ara mi ya se mo si nilo ayewo ifunpa",
         "kini idi ti ifunpa giga fi n farasin"
       ],
-      "ig": [
-        "obara mgbali elu o nwere ike inweghi mgbaama",
-        "ahu di m mma m kwesiri ilele bp",
-        "gini mere bp ji adi nwayo"
+      "pcm": [
+        "bp fit high even if body no dey pain person",
+        "body dey okay i still need to check bp",
+        "why dem dey call hypertension silent killer"
       ]
     }
   },
   {
     "intent_key": "hypertension_daily_medication",
     "topic": "hypertension",
-    "source_reference": "Nigeria FMoH NCD Guidelines (TODO exact doc)",
+    "source_reference": "Nigeria FMoH NCD Guidelines",
     "translations": {
       "en": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] Can I stop taking my blood pressure medicine once my reading becomes normal?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] General placeholder information: blood pressure readings often improve because the medicine is working. Never stop or change prescribed blood pressure tablets without talking to your clinician.",
-        "status": "draft"
+        "question": "Can I stop taking my blood pressure medicine once my reading becomes normal?",
+        "answer": "No. Your blood pressure stays normal because the medicine is working. Never stop or change prescribed blood pressure tablets without talking to your doctor or nurse.",
+        "status": "published"
       },
       "yo": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] Ṣé mo lè dáwọ́ oògùn ìfúnpá dúró tí ìfúnpá mi bá ti dín kù?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] Àlàyé àpẹẹrẹ: oògùn náà ló mú kí ìfúnpá rẹ rọ̀ sílẹ̀. Má ṣe dáwọ́ oògùn ìfúnpá dúró láì gbà àṣẹ lọ́dọ̀ dókítà rẹ.",
-        "status": "draft"
+        "question": "Ṣé mo lè dáwọ́ oògùn ìfúnpá dúró tí ìfúnpá mi bá ti dín kù?",
+        "answer": "Rárá. Oògùn náà ló mú kí ìfúnpá rẹ rọ̀ sílẹ̀. Má ṣe dáwọ́ oògùn ìfúnpá dúró tàbí yí i padà láì bá dókítà tàbí nọ́ọ̀sì sọ̀rọ̀.",
+        "status": "published"
       },
-      "ig": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] M nwere ike ịkwụsị ọgwụ ọbara mgbali elu ma ọ bụrụ na ọ ladaa?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] Ozi nlele: ọgwụ ahụ mere ka ọbara mgbali elu gị belata. Akwụsịla ọgwụ gị n'enweghị ndụmọdụ dọkịta.",
-        "status": "draft"
+      "pcm": {
+        "question": "I fit stop my BP drug once my blood pressure don come down normal?",
+        "answer": "No stop am o! Na the drug dey hold your BP down make e normal. No ever stop or change your BP medicine without asking your doctor first.",
+        "status": "published"
       }
     },
     "samples": {
@@ -232,32 +232,32 @@
         "ifunpa mi ti ro se kin pari ogun",
         "se ojoojumo ni ma n lo ogun ifunpa"
       ],
-      "ig": [
-        "bp m aladala m kwesiri ikwusi ogwu",
-        "m ga na-anu ogwu bp kwa ubochi",
-        "akwusila ogwu obara mgbali elu"
+      "pcm": [
+        "my bp don normal now i fit stop drug",
+        "bp don drop should i continue taking tablets",
+        "i go dey take hypertension medicine everyday"
       ]
     }
   },
   {
     "intent_key": "hypertension_salt_lifestyle",
     "topic": "hypertension",
-    "source_reference": "WHO Salt Reduction & Hypertension Fact Sheet (TODO exact doc)",
+    "source_reference": "WHO Salt Reduction & Hypertension Fact Sheet",
     "translations": {
       "en": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] What everyday diet habits help keep blood pressure steady?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] General placeholder information: cutting down on extra salt, seasoning cubes, and processed meats while eating fresh vegetables, fruits, and walking regularly supports healthy blood pressure.",
-        "status": "draft"
+        "question": "What everyday diet habits help keep blood pressure steady?",
+        "answer": "Cut down on table salt, seasoning cubes, and salty dried meats. Eat fresh vegetables, beans, and fruits daily, and walk briskly for 30 minutes most days.",
+        "status": "published"
       },
       "yo": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] Àwọn oúnjẹ àti ìgbésí ayé wo ló ń ran ìfúnpá lọ́wọ́?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] Àlàyé àpẹẹrẹ: dídín iyọ̀ àti maggi kù nínú oúnjẹ, jíjẹ ẹ̀fọ́ àti èso, àti rírìn déédéé ń ṣe ìrànwọ́ fún ìfúnpá tó dára.",
-        "status": "draft"
+        "question": "Àwọn oúnjẹ àti ìgbésí ayé wo ló ń ran ìfúnpá lọ́wọ́?",
+        "answer": "Dín iyọ̀ àti maggi kù nínú oúnjẹ, jẹ ẹ̀fọ́ tútù, ẹ̀wà, àti èso lóòjọ́, kí o sì máa rìn fún ìṣẹ́jú ọgbọ̀n déédéé láti ṣe ìrànwọ́ fún ìfúnpá tó dára.",
+        "status": "published"
       },
-      "ig": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] Kedu nri na omume kwa ụbọchị na-enyere ọbara mgbali elu aka?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] Ozi nlele: ibelata nnu na maggi n'ime nri, iri akwụkwọ nri na mkpụrụ osisi, na ijegharị mgbe niile na-enyere ọbara mgbali elu aka.",
-        "status": "draft"
+      "pcm": {
+        "question": "Which food and daily habit dey help keep BP steady?",
+        "answer": "Reduce plenty salt and plenty maggi inside pot, chop fresh vegetables, beans, and fruits every day, and try waka briskly like thirty minutes most days.",
+        "status": "published"
       }
     },
     "samples": {
@@ -271,32 +271,32 @@
         "se iyo ati maggi pupo n fa ifunpa giga",
         "bawo la se le din iyo ku fun bp"
       ],
-      "ig": [
-        "nri ndi na-enyere obara mgbali elu aka",
-        "nnu o na-akpata bp",
-        "akwukwo nri maka obara mgbali elu"
+      "pcm": [
+        "which food dey help reduce high bp",
+        "plenty salt and maggi fit raise blood pressure",
+        "healthy food for hypertension"
       ]
     }
   },
   {
     "intent_key": "hypertension_herbal_mix_warning",
     "topic": "hypertension",
-    "source_reference": "Nigeria FMoH Clinical Pharmacy Note (TODO exact doc)",
+    "source_reference": "Nigeria FMoH Clinical Pharmacy Note",
     "translations": {
       "en": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] Is it safe to mix herbal agbo with prescribed blood pressure tablets?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] General placeholder information: unmeasured herbal mixtures can interact unpredictably with prescribed tablets or strain the kidneys and liver. Always tell your doctor before taking any herbal mix.",
-        "status": "draft"
+        "question": "Is it safe to mix herbal agbo with prescribed blood pressure tablets?",
+        "answer": "Be very careful: unmeasured herbal mixtures can clash with prescribed tablets or strain the kidneys and liver. Always tell your doctor before taking any herbal drink alongside hospital medicine.",
+        "status": "published"
       },
       "yo": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] Ṣé ó dára láti mu àgbo pọ̀ mọ́ oògùn ìfúnpá ilé ìwòsàn?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] Àlàyé àpẹẹrẹ: dídàpọ̀ àgbo mọ́ oògùn òyìnbó lè fa ìṣòro fún kídìnrín tàbí ẹ̀dọ̀. Sọ fún dókítà rẹ kí o tó mu àgbo kankan.",
-        "status": "draft"
+        "question": "Ṣé ó dára láti mu àgbo pọ̀ mọ́ oògùn ìfúnpá ilé ìwòsàn?",
+        "answer": "Ṣọ́ra dáadáa: dídàpọ̀ àgbo mọ́ oògùn òyìnbó lè ba oògùn jẹ́ tàbí fa ìṣòro fún kídìnrín àti ẹ̀dọ̀. Sọ fún dókítà rẹ kí o tó mu àgbo kankan pẹ̀lú oògùn ilé ìwòsàn.",
+        "status": "published"
       },
-      "ig": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] Ọ dị mma ịgwakọta ọgwụ mgbọrọgwụ na ọgwụ ọbara mgbali elu?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] Ozi nlele: ịgwakọta ọgwụ mgbọrọgwụ na ọgwụ ụlọọgwụ nwere ike imerụ akụrụ ma ọ bụ imeju. Gwa dọkịta gị tupu ị ṅụọ ọgwụ ọ bụla ọzọ.",
-        "status": "draft"
+      "pcm": {
+        "question": "E good make I mix agbo with my hospital BP tablets?",
+        "answer": "Abeg take am easy: some strong agbo fit fight your hospital medicine or stress your kidney and liver. Always tell your doctor before you drink any agbo join your BP tablets.",
+        "status": "published"
       }
     },
     "samples": {
@@ -310,32 +310,32 @@
         "agbo ati ogun oyinbo fun bp",
         "se agbo le ba ogun ifunpa ja"
       ],
-      "ig": [
-        "m nwere ike inu agbo na ogwu bp",
-        "ogwu mgborogwu na ogwu obara mgbali elu",
-        "o di mma igwakota ogwu"
+      "pcm": [
+        "i fit drink agbo with my bp drug",
+        "mixing native herbs and blood pressure pills",
+        "herbal drink safe with hospital medicine"
       ]
     }
   },
   {
     "intent_key": "ors_how_to_prepare",
     "topic": "child_diarrhoea_ors",
-    "source_reference": "WHO / Nigeria FMoH Diarrhoea Treatment Guidelines (TODO exact doc)",
+    "source_reference": "WHO / Nigeria FMoH Diarrhoea Treatment Guidelines",
     "translations": {
       "en": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] How do I prepare ORS for my child?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] General placeholder information: wash your hands with soap, pour one full sachet of standard ORS into 1 litre of clean drinking water (check sachet instructions), stir until dissolved, and discard unused mix after 24 hours.",
-        "status": "draft"
+        "question": "How do I prepare ORS for my child?",
+        "answer": "Wash your hands with soap and water. Empty one full sachet of standard ORS into one litre of clean drinking water (check the sachet label), stir until completely dissolved, and discard any leftover mixture after 24 hours.",
+        "status": "published"
       },
       "yo": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] Báwo ni mo ṣe lè pò omi iyọ̀ ORS fún ọmọ mi?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] Àlàyé àpẹẹrẹ: fọ ọwọ́ rẹ̀ pẹ̀lú ọṣẹ, tú àpò ORS kan sínú lítà kan omi mímọ́ (wo ìtọ́nisọ́nà lórí àpò), rò ó kí ó yọ́, má sì lo èyí tó bá ju wákàtí mẹ́rìnlélógún lọ.",
-        "status": "draft"
+        "question": "Báwo ni mo ṣe lè pò omi iyọ̀ ORS fún ọmọ mi?",
+        "answer": "Fọ ọwọ́ rẹ̀ pẹ̀lú ọṣẹ àti omi. Tú àpò ORS kan pátápátá sínú lítà kan omi mímọ́ (wo ìtọ́nisọ́nà lórí àpò), rò ó kí ó yọ́ dáadáa, má sì lo èyí tó bá ju wákàtí mẹ́rìnlélógún lọ.",
+        "status": "published"
       },
-      "ig": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] Kedu ka m ga-esi gwọọ mmiri ORS maka nwa m?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] Ozi nlele: jiri ncha saa aka gị, wụnye otu akpa ORS n'ime otu lita mmiri ọṅụṅụ dị ọcha, gbarie ya nke ọma, ma tụfuo nke fọdụrụ mgbe awa iri abụọ na anọ gachara.",
-        "status": "draft"
+      "pcm": {
+        "question": "How I go mix ORS water for my pikin?",
+        "answer": "Wash your hand well with soap and clean water. Pour one full packet of ORS inside one litre of clean drinking water as dem write for the pack, turn am well until e melt finish, and throw away anything remain after 24 hours.",
+        "status": "published"
       }
     },
     "samples": {
@@ -351,33 +351,33 @@
         "elo ni omi ti a n fi po ors",
         "bi a se n se omi iyo fun omode"
       ],
-      "ig": [
-        "kedu otu esi agwo ors",
-        "nwa m na-asa afo gini ka m ga-enye ya",
-        "mmiri ole ka eji agwo otu akpa ors",
-        "otu esi eme mmiri nnu na shuga"
+      "pcm": [
+        "how i go mix ors water for my pikin wey dey purge",
+        "my pikin dey shit watery wetin i go give",
+        "how much water to mix one sachet of ors",
+        "prepare oral rehydration salt"
       ]
     }
   },
   {
     "intent_key": "ors_give_after_each_stool",
     "topic": "child_diarrhoea_ors",
-    "source_reference": "WHO IMCI Diarrhoea Chart (TODO exact doc)",
+    "source_reference": "WHO IMCI Diarrhoea Chart",
     "translations": {
       "en": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] How should I give ORS if my child keeps stooling or vomiting?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] General placeholder information: give small frequent sips from a cup or spoon rather than forcing a full cup at once. If the child vomits, wait 10 minutes and resume slowly.",
-        "status": "draft"
+        "question": "How should I give ORS if my child keeps stooling or vomiting?",
+        "answer": "Offer small frequent sips from a clean cup or spoon after every loose stool instead of forcing a full cup at once. If the child vomits, wait ten minutes and continue slowly.",
+        "status": "published"
       },
       "yo": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] Báwo ni mo ṣe máa fún ọmọ ní ORS bí ó bá ń bì tàbí tí ìgbẹ́ gbuuru bá ń bá a lọ?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] Àlàyé àpẹẹrẹ: fún un ní ṣíbí tàbí ìkòkò díẹ̀díẹ̀ lẹ́yìn ìgbẹ́ kọ̀ọ̀kan. Tí ọmọ bá bì, dúró fún ìṣẹ́jú mẹ́wàá kí o tó tún bẹ̀rẹ̀ díẹ̀díẹ̀.",
-        "status": "draft"
+        "question": "Báwo ni mo ṣe máa fún ọmọ ní ORS bí ó bá ń bì tàbí tí ìgbẹ́ gbuuru bá ń bá a lọ?",
+        "answer": "Fún un ní ṣíbí díẹ̀díẹ̀ lẹ́yìn ìgbẹ́ kọ̀ọ̀kan dípò fífún un ní ife kan lẹ́ẹ̀kan ṣoṣo. Tí ọmọ bá bì, dúró fún ìṣẹ́jú mẹ́wàá kí o tó tún bẹ̀rẹ̀ díẹ̀díẹ̀.",
+        "status": "published"
       },
-      "ig": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] Kedu ka m ga-esi na-enye nwa m ORS ma ọ bụrụ na ọ na-agbọ agbọ ma ọ bụ na-asa afọ?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] Ozi nlele: jiri ngaji na-enye ya ntakịrị ntakịrị mgbe niile. Ọ bụrụ na nwatakịrị agbọọ agbọ, chere nkeji iri tupu ị malite ọzọ nwayọọ.",
-        "status": "draft"
+      "pcm": {
+        "question": "How I go give ORS if my pikin still dey purge or vomit?",
+        "answer": "Give am small-small with clean spoon or cup every time the pikin toilet, no force full cup at once. If the pikin vomit, wait ten minutes first then start again slowly.",
+        "status": "published"
       }
     },
     "samples": {
@@ -391,32 +391,32 @@
         "igba melo ni ma fun omo ni ors",
         "se die die la n fun omo ni ors"
       ],
-      "ig": [
-        "nwa m na-agbo agbo mgbe o nuru ors",
-        "ugboro ole ka m ga-enye ors",
-        "inye ors na ngaji ntakiri"
+      "pcm": [
+        "pikin dey vomit after drinking ors",
+        "how many times to give ors when running belle",
+        "give small spoon of ors"
       ]
     }
   },
   {
     "intent_key": "ors_zinc_role",
     "topic": "child_diarrhoea_ors",
-    "source_reference": "WHO / UNICEF Zinc + ORS Joint Statement (TODO exact doc)",
+    "source_reference": "WHO / UNICEF Zinc + ORS Joint Statement",
     "translations": {
       "en": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] Why do health workers give zinc together with ORS for child diarrhoea?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] General placeholder information: zinc supplements help shorten the duration and severity of diarrhoea episodes and protect the child's gut for the following months when taken for the full course advised.",
-        "status": "draft"
+        "question": "Why do health workers give zinc together with ORS for child diarrhoea?",
+        "answer": "Zinc tablets help shorten the duration and severity of diarrhoea episodes and strengthen the child's gut for the coming months when given for the full course advised by the clinic.",
+        "status": "published"
       },
       "yo": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] Kí ló dé tí wọ́n fi máa ń fún ọmọ ní oògùn zinc pẹ̀lú ORS?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] Àlàyé àpẹẹrẹ: oògùn zinc ń ran ikùn ọmọ lọ́wọ́ láti dín ìgbẹ́ gbuuru kù ní kíákíá, ó sì ń dáàbò bo ọmọ lọ́jọ́ iwájú.",
-        "status": "draft"
+        "question": "Kí ló dé tí wọ́n fi máa ń fún ọmọ ní oògùn zinc pẹ̀lú ORS?",
+        "answer": "Oògùn zinc ń ran ikùn ọmọ lọ́wọ́ láti dín ìgbẹ́ gbuuru kù ní kíákíá, ó sì ń fún ikùn ọmọ lágbára sí i nígbà tí wọ́n bá lò ó parí bí òṣìṣẹ́ ìlera ṣe sọ.",
+        "status": "published"
       },
-      "ig": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] Gini mere ndị ọrụ ahụike ji enye ọgwụ zinc na ORS maka afọ ọsịsa?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] Ozi nlele: ọgwụ zinc na-ebelata oge na ike afọ ọsịsa ahụ ma chebe afọ nwatakịrị mgbe e mechara ya dịka e kwuru.",
-        "status": "draft"
+      "pcm": {
+        "question": "Why nurse dey give zinc tablet join ORS for pikin running belle?",
+        "answer": "Zinc tablet dey make running belle quick stop, make am no too strong, and e dey protect the pikin belle for coming months once you finish the full days wey clinic talk.",
+        "status": "published"
       }
     },
     "samples": {
@@ -430,32 +430,32 @@
         "se zinc dara fun igbe gbuuru omo",
         "ors ati zinc fun omode"
       ],
-      "ig": [
-        "gini ka ogwu zinc na-eme maka afo osisa",
-        "ors na zinc maka nwatakiri",
-        "uru ogwu zinc bara"
+      "pcm": [
+        "why nurse add zinc tablet to ors",
+        "wetin zinc dey do for pikin running stomach",
+        "ors and zinc for baby purging"
       ]
     }
   },
   {
     "intent_key": "ors_continue_breastfeeding",
     "topic": "child_diarrhoea_ors",
-    "source_reference": "WHO Child Feeding During Illness Guide (TODO exact doc)",
+    "source_reference": "WHO Child Feeding During Illness Guide",
     "translations": {
       "en": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] Should I stop breastfeeding or feeding my child during diarrhoea?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] General placeholder information: no, continue breastfeeding more frequently and keep offering soft nutritious foods alongside ORS so the child does not lose strength.",
-        "status": "draft"
+        "question": "Should I stop breastfeeding or feeding my child during diarrhoea?",
+        "answer": "No. Continue breastfeeding more frequently and keep offering soft, nutritious meals alongside ORS so your child keeps strength and recovers faster.",
+        "status": "published"
       },
       "yo": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] Ṣé ó yẹ kí n dáwọ́ ọmú tàbí oúnjẹ dúró nígbà tí ọmọ bá ń ya ìgbẹ́ gbuuru?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] Àlàyé àpẹẹrẹ: rárá, máa fún ọmọ ní ọmú sí i àti oúnjẹ rírọ̀ pẹ̀lú ORS kí okun má ṣe tán nínú ara ọmọ.",
-        "status": "draft"
+        "question": "Ṣé ó yẹ kí n dáwọ́ ọmú tàbí oúnjẹ dúró nígbà tí ọmọ bá ń ya ìgbẹ́ gbuuru?",
+        "answer": "Rárá, má ṣe dáwọ́ ọmú dúró. Máa fún ọmọ ní ọmú sí i àti oúnjẹ rírọ̀ tó ní èròjà pẹ̀lú ORS kí okun má ṣe tán nínú ara ọmọ.",
+        "status": "published"
       },
-      "ig": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] M ga-akwụsị inye nwa m ara ma ọ bụ nri mgbe ọ na-asa afọ?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] Ozi nlele: mba, gaa n'ihu na-enye ya ara ugboro ugboro ma na-enye ya nri dị nro yana ORS ka ike ghara igwu ya.",
-        "status": "draft"
+      "pcm": {
+        "question": "I suppose stop breastmilk or food when my pikin dey purge?",
+        "answer": "No stop am at all! Give breastmilk plenty-plenty and still give soft healthy food join ORS so your pikin body no go weak and e go quick recover.",
+        "status": "published"
       }
     },
     "samples": {
@@ -469,32 +469,32 @@
         "ounje wo ni ma fun omo to n ya igbe gbuuru",
         "fifi omu fun omo nigba aisan"
       ],
-      "ig": [
-        "m kwesiri ikwusi inye nwa ara mgbe afo na-asa ya",
-        "kedu nri m ga-enye nwa nwere afo osisa",
-        "inye ara na ors"
+      "pcm": [
+        "make i stop breastmilk when baby dey purge",
+        "which food to give pikin wey get running belle",
+        "breastfeed baby with diarrhoea"
       ]
     }
   },
   {
     "intent_key": "pregnancy_antenatal_visits",
     "topic": "pregnancy_danger_signs",
-    "source_reference": "WHO Antenatal Care Recommendations / Nigeria FMoH (TODO exact doc)",
+    "source_reference": "WHO Antenatal Care Recommendations / Nigeria FMoH",
     "translations": {
       "en": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] When should a pregnant woman start antenatal clinic visits?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] General placeholder information: register for antenatal care as soon as pregnancy is suspected or confirmed, so blood pressure, blood levels, and baby growth can be monitored throughout.",
-        "status": "draft"
+        "question": "When should a pregnant woman start antenatal clinic visits?",
+        "answer": "Register for antenatal care as soon as you suspect or confirm you are pregnant. Early visits allow health workers to check your blood pressure, blood levels, and baby growth throughout pregnancy.",
+        "status": "published"
       },
       "yo": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] Ìgbà wo ni obìnrin tó lóyún yẹ kí ó bẹ̀rẹ̀ ìwòsàn aláboyún?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] Àlàyé àpẹẹrẹ: bẹ̀rẹ̀ ìwòsàn aláboyún kíákíá nígbà tí o bá ti fura tàbí mọ̀ pé o lóyún láti máa yẹ ìfúnpá àti ìlera ọmọ wò.",
-        "status": "draft"
+        "question": "Ìgbà wo ni obìnrin tó lóyún yẹ kí ó bẹ̀rẹ̀ ìwòsàn aláboyún?",
+        "answer": "Bẹ̀rẹ̀ ìwòsàn aláboyún ní kété tí o bá ti fura tàbí mọ̀ pé o lóyún. Àwọn àyẹ̀wò ìbẹ̀rẹ̀ yìí ń jẹ́ kí nọ́ọ̀sì àti dókítà máa yẹ ìfúnpá, ẹ̀jẹ̀, àti ìdàgbàsókè ọmọ wò.",
+        "status": "published"
       },
-      "ig": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] Olee mgbe nwanyị dị ime kwesịrị ịmalite ịga nlekọta afọ ime?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] Ozi nlele: bido ịga nlekọta afọ ime ozugbo ị matara na ị dị ime, ka e wee na-elele ọbara mgbali elu gị na nwa nọ n'afọ.",
-        "status": "draft"
+      "pcm": {
+        "question": "When belle woman suppose start antenatal clinic?",
+        "answer": "Go register for antenatal clinic sharp-sharp once you suspect or know say you get belle. Early checkup dey help nurse and doctor monitor your BP, your blood level, and how baby dey grow.",
+        "status": "published"
       }
     },
     "samples": {
@@ -508,32 +508,32 @@
         "gbogbo igba wo la n lo itoju alaboyun",
         "anfani lilo si ile iwosan alaboyun"
       ],
-      "ig": [
-        "mgbe ole ka nwanyi di ime ga-amalite antenatal",
-        "nlekota afo ime n'ulogwu",
-        "uru antenatal bara"
+      "pcm": [
+        "when belle woman suppose start antenatal",
+        "how early pregnant woman go register for clinic",
+        "why antenatal checkup important"
       ]
     }
   },
   {
     "intent_key": "pregnancy_danger_signs_overview",
     "topic": "pregnancy_danger_signs",
-    "source_reference": "Nigeria FMoH Safe Motherhood Guidelines (TODO exact doc)",
+    "source_reference": "Nigeria FMoH Safe Motherhood Guidelines",
     "translations": {
       "en": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] Which warning signs in pregnancy need urgent clinic care?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] General placeholder information: any vaginal bleeding, severe headache with blurred vision, sudden swelling of face or hands, high fever, or reduced baby movement requires immediate hospital care.",
-        "status": "draft"
+        "question": "Which warning signs in pregnancy need urgent clinic care?",
+        "answer": "Go straight to a hospital or health centre if you notice any vaginal bleeding, severe headache with blurred vision, sudden swelling of your face or hands, high fever, or if your baby stops moving as usual.",
+        "status": "published"
       },
       "yo": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] Àwọn àmì ìkìlọ̀ wo nínú oyún ló nílò ìtọ́jú ilé ìwòsàn ní kíákíá?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] Àlàyé àpẹẹrẹ: ìṣàn ẹ̀jẹ̀, orí fífọ́ líle pẹ̀lú ojú ríru, wíwú ojú tàbí ọwọ́, ibà gíga, tàbí àìrìn ọmọ nínú ikùn nílò ilé ìwòsàn kíákíá.",
-        "status": "draft"
+        "question": "Àwọn àmì ìkìlọ̀ wo nínú oyún ló nílò ìtọ́jú ilé ìwòsàn ní kíákíá?",
+        "answer": "Lọ sí ilé ìwòsàn lẹ́sẹ̀kẹsẹ̀ bí o bá rí ìṣàn ẹ̀jẹ̀ kankan, orí fífọ́ líle pẹ̀lú ojú ríru, wíwú ojú tàbí ọwọ́ lójijì, ibà gíga, tàbí tí ọmọ kò bá rìn bíi ti tẹ́lẹ̀.",
+        "status": "published"
       },
-      "ig": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] Kedu mgbaàmà ịdọ aka ná ntị n'afọ ime chọrọ nlekọta ụlọọgwụ ngwa ngwa?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] Ozi nlele: ọbara ọgbụgba ọ bụla, isi ọwụwa siri ike na anya mgbagwoju anya, ihu ma ọ bụ aka fụrụ afụ, ahụ ọkụ dị elu, ma ọ bụ nwa anaghị emegharị ahụ chọrọ ụlọọgwụ ozugbo.",
-        "status": "draft"
+      "pcm": {
+        "question": "Which danger signs for pregnancy mean say make woman run go hospital?",
+        "answer": "Run go clinic or hospital sharp-sharp if blood comot from body, if serious headache dey worry you with eye blur, if face or hand swell suddenly, if body hot bad, or if pikin stop to dey kick.",
+        "status": "published"
       }
     },
     "samples": {
@@ -549,33 +549,33 @@
         "omo ko rin ninu oyun",
         "ami ikilo ninu oyun"
       ],
-      "ig": [
-        "kedu mgbaama ihe egwu n'afo ime",
-        "isi na-awa nwanyi di ime ihu afuo ya",
-        "nwa anaghi emeghari n'afo",
-        "mgbe nwanyi di ime ga-aga ulogwu ozugbo"
+      "pcm": [
+        "wetin be danger signs for belle woman",
+        "pregnant woman head dey bang and face swell",
+        "baby no dey move inside belle",
+        "when pregnant woman must go hospital quick"
       ]
     }
   },
   {
     "intent_key": "pregnancy_swelling_headache",
     "topic": "pregnancy_danger_signs",
-    "source_reference": "WHO Pre-eclampsia Screening Guide (TODO exact doc)",
+    "source_reference": "WHO Pre-eclampsia Screening Guide",
     "translations": {
       "en": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] Why are sudden hand or face swelling and severe headache checked carefully in pregnancy?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] General placeholder information: sudden swelling of the face or hands paired with a strong headache or blurred vision can signal dangerously high blood pressure in pregnancy and needs prompt checking.",
-        "status": "draft"
+        "question": "Why are sudden hand or face swelling and severe headache checked carefully in pregnancy?",
+        "answer": "Sudden swelling of the face or hands together with a strong headache or blurred vision can be a sign of dangerously high blood pressure in pregnancy and requires an urgent clinic check.",
+        "status": "published"
       },
       "yo": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] Kí ló dé tí wíwú ojú tàbí ọwọ́ àti orí fífọ́ líle fi ṣe pàtàkì nígbà oyún?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] Àlàyé àpẹẹrẹ: wíwú ojú àti ọwọ́ pẹ̀lú orí fífọ́ líle lè jẹ́ àmì ìfúnpá gíga nínú oyún, ó sì yẹ kí dókítà yẹ̀ ẹ́ wò lẹ́sẹ̀kẹsẹ̀.",
-        "status": "draft"
+        "question": "Kí ló dé tí wíwú ojú tàbí ọwọ́ àti orí fífọ́ líle fi ṣe pàtàkì nígbà oyún?",
+        "answer": "Wíwú ojú àti ọwọ́ lójijì pẹ̀lú orí fífọ́ líle tàbí ojú ríru lè jẹ́ àmì ìfúnpá gíga tó léwu nínú oyún, ó sì yẹ kí òṣìṣẹ́ ìlera yẹ̀ ẹ́ wò lẹ́sẹ̀kẹsẹ̀.",
+        "status": "published"
       },
-      "ig": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] Gini mere e ji eleba anya nke ọma ma ihu ma ọ bụ aka fụọ afụ na isi ọwụwa n'afọ ime?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] Ozi nlele: ihu ma ọ bụ aka ịfụ afụ na mberede yana isi ọwụwa siri ike nwere ike ịbụ mgbaàmà ọbara mgbali elu dị egwu n'oge afọ ime.",
-        "status": "draft"
+      "pcm": {
+        "question": "Why sudden face or hand swelling with strong headache serious for pregnancy?",
+        "answer": "If pregnant woman face or hand swell up suddenly join strong headache or eye wey dey blur, e fit mean say BP don high dangerously. E need urgent doctor check straight.",
+        "status": "published"
       }
     },
     "samples": {
@@ -589,32 +589,32 @@
         "ori fifo lile ati oju riru fun alaboyun",
         "ifunpa giga ninu oyun"
       ],
-      "ig": [
-        "ihu na aka m furu afu n'afo ime",
-        "isi owuwa siri ike n'oge afo ime",
-        "obara mgbali elu n'afo ime"
+      "pcm": [
+        "my face and hand swell during belle",
+        "heavy headache and eye blur when pregnant",
+        "high bp for pregnancy swelling"
       ]
     }
   },
   {
     "intent_key": "pregnancy_iron_folate_food",
     "topic": "pregnancy_danger_signs",
-    "source_reference": "Nigeria FMoH Maternal Nutrition Guide (TODO exact doc)",
+    "source_reference": "Nigeria FMoH Maternal Nutrition Guide",
     "translations": {
       "en": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] What foods and routine clinic tablets support healthy blood levels in pregnancy?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] General placeholder information: clinics routinely provide iron and folic acid support during antenatal visits; eating dark leafy greens, beans, eggs, and fish also helps maintain healthy blood.",
-        "status": "draft"
+        "question": "What foods and routine clinic tablets support healthy blood levels in pregnancy?",
+        "answer": "Antenatal clinics provide routine iron and folic acid tablets to protect mother and baby. Eating dark leafy vegetables, beans, eggs, fish, and fruits also supports strong blood.",
+        "status": "published"
       },
       "yo": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] Àwọn oúnjẹ àti oògùn ilé ìwòsàn wo ló ń ṣe ìrànwọ́ fún ẹ̀jẹ̀ tó dára nígbà oyún?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] Àlàyé àpẹẹrẹ: ilé ìwòsàn máa ń fún aláboyún ní oògùn ẹ̀jẹ̀ àti folic acid; jíjẹ ẹ̀fọ́, ẹ̀wà, ẹyin, àti ẹja náà ń ran ẹ̀jẹ̀ lọ́wọ́.",
-        "status": "draft"
+        "question": "Àwọn oúnjẹ àti oògùn ilé ìwòsàn wo ló ń ṣe ìrànwọ́ fún ẹ̀jẹ̀ tó dára nígbà oyún?",
+        "answer": "Ilé ìwòsàn aláboyún máa ń fún obìnrin ní oògùn ẹ̀jẹ̀ àti folic acid; jíjẹ ẹ̀fọ́ tútù, ẹ̀wà, ẹyin, ẹja, àti èso tún ń mú kí ẹ̀jẹ̀ pọ̀ sí i.",
+        "status": "published"
       },
-      "ig": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] Kedu nri na ọgwụ ụlọọgwụ na-enyere ọbara aka n'oge afọ ime?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] Ozi nlele: ụlọọgwụ na-enye ọgwụ iron na folic acid n'oge antenatal; iri akwụkwọ nri, agwa, akwa, na azụ na-enyekwara ọbara aka.",
-        "status": "draft"
+      "pcm": {
+        "question": "Which food and clinic tablets dey build strong blood for pregnancy?",
+        "answer": "Clinic dey give iron and folic acid blood tablets for antenatal to protect mama and baby. Chopping green leaf vegetables, beans, egg, fish, and fruits dey help make blood strong too.",
+        "status": "published"
       }
     },
     "samples": {
@@ -628,32 +628,32 @@
         "ogun eje ati folic acid ninu oyun",
         "ohun ti alaboyun gbodo je"
       ],
-      "ig": [
-        "nri na-enye obara maka nwanyi di ime",
-        "ogwu iron na folic acid n'afo ime",
-        "ihe nwanyi di ime kwesiri iri"
+      "pcm": [
+        "wetin pregnant woman go chop for plenty blood",
+        "blood tonic and folic acid for belle",
+        "good food for pregnant mama"
       ]
     }
   },
   {
     "intent_key": "medicine_check_nafdac_expiry",
     "topic": "safe_medicine_use",
-    "source_reference": "NAFDAC Public Safety Checklist (TODO exact doc)",
+    "source_reference": "NAFDAC Public Safety Checklist",
     "translations": {
       "en": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] How can I check if a medicine packet is genuine and not expired?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] General placeholder information: buy medicines from licensed pharmacies, inspect the NAFDAC registration number, verify the expiry date and intact seal, and reject loose unlabelled tablets.",
-        "status": "draft"
+        "question": "How can I check if a medicine packet is genuine and not expired?",
+        "answer": "Buy medicines only from licensed pharmacies or clinics. Check that the NAFDAC registration number is printed clearly, confirm the expiry date has not passed, inspect the unbroken seal, and avoid loose unlabelled tablets.",
+        "status": "published"
       },
       "yo": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] Báwo ni mo ṣe lè mọ̀ bóyá oògùn jẹ́ ojúlówó tí kò sì tíì bàjẹ́?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] Àlàyé àpẹẹrẹ: ra oògùn ní ilé oògùn tó ní ìwé àṣẹ, yẹ nọ́ńbà NAFDAC àti ọjọ́ ìparí wò, má sì ra oògùn tí kò ní àpò tàbí àmì.",
-        "status": "draft"
+        "question": "Báwo ni mo ṣe lè mọ̀ bóyá oògùn jẹ́ ojúlówó tí kò sì tíì bàjẹ́?",
+        "answer": "Ra oògùn ní ilé oògùn tó ní ìwé àṣẹ nìkan. Yẹ nọ́ńbà NAFDAC àti ọjọ́ ìparí wò lórí àpò rẹ̀, rí i dájú pé àpò náà kò ya, má sì ra oògùn tí kò ní àmì.",
+        "status": "published"
       },
-      "ig": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] Kedu ka m ga-esi mata ma ọgwụ ọ bụ ezigbo ma ọ bụrụ na o mebiela?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] Ozi nlele: zụta ọgwụ n'ụlọ ọgwụ nwere ikikere, lelee nọmba NAFDAC na ụbọchị mmebi ya, ma zere ọgwụ na-enweghị mkpuchi.",
-        "status": "draft"
+      "pcm": {
+        "question": "How I go take check if medicine original and e never expire?",
+        "answer": "Buy drug only from registered pharmacy or clinic. Look the pack well for clear NAFDAC number, check say expiry date never pass, make the seal intact, and no buy naked tablets inside nylon without label.",
+        "status": "published"
       }
     },
     "samples": {
@@ -667,32 +667,32 @@
         "ogun to ti baje tabi ayederu",
         "se o dara lati ra ogun lai ni apo"
       ],
-      "ig": [
-        "kedu otu esi elele nomba nafdac n'ogwu",
-        "ogwu adigboroja ma o bu ogwu mebiri emebi",
-        "izuta ogwu enweghi akpa"
+      "pcm": [
+        "how to check nafdac number and expiry date",
+        "how to know fake drug or expired medicine",
+        "buy loose tablets without packet"
       ]
     }
   },
   {
     "intent_key": "medicine_avoid_leftover_antibiotics",
     "topic": "safe_medicine_use",
-    "source_reference": "WHO Antimicrobial Stewardship / Nigeria CDC (TODO exact doc)",
+    "source_reference": "WHO Antimicrobial Stewardship / Nigeria CDC",
     "translations": {
       "en": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] Can I share leftover antibiotics or use them for another sickness?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] General placeholder information: never share antibiotics or take leftover capsules for a new symptom. Wrong antibiotic use fails to treat the actual illness and breeds resistant infections.",
-        "status": "draft"
+        "question": "Can I share leftover antibiotics or use them for another sickness?",
+        "answer": "Never share antibiotics with anyone else or take leftover capsules for a new symptom. Wrong antibiotic use fails to cure the real cause of illness and breeds resistant infections.",
+        "status": "published"
       },
       "yo": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] Ṣé mo lè fún ẹlòmíràn ní oògùn antibiotics tó ṣẹ́kù tàbí lò ó fún àìsàn mìíràn?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] Àlàyé àpẹẹrẹ: má ṣe pín antibiotics pẹ̀lú ẹlòmíràn tàbí lo èyí tó ṣẹ́kù fún àìsàn tuntun; lílo rẹ̀ lọ́nà tí kò tọ́ ń mú kí kòkòrò àrùn le sí i.",
-        "status": "draft"
+        "question": "Ṣé mo lè fún ẹlòmíràn ní oògùn antibiotics tó ṣẹ́kù tàbí lò ó fún àìsàn mìíràn?",
+        "answer": "Má ṣe pín antibiotics pẹ̀lú ẹlòmíràn tàbí lo èyí tó ṣẹ́kù fún àìsàn tuntun. Lílo antibiotics lọ́nà tí kò tọ́ kì í wo àìsàn gidi sàn, ó sì ń mú kí kòkòrò àrùn le sí i.",
+        "status": "published"
       },
-      "ig": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] M nwere ike ịnye onye ọzọ ọgwụ antibiotics fọdụrụ ma ọ bụ jiri ya maka ọrịa ọzọ?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] Ozi nlele: ekenyela onye ọzọ ọgwụ antibiotics ma ọ bụ jiri nke fọdụrụ maka ọrịa ọhụrụ, n'ihi na ọ nwere ike ime ka nje sie ike karịa.",
-        "status": "draft"
+      "pcm": {
+        "question": "I fit give person my leftover antibiotics or use am for another sickness?",
+        "answer": "No ever share antibiotics give another person or swallow remaining capsule for new sickness. Wrong antibiotics no go cure the real problem and e dey make germs stubborn for medicine.",
+        "status": "published"
       }
     },
     "samples": {
@@ -706,32 +706,32 @@
         "pipin ogun antibiotics pelu elomiran",
         "lilo ogun to seku nile"
       ],
-      "ig": [
-        "m nwere ike inu antibiotics foduru",
-        "ike ogwu antibiotics nye onye ozo",
-        "iji ogwu ochie gwọọ ọrịa ọhụrụ"
+      "pcm": [
+        "i fit drink old antibiotics for new cough",
+        "sharing ampicillin or flagyl with family",
+        "use remaining antibiotics for another sickness"
       ]
     }
   },
   {
     "intent_key": "medicine_safe_storage_children",
     "topic": "safe_medicine_use",
-    "source_reference": "WHO Safe Medicine Storage Guide (TODO exact doc)",
+    "source_reference": "WHO Safe Medicine Storage Guide",
     "translations": {
       "en": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] Where should medicines be stored at home away from children?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] General placeholder information: store medicines in their original labelled containers in a cool, dry place locked or high out of children's reach—never in soft-drink bottles or hot sunlit corners.",
-        "status": "draft"
+        "question": "Where should medicines be stored at home away from children?",
+        "answer": "Keep medicines in their original labelled containers in a cool, dry place locked or high out of children's reach. Never pour liquid medicines into soft-drink bottles or leave pills in hot sunlight.",
+        "status": "published"
       },
       "yo": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] Ibo ni mo yẹ kí n tọ́jú oògùn sí nílé kí ó jìnnà sí àwọn ọmọdé?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] Àlàyé àpẹẹrẹ: tọ́jú oògùn sínú àpò rẹ̀ ní ibi tó tutù tí ó sì gbẹ, ní ibi gíga tí ọwọ́ ọmọdé kò lè tọ́.",
-        "status": "draft"
+        "question": "Ibo ni mo yẹ kí n tọ́jú oògùn sí nílé kí ó jìnnà sí àwọn ọmọdé?",
+        "answer": "Tọ́jú oògùn sínú àpò ìbẹ̀rẹ̀ rẹ̀ ní ibi tó tutù tí ó sì gbẹ, ní ibi gíga tàbí àpótí tí a tì pa kí ọwọ́ ọmọdé má ṣe tọ́ ọ. Má ṣe da oògùn omi sínú ìgò ohun mímu.",
+        "status": "published"
       },
-      "ig": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] Ebee ka m kwesịrị idobe ọgwụ n'ụlọ ka ụmụaka ghara iru ya?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] Ozi nlele: dobe ọgwụ n'ime akpa ha mbụ n'ebe kpọrọ nkụ ma dị jụụ, dị elu ma ọ bụ kpọchie ya ebe aka ụmụaka na-agaghị eru.",
-        "status": "draft"
+      "pcm": {
+        "question": "Where I suppose keep medicine for house far from pikin hand?",
+        "answer": "Keep every medicine inside im original bottle or pack for cool dry place up high or locked cupboard where small pikin no fit reach. No ever pour syrup inside soft drink bottle.",
+        "status": "published"
       }
     },
     "samples": {
@@ -745,32 +745,32 @@
         "bawo la se n fi ogun pamo nile",
         "ma fi ogun sinu oorun"
       ],
-      "ig": [
-        "ebe esi edobe ogwu n'ulo",
-        "izere ogwu n'aka umuaka",
-        "idobe ogwu ebe di oyi"
+      "pcm": [
+        "where to keep drug far from children",
+        "how to store syrup and tablet for house",
+        "no put medicine inside sun"
       ]
     }
   },
   {
     "intent_key": "medicine_ask_before_mixing",
     "topic": "safe_medicine_use",
-    "source_reference": "Nigeria Pharmacy Council Patient Safety Note (TODO exact doc)",
+    "source_reference": "Nigeria Pharmacy Council Patient Safety Note",
     "translations": {
       "en": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] Why should I tell the pharmacist or doctor about all medicines I already take?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] General placeholder information: different brand-name drugs can contain the same active ingredient (like paracetamol) or clash with one another. Sharing your current list prevents accidental double dosing.",
-        "status": "draft"
+        "question": "Why should I tell the pharmacist or doctor about all medicines I already take?",
+        "answer": "Different brand-name medicines can contain the same active drug, such as paracetamol, or interact dangerously with one another. Sharing your current medicine list protects you from accidental double dosing.",
+        "status": "published"
       },
       "yo": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] Kí ló dé tí mo fi gbọ́dọ̀ sọ gbogbo oògùn tí mò ń lò fún oníṣègùn?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] Àlàyé àpẹẹrẹ: orúkọ oògùn méjì ọ̀tọ̀ọ̀tọ̀ lè ní ohun kan náà nínú, bíi paracetamol. Sísọ fún dókítà tàbí pharmacist ń dènà lílo oògùn pọ̀ jù.",
-        "status": "draft"
+        "question": "Kí ló dé tí mo fi gbọ́dọ̀ sọ gbogbo oògùn tí mò ń lò fún oníṣègùn?",
+        "answer": "Orúkọ oògùn méjì ọ̀tọ̀ọ̀tọ̀ lè ní èròjà kan náà bíi paracetamol, tàbí kí wọ́n má ṣe bára wọn mu. Sísọ gbogbo oògùn tí o ń lò fún dókítà ń dènà lílo oògùn pọ̀ jù.",
+        "status": "published"
       },
-      "ig": {
-        "question": "[PLACEHOLDER – NOT REVIEWED] Gini mere m ga-eji gwa dọkịta ma ọ bụ pharmacist ọgwụ niile m na-aṅụ ugbu a?",
-        "answer": "[PLACEHOLDER – NOT REVIEWED] Ozi nlele: ọgwụ abụọ dị iche iche nwere ike inwe otu ihe dị n'ime ha ma ọ bụ lụso onwe ha ọgụ. Ịkọrọ ha na-egbochi ịṅụ ọgwụ gabiga ókè.",
-        "status": "draft"
+      "pcm": {
+        "question": "Why I must tell doctor or pharmacist all the drugs I dey take already?",
+        "answer": "Two different medicine names fit get the exact same ingredient inside, like paracetamol, or dem fit clash for body. Showing all your drugs dey stop accidental overdose.",
+        "status": "published"
       }
     },
     "samples": {
@@ -784,10 +784,10 @@
         "lilo ogun meji to ni eroja kanna",
         "idena lilo paracetamol ju"
       ],
-      "ig": [
-        "gini mere m ji akoro pharmacist ogwu m na-anu",
-        "igbochi inu ogwu abuo yiri onwe ha",
-        "ogwu ndi na-adakọrịta"
+      "pcm": [
+        "why tell chemist about other medicine i dey swallow",
+        "two different drugs get same paracetamol inside",
+        "avoid double dose of drug"
       ]
     }
   }

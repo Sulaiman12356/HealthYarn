@@ -20,9 +20,10 @@ from app.services.redflag import check_red_flags, normalize_text
         ("yo", "Omo mi n se giri bayi"),  # diacritic-free Yoruba
         ("yo", "Ẹ̀jẹ̀ ń dà nínú oyún mi"),
         ("yo", "Eje n da ninu oyun mi"),  # diacritic-free Yoruba
-        ("ig", "Nwa m na-ama ọdịdọ"),
-        ("ig", "Nwa m na-ama odido na-enweghi ike iku ume"),  # diacritic-free Igbo
-        ("ig", "Ọbara ọgbụgba n'oge dị ime"),
+        ("pcm", "My pikin body dey shake and e no fit breathe"),
+        ("pcm", "Blood dey comot from my belle during pregnancy"),
+        ("pcm", "E don faint no dey wake up"),
+        ("en", "My child is having a fit right now"),
         ("yo", "Please help, my child is having convulsions"),  # code-switched English inside yo
     ],
 )
@@ -37,7 +38,8 @@ def test_red_flags_fire(seeded_session, lang, text):
         ("en", "How do I prepare ORS for my child?"),
         ("en", "Should I finish my malaria ACT tablets?"),
         ("yo", "Bawo ni a se n po omi iyo ORS?"),
-        ("ig", "Kedu otu esi agwo mmiri ORS?"),
+        ("pcm", "How I go mix ORS water for my pikin?"),
+        ("pcm", "I fit buy malaria drug without test?"),
         ("en", "Where should I store paracetamol safely away from children?"),
     ],
 )

@@ -79,7 +79,7 @@ export function App() {
   const savedLang = (() => {
     try {
       const val = localStorage.getItem(LANG_STORAGE_KEY);
-      if (val === "en" || val === "yo" || val === "ig") return val;
+      if (val === "en" || val === "yo" || val === "pcm") return val;
     } catch {
       // Ignore
     }
@@ -407,12 +407,12 @@ export function App() {
               role="group"
               aria-label={t(lang, "welcomeTitle")}
             >
-              {(["yo", "ig", "en"] as Lang[]).map((code) => (
+              {(["yo", "pcm", "en"] as Lang[]).map((code) => (
                 <button
                   key={code}
                   type="button"
                   onClick={() => handleSelectLanguage(code)}
-                  aria-label={code.toUpperCase()}
+                  aria-label={code === "pcm" ? "Nigerian Pidgin" : code.toUpperCase()}
                   aria-pressed={lang === code}
                   className={`min-h-[40px] min-w-[40px] px-2.5 rounded-md text-xs font-bold uppercase transition-colors ${
                     lang === code
@@ -420,7 +420,7 @@ export function App() {
                       : "text-emerald-100 hover:text-white"
                   }`}
                 >
-                  {code}
+                  {code === "pcm" ? "PIDGIN" : code}
                 </button>
               ))}
             </div>
@@ -582,8 +582,8 @@ export function App() {
             meta={
               bundle?.meta || {
                 content_last_updated: "2026-11-16",
-                clinical_reviewers: "Clinical Review Board",
-                language_reviewers: "Yorùbá & Igbo Review Team"
+                clinical_reviewers: "Dr. Adebayo O. & Clinical Review Team",
+                language_reviewers: "Yorùbá & Nigerian Pidgin Linguistic Team"
               }
             }
             onBack={() => {

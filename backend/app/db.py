@@ -2,6 +2,7 @@
 
 from typing import Generator
 
+from sqlalchemy import inspect, text
 from sqlmodel import Session, SQLModel, create_engine
 
 from app.config import get_settings
@@ -17,7 +18,16 @@ engine = build_engine()
 
 
 def init_db(target_engine=None) -> None:
-    SQLModel.metadata.create_all(target_engine or engine)
+    eng = target_engine or engine
+    SQLModel.metadata.create_all(eng)
+    insp = inspect(eng)
+    if "topics" in insp.get_table_names():
+        cols = {c["name"] for c in insp.get_columns("topics")}
+        with eng.begin() as conn:
+            if "name_pcm" not in cols:
+                conn.execute(text("ALTER TABLE topics ADD COLUMN name_pcm VARCHAR DEFAULT ''"))
+            if "desc_pcm" not in cols:
+                conn.execute(text("ALTER TABLE topics ADD COLUMN desc_pcm VARCHAR DEFAULT ''"))
 
 
 def get_session() -> Generator[Session, None, None]:

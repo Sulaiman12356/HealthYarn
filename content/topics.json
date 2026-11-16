@@ -6,12 +6,12 @@
     "names": {
       "en": "Malaria & Fever",
       "yo": "Ibà & Àrùn Malárìà",
-      "ig": "Ịba & Ahụ Ọkụ"
+      "pcm": "Malaria & Hot Body"
     },
     "descriptions": {
       "en": "Testing before treatment, completing ACT doses, and preventing mosquito bites.",
       "yo": "Àyẹ̀wò kí o tó lo oògùn, píparí oògùn ibà, àti dídènà ìjẹ ẹ̀fọn.",
-      "ig": "Nnwale tupu ọgwụgwọ, imechacha ọgwụ ịba, na igbochi anwụnta."
+      "pcm": "Make you test before you take drug, finish your malaria medicine, and block mosquito."
     }
   },
   {
@@ -21,12 +21,12 @@
     "names": {
       "en": "Blood Pressure",
       "yo": "Ìfúnpá Gíga",
-      "ig": "Ọbara Mgbali Elu"
+      "pcm": "High Blood Pressure (BP)"
     },
     "descriptions": {
       "en": "Checking blood pressure regularly, daily medicines, and salt reduction.",
       "yo": "Ṣíṣàyẹ̀wò ìfúnpá déédéé, oògùn ojoojúmọ́, àti dídín iyọ̀ kù.",
-      "ig": "Ịlele ọbara mgbali elu mgbe niile, ọgwụ kwa ụbọchị, na ibelata nnu."
+      "pcm": "How to dey check BP every time, take your everyday medicine, and reduce salt."
     }
   },
   {
@@ -36,12 +36,12 @@
     "names": {
       "en": "Child Diarrhoea & ORS",
       "yo": "Ìgbẹ́ Gbuuru Ọmọ & ORS",
-      "ig": "Afọ Ọsịsa Ụmụaka & ORS"
+      "pcm": "Pikin Running Belle & ORS"
     },
     "descriptions": {
       "en": "Mixing ORS sachets safely, zinc guidance, and feeding a child with diarrhoea.",
       "yo": "Pípò omi iyọ̀ ORS lọ́nà tó tọ́, oògùn zinc, àti fífún ọmọ lóúnjẹ.",
-      "ig": "Ịgwọ mmiri ORS nke ọma, ọgwụ zinc, na inye nwatakịrị nri."
+      "pcm": "How to mix ORS water well, use zinc tablet, and still feed pikin wey dey purge."
     }
   },
   {
@@ -51,12 +51,12 @@
     "names": {
       "en": "Pregnancy Care & Signs",
       "yo": "Ìtọ́jú Aláboyún & Àmì Ewu",
-      "ig": "Nlekọta Dị Ime & Mgbaàmà Ihe Egwu"
+      "pcm": "Belle Woman Care & Danger Signs"
     },
     "descriptions": {
       "en": "Antenatal visits, danger signs that need immediate hospital care, and safe habits.",
       "yo": "Lílọ sí ilé ìwòsàn aláboyún, àmì ewu kíákíá, àti ìlera oyún.",
-      "ig": "Ịga nlekọta afọ ime, mgbaàmà ihe egwu ozugbo, na ndụmọdụ ahụike."
+      "pcm": "Antenatal clinic checkups, danger signs wey need hospital sharp-sharp, and healthy food."
     }
   },
   {
@@ -66,12 +66,12 @@
     "names": {
       "en": "Safe Medicine Use",
       "yo": "Lílo Oògùn Lọ́nà Ààbò",
-      "ig": "Iji Ọgwụ N'ụzọ Nchekwa"
+      "pcm": "How to Use Medicine Well"
     },
     "descriptions": {
       "en": "Checking NAFDAC numbers, avoiding leftover antibiotics, and storing medicines safely.",
       "yo": "Yíyẹ nọ́ńbà NAFDAC wò, píparí oògùn, àti títọ́jú oògùn pamọ́.",
-      "ig": "Ịlele nọmba NAFDAC, izere ọgwụ fọdụrụ, na idobe ọgwụ ebe dị mma."
+      "pcm": "Check NAFDAC number and expiry date, no share leftover antibiotics, and keep drugs safe."
     }
   }
 ]

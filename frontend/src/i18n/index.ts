@@ -1,6 +1,6 @@
 import en from "./en.json";
 import yo from "./yo.json";
-import ig from "./ig.json";
+import pcm from "./pcm.json";
 import type { Lang } from "../types";
 
 export type TranslationKeys = keyof typeof en;
@@ -8,7 +8,7 @@ export type TranslationKeys = keyof typeof en;
 const DICTS: Record<Lang, typeof en> = {
   en,
   yo,
-  ig
+  pcm
 };
 
 export function t(lang: Lang, key: TranslationKeys): string {
@@ -21,6 +21,6 @@ export const LANGUAGE_OPTIONS: Array<{
   englishHint: string;
 }> = [
   { code: "yo", nativeLabel: "Yorùbá", englishHint: "Èdè Yorùbá" },
-  { code: "ig", nativeLabel: "Igbo", englishHint: "Asụsụ Igbo" },
+  { code: "pcm", nativeLabel: "Nigerian Pidgin", englishHint: "Pidgin English" },
   { code: "en", nativeLabel: "English", englishHint: "Nigerian English" }
 ];

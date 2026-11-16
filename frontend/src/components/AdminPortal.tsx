@@ -10,7 +10,7 @@ interface AdminUser {
 
 interface AdminTranslation {
   id: number;
-  lang: "en" | "yo" | "ig";
+  lang: "en" | "yo" | "pcm";
   question_text: string;
   answer_text: string;
   question_audio_url: string | null;
@@ -32,7 +32,7 @@ interface AdminItem {
   intent_key: string;
   source_reference: string;
   is_active: boolean;
-  translations: Partial<Record<"en" | "yo" | "ig", AdminTranslation>>;
+  translations: Partial<Record<"en" | "yo" | "pcm", AdminTranslation>>;
 }
 
 interface AdminStats {
@@ -101,13 +101,13 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onExit }) => {
   const [filterStatus, setFilterStatus] = useState("");
 
   const [editingItem, setEditingItem] = useState<AdminItem | null>(null);
-  const [activeLangTab, setActiveLangTab] = useState<"en" | "yo" | "ig">("en");
+  const [activeLangTab, setActiveLangTab] = useState<"en" | "yo" | "pcm">("en");
   const [draftEdits, setDraftEdits] = useState<
-    Record<"en" | "yo" | "ig", { question_text: string; answer_text: string; samplesText: string }>
+    Record<"en" | "yo" | "pcm", { question_text: string; answer_text: string; samplesText: string }>
   >({
     en: { question_text: "", answer_text: "", samplesText: "" },
     yo: { question_text: "", answer_text: "", samplesText: "" },
-    ig: { question_text: "", answer_text: "", samplesText: "" }
+    pcm: { question_text: "", answer_text: "", samplesText: "" }
   });
   const [editSourceRef, setEditSourceRef] = useState("");
   const [reviewComment, setReviewComment] = useState("");
@@ -239,10 +239,10 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onExit }) => {
         answer_text: item.translations.yo?.answer_text || "",
         samplesText: (item.translations.yo?.samples || []).join("\n")
       },
-      ig: {
-        question_text: item.translations.ig?.question_text || "",
-        answer_text: item.translations.ig?.answer_text || "",
-        samplesText: (item.translations.ig?.samples || []).join("\n")
+      pcm: {
+        question_text: item.translations.pcm?.question_text || "",
+        answer_text: item.translations.pcm?.answer_text || "",
+        samplesText: (item.translations.pcm?.samples || []).join("\n")
       }
     };
     setDraftEdits(nextEdits);
@@ -268,10 +268,10 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onExit }) => {
               answer_text: draftEdits.yo.answer_text,
               samples: draftEdits.yo.samplesText.split("\n").map((s) => s.trim()).filter(Boolean)
             },
-            ig: {
-              question_text: draftEdits.ig.question_text,
-              answer_text: draftEdits.ig.answer_text,
-              samples: draftEdits.ig.samplesText.split("\n").map((s) => s.trim()).filter(Boolean)
+            pcm: {
+              question_text: draftEdits.pcm.question_text,
+              answer_text: draftEdits.pcm.answer_text,
+              samples: draftEdits.pcm.samplesText.split("\n").map((s) => s.trim()).filter(Boolean)
             }
           }
         })
@@ -448,7 +448,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onExit }) => {
                   <option value="">All languages</option>
                   <option value="en">English (en)</option>
                   <option value="yo">Yorùbá (yo)</option>
-                  <option value="ig">Igbo (ig)</option>
+                  <option value="pcm">Nigerian Pidgin (pcm)</option>
                 </select>
                 <select
                   aria-label="Filter by status"
@@ -490,7 +490,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onExit }) => {
                   </div>
 
                   <div className="flex gap-2 border-b border-seam pb-2">
-                    {(["en", "yo", "ig"] as const).map((lc) => {
+                    {(["en", "yo", "pcm"] as const).map((lc) => {
                       const tr = editingItem.translations[lc];
                       return (
                         <button
@@ -700,7 +700,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onExit }) => {
                       <th className="p-3 font-bold">Topic</th>
                       <th className="p-3 font-bold">EN</th>
                       <th className="p-3 font-bold">YO</th>
-                      <th className="p-3 font-bold">IG</th>
+                      <th className="p-3 font-bold">PCM</th>
                       <th className="p-3 font-bold">Action</th>
                     </tr>
                   </thead>
@@ -709,7 +709,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onExit }) => {
                       <tr key={item.id} className="border-b border-seam last:border-b-0">
                         <td className="p-3 font-semibold text-ink">{item.intent_key}</td>
                         <td className="p-3 text-ink-muted">{item.topic_name}</td>
-                        {(["en", "yo", "ig"] as const).map((lc) => {
+                        {(["en", "yo", "pcm"] as const).map((lc) => {
                           const tr = item.translations[lc];
                           const st = tr?.status || "missing";
                           return (

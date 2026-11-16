@@ -21,9 +21,11 @@ class Topic(SQLModel, table=True):
     sort_order: int = Field(default=0, index=True)
     name_en: str = ""
     name_yo: str = ""
+    name_pcm: str = ""
     name_ig: str = ""
     desc_en: str = ""
     desc_yo: str = ""
+    desc_pcm: str = ""
     desc_ig: str = ""
 
 

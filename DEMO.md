@@ -7,11 +7,11 @@ Follow this step-by-step script for the **ITDC 2026** live demonstration (plus o
 ```powershell
 # Terminal 1 — Backend API (from backend/)
 cd backend
-python -m scripts.seed --demo
-# Either use real YarnGPT API voices (requires YARNGPT_API_KEY in .env):
-#   python -m scripts.generate_audio --api --only-missing
-# Or use local zero-key demo tone synthesis:
-python -m scripts.generate_audio --demo-synth --takes 2
+python -m scripts.seed
+# Generate Spitch Opus .ogg voices (requires SPITCH_API_KEY in .env):
+#   python -m scripts.generate_audio --spitch --only-missing --takes 1
+# Or use local zero-key tone synthesis for testing:
+#   python -m scripts.generate_audio --demo-synth --only-missing --takes 1
 uvicorn app.main:app --host 127.0.0.1 --port 8000
 
 # Terminal 2 — Frontend PWA (from frontend/)
@@ -31,9 +31,9 @@ Open **http://localhost:5173** in Chrome (ideally with DevTools Mobile Device To
 ## 2. Live Click-Through Script (3–4 Minutes)
 
 1. **Welcome, Spoken Prompts & Privacy Consent**
-   - Observe the three large language buttons: **Yorùbá**, **Igbo**, **English**.
-   - Tap the speaker icon beside Yorùbá or English to hear the welcome audio clip, and tap **"Listen to privacy notice"** to confirm the spoken NDPA promise (*"Your voice is used only to understand your question and is not saved"*).
-   - Select **English** (or **Yorùbá**). Note the visible **"DEMO CONTENT — NOT CLINICALLY REVIEWED"** banner indicating `--demo` seeded placeholder copy.
+   - Observe the three large language buttons: **Yorùbá**, **Pidgin**, **English**.
+   - Tap the speaker icon beside Yorùbá, Pidgin, or English to hear the welcome audio clip, and tap **"Listen to privacy notice"** to confirm the spoken NDPA promise (*"Your voice is used only to understand your question and is not saved"*).
+   - Select **English**, **Yorùbá**, or **Pidgin**. Verify clean reviewed clinical headings with zero `[PLACEHOLDER]` markers or demo warnings.
 
 2. **Tap-a-Topic Flow & Offline Resilience (No Wi-Fi Needed)**
    - Confirm the status bar shows **"Ready to use offline"**.
@@ -50,7 +50,7 @@ Open **http://localhost:5173** in Chrome (ideally with DevTools Mobile Device To
 
 4. **Staff Content Governance Portal (`/admin`)**
    - Click **Staff** in the top header (or navigate to `/admin`).
-   - Sign in with any demo account created by `seed.py --demo`:
+   - Sign in with any staff account seeded locally:
      - Editor: `editor@healthyarn.ng` / `HealthYarnEditor2026!`
      - Clinical Reviewer: `clinical@healthyarn.ng` / `HealthYarnClinic2026!`
      - Language Reviewer: `language@healthyarn.ng` / `HealthYarnLang2026!`
@@ -63,4 +63,4 @@ Open **http://localhost:5173** in Chrome (ideally with DevTools Mobile Device To
 
 - If conference Wi-Fi fails or `SPITCH_API_KEY` is unavailable:
   1. Ensure `STT_PROVIDER=mock` in `.env` — the voice mic button works 100% locally via `MockSTT`!
-  2. All 5 topics, 20 questions, and 198 audio clips remain cached inside the browser PWA even with Wi-Fi completely turned off.
+  2. All 5 topics, 20 questions, and 138 audio clips (when all 3 languages + system prompts are generated) remain cached inside the browser PWA even with Wi-Fi completely turned off.

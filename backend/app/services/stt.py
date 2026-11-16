@@ -36,10 +36,10 @@ class MockSTT(STTProvider):
             "se kin lo ogun iba lai se ayewo",
             "se ifunpa giga ma n se aisi ami",
         ],
-        "ig": [
-            "kedu otu esi agwo ors",
-            "m ga-anu ogwu iba n'emezighi test",
-            "obara mgbali elu o nwere ike inweghi mgbaama",
+        "pcm": [
+            "how i go mix ors water for my pikin wey dey purge",
+            "i fit buy malaria drug without doing test",
+            "bp fit high even if body no dey pain person",
         ],
     }
 
@@ -80,7 +80,8 @@ class SpitchSTT(STTProvider):
 
         def _call_sync() -> str:
             client = Spitch(api_key=self.api_key)
-            resp = client.speech.transcribe(language=lang, content=audio_bytes)
+            api_lang = "en" if lang == "pcm" else lang
+            resp = client.speech.transcribe(language=api_lang, content=audio_bytes)
             text = getattr(resp, "text", "") or ""
             return text.strip()
 

@@ -55,16 +55,16 @@ export const AboutView: React.FC<AboutViewProps> = ({ lang, meta, onBack }) => {
           <p className="text-sm text-ink-muted prose-measure mb-4">{t(lang, "aboutPrivacySummary")}</p>
           <ul className="space-y-2 text-sm text-ink">
             <li>
-              <span className="font-semibold">YarnGPT TTS:</span> Saheed Azeez (`saheedniyi/YarnGPT2b`) — Apache-2.0 / Open Weights
+              <span className="font-semibold">Spitch Speech AI:</span> West African Speech-to-Text and offline Nigerian voice synthesis (sade, ufoma, remi)
             </li>
             <li>
-              <span className="font-semibold">Speech-to-Text:</span> Spitch API (`spitch`) with pluggable `STTProvider`
+              <span className="font-semibold">YarnGPT TTS Support:</span> Saheed Azeez (YarnGPT2b) — Apache-2.0 / Open Weights
             </li>
             <li>
-              <span className="font-semibold">Multilingual Matching:</span> `sentence-transformers/LaBSE` (Apache-2.0) + `RapidFuzz` (MIT)
+              <span className="font-semibold">Multilingual Matching:</span> sentence-transformers/LaBSE (Apache-2.0) + RapidFuzz (MIT)
             </li>
             <li>
-              <span className="font-semibold">Privacy Policy:</span> See repository `PRIVACY.md` (NDPA 2023 Data Minimisation)
+              <span className="font-semibold">Privacy Policy:</span> See repository PRIVACY.md (NDPA 2023 Data Minimisation)
             </li>
           </ul>
         </section>

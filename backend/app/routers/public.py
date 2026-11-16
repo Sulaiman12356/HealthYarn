@@ -42,7 +42,7 @@ from app.services.stt import STTError, STTProvider, get_stt_provider
 
 router = APIRouter(prefix="/api", tags=["public"])
 
-SUPPORTED_LANGS = {"en", "yo", "ig"}
+SUPPORTED_LANGS = {"en", "yo", "pcm"}
 ALLOWED_AUDIO_MIMES = {
     "audio/webm",
     "audio/ogg",
@@ -59,7 +59,7 @@ ALLOWED_AUDIO_MIMES = {
 def validate_lang(lang: str) -> str:
     cleaned = lang.strip().lower()
     if cleaned not in SUPPORTED_LANGS:
-        raise HTTPException(status_code=400, detail="Unsupported language. Use 'en', 'yo', or 'ig'.")
+        raise HTTPException(status_code=400, detail="Unsupported language. Use 'en', 'yo', or 'pcm'.")
     return cleaned
 
 
@@ -122,13 +122,13 @@ def _check_wav_duration(audio_bytes: bytes, max_seconds: int) -> None:
 class FeedbackRequest(BaseModel):
     log_id: Optional[int] = None
     faq_id: Optional[int] = None
-    lang: Optional[Literal["en", "yo", "ig"]] = None
+    lang: Optional[Literal["en", "yo", "pcm"]] = None
     rating: Literal[1, -1]
 
 
 class AskTextRequest(BaseModel):
     text: str = PydanticField(min_length=1, max_length=1000)
-    lang: Literal["en", "yo", "ig"] = "en"
+    lang: Literal["en", "yo", "pcm"] = "en"
 
 
 def _get_sys_msg(session: Session, key: str, lang: str) -> Optional[SystemMessage]:
@@ -368,7 +368,7 @@ def read_meta(session: Session = Depends(get_session)) -> dict:
         "demo_mode": is_demo_mode(session),
         "content_last_updated": meta.get("content_last_updated", ""),
         "clinical_reviewers": meta.get("clinical_reviewers", "Clinical Review Board"),
-        "language_reviewers": meta.get("language_reviewers", "Yorùbá & Igbo Review Team"),
+        "language_reviewers": meta.get("language_reviewers", "Yorùbá & Nigerian Pidgin Review Team"),
         "welcome_audio": welcome_audio,
         "consent_audio": consent_audio,
     }
@@ -578,7 +578,7 @@ def get_offline_bundle(
         "meta": {
             "content_last_updated": meta.get("content_last_updated", ""),
             "clinical_reviewers": meta.get("clinical_reviewers", "Clinical Review Board"),
-            "language_reviewers": meta.get("language_reviewers", "Yorùbá & Igbo Review Team"),
+            "language_reviewers": meta.get("language_reviewers", "Yorùbá & Nigerian Pidgin Review Team"),
         },
         "topics": bundle_topics,
         "system_messages": system_messages,

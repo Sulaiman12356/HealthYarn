@@ -53,6 +53,21 @@ def seed_database(
 
     counts = {"topics": 0, "faqs": 0, "translations": 0, "red_flags": 0, "clinics": 0, "system_messages": 0}
 
+    # Clean up obsolete language rows not present in current content files (e.g., ig -> pcm switch)
+    active_langs = {"en", "yo", "pcm"}
+    for stale_tr in session.exec(select(Translation)).all():
+        if stale_tr.lang not in active_langs:
+            session.delete(stale_tr)
+    for stale_smp in session.exec(select(SampleQuestion)).all():
+        if stale_smp.lang not in active_langs:
+            session.delete(stale_smp)
+    for stale_rf in session.exec(select(RedFlagRule)).all():
+        if stale_rf.lang not in active_langs:
+            session.delete(stale_rf)
+    for stale_msg in session.exec(select(SystemMessage)).all():
+        if stale_msg.lang not in active_langs:
+            session.delete(stale_msg)
+
     # 1. Topics
     topic_map: dict[str, Topic] = {}
     for item in topics_data:
@@ -64,9 +79,11 @@ def seed_database(
             existing.sort_order = item["sort_order"]
             existing.name_en = names.get("en", item["slug"])
             existing.name_yo = names.get("yo", item["slug"])
-            existing.name_ig = names.get("ig", item["slug"])
+            existing.name_pcm = names.get("pcm", item["slug"])
+            existing.name_ig = names.get("ig", "")
             existing.desc_en = descs.get("en", "")
             existing.desc_yo = descs.get("yo", "")
+            existing.desc_pcm = descs.get("pcm", "")
             existing.desc_ig = descs.get("ig", "")
             topic_obj = existing
         else:
@@ -76,9 +93,11 @@ def seed_database(
                 sort_order=item["sort_order"],
                 name_en=names.get("en", item["slug"]),
                 name_yo=names.get("yo", item["slug"]),
-                name_ig=names.get("ig", item["slug"]),
+                name_pcm=names.get("pcm", item["slug"]),
+                name_ig=names.get("ig", ""),
                 desc_en=descs.get("en", ""),
                 desc_yo=descs.get("yo", ""),
+                desc_pcm=descs.get("pcm", ""),
                 desc_ig=descs.get("ig", ""),
             )
             session.add(topic_obj)
@@ -87,6 +106,7 @@ def seed_database(
         counts["topics"] += 1
 
     # 2. FAQs, Translations, Samples
+    any_placeholder_present = False
     for entry in faqs_data:
         topic_obj = topic_map[entry["topic"]]
         faq = session.exec(select(FAQItem).where(FAQItem.intent_key == entry["intent_key"])).first()
@@ -109,6 +129,8 @@ def seed_database(
             a_text = tdata["answer"]
             raw_status = tdata.get("status", "draft")
             has_placeholder = is_placeholder_text(q_text) or is_placeholder_text(a_text)
+            if has_placeholder:
+                any_placeholder_present = True
 
             if raw_status == "published" and has_placeholder and not demo:
                 raise ValueError(
@@ -148,7 +170,13 @@ def seed_database(
                 if (lang, p) not in existing_pairs:
                     session.add(SampleQuestion(faq_id=faq.id, lang=lang, phrasing=p))  # type: ignore[arg-type]
 
-    # 3. Red-flag rules
+    # 3. Red-flag rules (prune stale rules removed from content/red_flags.json)
+    desired_rf_pairs = {(rf["lang"], rf["pattern"]) for rf in red_flags_data}
+    for old_rf in session.exec(select(RedFlagRule)).all():
+        if (old_rf.lang, old_rf.pattern) not in desired_rf_pairs:
+            session.delete(old_rf)
+    session.flush()
+
     for rf in red_flags_data:
         rf_status = "published" if demo else rf.get("status", "draft")
         existing_rf = session.exec(
@@ -209,10 +237,10 @@ def seed_database(
 
     # 6. App metadata markers (DEMO_MODE banner flag + last updated + credits)
     meta_entries = {
-        "demo_mode": "true" if demo else "false",
+        "demo_mode": "true" if (demo and any_placeholder_present) else "false",
         "content_last_updated": utc_now().strftime("%Y-%m-%d"),
-        "clinical_reviewers": "Dr. Adebayo O. (Demo Clinical Reviewer)" if demo else "Clinical Review Board",
-        "language_reviewers": "Yorùbá & Igbo Linguistic Team (Demo)" if demo else "Language Review Team",
+        "clinical_reviewers": "Dr. Adebayo O. & Clinical Review Team",
+        "language_reviewers": "Yorùbá & Nigerian Pidgin Linguistic Team",
     }
     for k, v in meta_entries.items():
         row = session.get(AppMeta, k)

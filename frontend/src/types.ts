@@ -1,4 +1,4 @@
-export type Lang = "yo" | "ig" | "en";
+export type Lang = "yo" | "pcm" | "en";
 
 export interface QuestionSummary {
   faq_id: number;
