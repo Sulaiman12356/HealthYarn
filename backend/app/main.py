@@ -15,7 +15,7 @@ from sqlmodel import Session
 
 from app.config import get_settings
 from app.db import engine, init_db
-from app.routers import public
+from app.routers import admin, public
 from app.services.limiter import limiter
 from app.services.matcher import FAQMatcher
 from app.services.stt import get_stt_provider
@@ -78,6 +78,7 @@ settings.static_audio_dir.mkdir(parents=True, exist_ok=True)
 app.mount("/static", StaticFiles(directory=str(Path(settings.static_audio_dir).parent)), name="static")
 
 app.include_router(public.router)
+app.include_router(admin.router)
 
 
 @app.get("/health")

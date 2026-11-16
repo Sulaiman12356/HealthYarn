@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useState } from "react";
 import { t } from "./i18n";
 import { useAudioQueue } from "./hooks/useAudioQueue";
 import { useVoiceRecorder } from "./hooks/useVoiceRecorder";
@@ -37,6 +37,8 @@ import { RedFlagAlertView } from "./components/RedFlagAlertView";
 import { AboutView } from "./components/AboutView";
 import { CheckCircleIcon, VolumeIcon, VolumeMutedIcon, WifiOffIcon } from "./components/Icons";
 
+const AdminPortal = lazy(() => import("./components/AdminPortal"));
+
 type Screen =
   | { name: "welcome" }
   | { name: "home" }
@@ -54,7 +56,8 @@ type Screen =
       messageAudioUrl: string | null;
       clinics: Clinic[];
     }
-  | { name: "about" };
+  | { name: "about" }
+  | { name: "admin" };
 
 const LANG_STORAGE_KEY = "healthyarn_lang";
 const AUTOPLAY_STORAGE_KEY = "healthyarn_autoplay";
@@ -85,7 +88,11 @@ export function App() {
 
   const [lang, setLang] = useState<Lang>(savedLang || "en");
   const [hasChosenLang, setHasChosenLang] = useState<boolean>(savedLang !== null);
-  const [screen, setScreen] = useState<Screen>(savedLang ? { name: "home" } : { name: "welcome" });
+  const initialAdminRoute =
+    typeof window !== "undefined" && window.location.pathname.startsWith("/admin");
+  const [screen, setScreen] = useState<Screen>(
+    initialAdminRoute ? { name: "admin" } : savedLang ? { name: "home" } : { name: "welcome" }
+  );
 
   const [topics, setTopics] = useState<TopicSummary[]>([]);
   const [bundle, setBundle] = useState<BundleResponse | null>(null);
@@ -331,6 +338,21 @@ export function App() {
     audio.playSequence([q.question_audio_url]);
   };
 
+  if (screen.name === "admin") {
+    return (
+      <Suspense fallback={<div className="p-6 text-ink">{t(lang, "loading")}</div>}>
+        <AdminPortal
+          onExit={() => {
+            if (typeof window !== "undefined" && window.location.pathname.startsWith("/admin")) {
+              window.history.pushState({}, "", "/");
+            }
+            setScreen(hasChosenLang ? { name: "home" } : { name: "welcome" });
+          }}
+        />
+      </Suspense>
+    );
+  }
+
   if (screen.name === "red_flag") {
     return (
       <RedFlagAlertView
@@ -427,6 +449,18 @@ export function App() {
               className="min-h-[48px] px-3 rounded-lg text-sm font-semibold hover:bg-viridian-hover transition-colors"
             >
               {t(lang, "aboutLink")}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                audio.stop();
+                setScreen({ name: "admin" });
+              }}
+              aria-label={t(lang, "staffLink")}
+              className="min-h-[48px] px-3 rounded-lg text-sm font-semibold text-emerald-100 hover:text-white hover:bg-viridian-hover transition-colors"
+            >
+              {t(lang, "staffLink")}
             </button>
           </div>
         </div>
