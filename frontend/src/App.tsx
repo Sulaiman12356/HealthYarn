@@ -2,6 +2,12 @@ import { useEffect, useState } from "react";
 import { t } from "./i18n";
 import { useAudioQueue } from "./hooks/useAudioQueue";
 import { fetchAnswer, fetchBundle, fetchMeta, fetchTopics, sendFeedback } from "./services/api";
+import {
+  bundleToTopicSummaries,
+  getCachedBundle,
+  precacheBundleAudio,
+  saveCachedBundle
+} from "./services/offlineCache";
 import type {
   AnswerPayload,
   BundleResponse,
@@ -61,6 +67,8 @@ export function App() {
   const [consentAudioByLang, setConsentAudioByLang] = useState<Partial<Record<Lang, string | null>>>({});
   const [demoMode, setDemoMode] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [cachingOffline, setCachingOffline] = useState<boolean>(false);
+  const [offlineReady, setOfflineReady] = useState<boolean>(false);
   const [isOffline, setIsOffline] = useState<boolean>(
     typeof navigator !== "undefined" ? !navigator.onLine : false
   );
@@ -96,8 +104,16 @@ export function App() {
 
   useEffect(() => {
     let active = true;
+    const cached = getCachedBundle(lang);
+    if (cached) {
+      setBundle(cached);
+      setTopics(bundleToTopicSummaries(cached));
+      setDemoMode(cached.demo_mode);
+      setOfflineReady(true);
+    }
+
     async function loadContent() {
-      setLoading(true);
+      setLoading(!cached);
       try {
         const [topicsRes, bundleRes] = await Promise.all([
           fetchTopics(lang),
@@ -107,8 +123,18 @@ export function App() {
         setTopics(topicsRes.topics);
         setDemoMode(topicsRes.demo_mode || bundleRes.demo_mode);
         setBundle(bundleRes);
+        saveCachedBundle(bundleRes);
+
+        setCachingOffline(true);
+        const ok = await precacheBundleAudio(bundleRes, cached?.version_hash ?? null);
+        if (active) {
+          setCachingOffline(false);
+          setOfflineReady(ok || Boolean(cached));
+        }
       } catch {
-        // Offline bundle fallback will be added in M3
+        if (active && cached) {
+          setOfflineReady(true);
+        }
       } finally {
         if (active) setLoading(false);
       }
@@ -287,10 +313,15 @@ export function App() {
                 <WifiOffIcon className="w-4 h-4 text-ochre" />
                 <span className="text-ochre font-semibold">{t(lang, "offlineActive")}</span>
               </>
+            ) : cachingOffline ? (
+              <>
+                <CheckCircleIcon className="w-4 h-4 text-ink-muted" />
+                <span>{t(lang, "offlineCaching")}</span>
+              </>
             ) : (
               <>
                 <CheckCircleIcon className="w-4 h-4 text-viridian" />
-                <span>{t(lang, "offlineReady")}</span>
+                <span>{offlineReady ? t(lang, "offlineReady") : t(lang, "offlineCaching")}</span>
               </>
             )}
           </span>
