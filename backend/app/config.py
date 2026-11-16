@@ -21,6 +21,8 @@ class Settings(BaseSettings):
     DATABASE_URL: str = f"sqlite:///{(BASE_DIR / 'healthyarn.db').as_posix()}"
     STT_PROVIDER: str = "mock"  # spitch | mock | hf
     SPITCH_API_KEY: str = ""
+    YARNGPT_API_KEY: str = ""
+    YARNGPT_BASE_URL: str = "https://api.yarngpt.ai"
     EMBEDDING_MODEL: str = "sentence-transformers/LaBSE"
     MATCH_THRESHOLD: float = 0.62
     MATCH_MARGIN: float = 0.03

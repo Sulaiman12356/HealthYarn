@@ -46,12 +46,12 @@ def client(test_engine, seeded_session):
             yield session
 
     app.dependency_overrides[get_session] = override_get_session
-    app.state.stt_provider = MockSTT()
-    matcher = FAQMatcher(disable_heavy=True)
-    matcher.build_index(seeded_session)
-    app.state.matcher = matcher
 
     with TestClient(app) as c:
+        app.state.stt_provider = MockSTT()
+        matcher = FAQMatcher(disable_heavy=True)
+        matcher.build_index(seeded_session)
+        app.state.matcher = matcher
         yield c
 
     app.dependency_overrides.clear()

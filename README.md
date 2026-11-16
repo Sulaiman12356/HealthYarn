@@ -46,8 +46,18 @@ docker compose up --build
 
 ---
 
-## Offline YarnGPT Audio Generation (Colab GPU)
+## Batch YarnGPT Audio Generation (API or Colab GPU)
 
+### Option 1: YarnGPT Hosted API (Recommended — No GPU or `ffmpeg` Needed)
+1. Create an API key on [https://yarngpt.ai](https://yarngpt.ai) and add `YARNGPT_API_KEY=your_key` to `.env`.
+2. Preview live voice IDs (`GET /api/v1/voices`) and generate Opus `.ogg` clips directly into `backend/static/audio/`:
+```powershell
+cd backend
+python -m scripts.generate_audio --api --list-voices
+python -m scripts.generate_audio --api --only-missing
+```
+
+### Option 2: Colab GPU (`saheedniyi/YarnGPT2b`)
 1. Open [notebooks/generate_audio_colab.ipynb](notebooks/generate_audio_colab.ipynb) in Google Colab (T4/A100 GPU).
 2. Run all cells to install `saheedniyi02/yarngpt` + `WavTokenizer`, synthesise approved translations into 24 kbps–32 kbps mono Opus `.ogg` clips, and download the zip into `backend/static/audio/`.
 3. Run locally with `--only-missing` or `--lang yo --takes 2`.

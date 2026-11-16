@@ -2,9 +2,9 @@
 
 This log records pragmatic engineering decisions made during the HealthYarn ITDC 2026 prototype build whenever a requirement left implementation details open.
 
-## 1. Local Audio Synthesis Fallback (`--demo-synth`) & Format Compatibility
-- **Context**: YarnGPT (`saheedniyi/YarnGPT2b`) requires a CUDA GPU (~16 GB VRAM) and `ffmpeg` is not pre-installed on the local Windows build host.
-- **Decision**: `backend/scripts/generate_audio.py` implements full YarnGPT + `ffmpeg` Opus (`.ogg`) synthesis as the primary pipeline (paired with `notebooks/generate_audio_colab.ipynb` for GPU execution), and provides `--demo-synth` which generates valid, browser-playable, speech-cadence WAV/OGG-compatible audio clips locally with zero external binary dependencies. Audio files use content-hashed filenames (`{lang}/{intent_key}_{answer|question}_{sha1(text)[:8]}.ogg` or `.wav` when `--demo-synth` runs without `ffmpeg`) so cache invalidation works identically.
+## 1. YarnGPT API + Local Audio Synthesis Fallback (`--api` & `--demo-synth`)
+- **Context**: Running `saheedniyi/YarnGPT2b` locally requires a CUDA GPU (~16 GB VRAM), and `ffmpeg` is not pre-installed on the local Windows host. YarnGPT also provides an official hosted REST API (`https://api.yarngpt.ai/api/v1/*`) supporting `opus` (`.ogg`), `mp3`, and `wav` outputs for Yorùbá, Igbo, and Nigerian English.
+- **Decision**: `backend/scripts/generate_audio.py` supports three modes: (1) `--api` using `YARNGPT_API_KEY` via `POST /api/v1/tts/prepare` + `GET /api/v1/tts/stream/{ticket}` (returning `.ogg` Opus directly with zero `ffmpeg` required, dynamically resolving voice IDs via `GET /api/v1/voices`, and strictly omitting `target_language` so clinical copy is never altered), plus `--api-mode job` polling fallback; (2) local/Colab GPU (`notebooks/generate_audio_colab.ipynb`); and (3) `--demo-synth` offline waveform synthesis for zero-key testing. Audio files use content-hashed filenames (`{lang}/{intent_key}_{answer|question}_{sha1(text)[:8]}.{ogg|mp3|wav}`).
 
 ## 2. Hybrid Matcher Resilience (`LaBSE` + Multilingual Character/Word N-Gram Fallback)
 - **Context**: `sentence-transformers/LaBSE` (~1.8 GB) provides strong cross-lingual embeddings across Yorùbá, Igbo, and English, while local CI/test runs or restricted environments may not have `torch`/`LaBSE` weights downloaded yet.

@@ -1,9 +1,17 @@
-"""Offline batch audio synthesis pipeline for HealthYarn (YarnGPT + ffmpeg Opus).
+"""Offline batch audio synthesis pipeline for HealthYarn.
+
+Supports three backends:
+  1. YarnGPT Hosted API (`--api`, uses `YARNGPT_API_KEY` from `.env` via
+     `POST /api/v1/tts/prepare` + `GET /api/v1/tts/stream/{ticket}` or
+     `POST /api/v1/tts` + `GET /api/v1/status/{job_id}`).
+  2. Local / Colab YarnGPT GPU (`saheedniyi/YarnGPT2b` + `ffmpeg` Opus).
+  3. Local Offline Demo Synth (`--demo-synth`, lightweight tone waveforms).
 
 Usage:
-  python -m scripts.generate_audio --only-missing
-  python -m scripts.generate_audio --lang yo --takes 2
-  python -m scripts.generate_audio --demo-synth
+  python -m scripts.generate_audio --api --list-voices
+  python -m scripts.generate_audio --api --only-missing
+  python -m scripts.generate_audio --api --lang yo --takes 2 --format opus
+  python -m scripts.generate_audio --demo-synth --takes 2
 """
 
 from __future__ import annotations
@@ -14,13 +22,15 @@ import json
 import math
 import re
 import shutil
-import struct
 import subprocess
+import sys
 import tempfile
+import time
 import wave
 from pathlib import Path
 from typing import Callable, Optional
 
+import httpx
 import numpy as np
 from sqlmodel import Session, select
 
@@ -28,11 +38,11 @@ from app.config import get_settings
 from app.db import engine, init_db
 from app.models import PLACEHOLDER_PREFIX, FAQItem, SystemMessage, Translation, utc_now
 
-# Verified speaker names for saheedniyi/YarnGPT2b / yarngpt PyPI package
+# Preferred speaker names (resolved dynamically against GET /api/v1/voices in API mode)
 DEFAULT_VOICE_MAP: dict[str, list[str]] = {
     "yo": ["folake", "aisha", "abayomi"],
     "ig": ["chioma", "adanna", "obinna"],
-    "en": ["idera", "emma", "jude"],
+    "en": ["idera", "emma", "jude", "umar"],
 }
 
 YARNGPT_LANG_NAMES: dict[str, str] = {
@@ -40,6 +50,29 @@ YARNGPT_LANG_NAMES: dict[str, str] = {
     "ig": "igbo",
     "en": "english",
 }
+
+API_FORMAT_TO_EXT: dict[str, str] = {
+    "opus": "ogg",
+    "mp3": "mp3",
+    "wav": "wav",
+}
+
+
+class YarnGPTAPIError(RuntimeError):
+    """Structured error raised from the YarnGPT REST API."""
+
+    def __init__(
+        self,
+        message: str,
+        *,
+        status_code: int = 0,
+        code: str = "API_ERROR",
+        trace_id: str | None = None,
+    ) -> None:
+        super().__init__(message)
+        self.status_code = status_code
+        self.code = code
+        self.trace_id = trace_id
 
 
 def strip_placeholder_prefix(text: str) -> str:
@@ -69,6 +102,272 @@ def split_into_chunks(text: str, max_words: int = 25) -> list[str]:
 
 def text_hash(text: str) -> str:
     return hashlib.sha1(text.encode("utf-8")).hexdigest()[:8]
+
+
+def _extract_error(resp: httpx.Response) -> YarnGPTAPIError:
+    trace_id = resp.headers.get("X-Request-Id")
+    try:
+        data = resp.json()
+    except Exception:
+        return YarnGPTAPIError(
+            f"HTTP {resp.status_code}: {resp.text[:240]}",
+            status_code=resp.status_code,
+            trace_id=trace_id,
+        )
+    err = data.get("error") if isinstance(data, dict) else None
+    if isinstance(err, dict):
+        code = str(err.get("code") or "API_ERROR")
+        trace_id = str(err.get("trace_id") or trace_id or "")
+        msg = str(err.get("user_message") or err.get("message") or resp.text[:200])
+        return YarnGPTAPIError(
+            f"[{code}] {msg} (trace_id={trace_id or 'n/a'})",
+            status_code=resp.status_code,
+            code=code,
+            trace_id=trace_id or None,
+        )
+    return YarnGPTAPIError(
+        f"HTTP {resp.status_code}: {data}",
+        status_code=resp.status_code,
+        trace_id=trace_id,
+    )
+
+
+def _retry_delay_seconds(resp: httpx.Response, default: float = 1.5) -> float:
+    hdr = resp.headers.get("Retry-After")
+    if hdr:
+        try:
+            return min(15.0, max(0.5, float(hdr)))
+        except ValueError:
+            pass
+    try:
+        data = resp.json()
+        sec = data.get("error", {}).get("details", {}).get("retry_after_seconds")
+        if sec is not None:
+            return min(15.0, max(0.5, float(sec)))
+    except Exception:
+        pass
+    return default
+
+
+class YarnGPTAPIClient:
+    """Official YarnGPT REST API client following https://yarngpt.ai/api-docs."""
+
+    def __init__(
+        self,
+        api_key: str,
+        base_url: str = "https://api.yarngpt.ai",
+        *,
+        auth_client: Optional[httpx.Client] = None,
+        public_client: Optional[httpx.Client] = None,
+        sleep_fn: Callable[[float], None] = time.sleep,
+    ) -> None:
+        if not api_key or api_key == "TODO":
+            raise ValueError("YARNGPT_API_KEY is not configured. Set it in .env.")
+        self.api_key = api_key.strip()
+        self.base_url = base_url.rstrip("/")
+        self.sleep_fn = sleep_fn
+        self._owns_clients = auth_client is None and public_client is None
+        self.auth_client = auth_client or httpx.Client(timeout=60.0)
+        # Stream tickets & signed audio URLs carry credentials in path/query and MUST NOT send Authorization
+        self.public_client = public_client or httpx.Client(timeout=90.0, follow_redirects=True)
+
+    def close(self) -> None:
+        if self._owns_clients:
+            self.auth_client.close()
+            self.public_client.close()
+
+    def _auth_headers(self, extra: Optional[dict[str, str]] = None) -> dict[str, str]:
+        headers = {"Authorization": f"Bearer {self.api_key}"}
+        if extra:
+            headers.update(extra)
+        return headers
+
+    def list_voices(self) -> list[dict]:
+        resp = self.auth_client.get(
+            f"{self.base_url}/api/v1/voices",
+            headers=self._auth_headers(),
+        )
+        if resp.status_code >= 400:
+            raise _extract_error(resp)
+        payload = resp.json()
+        if isinstance(payload, list):
+            return payload
+        if isinstance(payload, dict):
+            for key in ("voices", "data", "items"):
+                if isinstance(payload.get(key), list):
+                    return payload[key]
+        return []
+
+    @staticmethod
+    def _voice_id(entry: dict) -> Optional[str]:
+        for key in ("id", "voice", "name"):
+            val = entry.get(key)
+            if isinstance(val, str) and val.strip():
+                return val.strip()
+        return None
+
+    def resolve_voice(self, lang: str, take_idx: int, catalogue: list[dict]) -> Optional[str]:
+        if not catalogue:
+            return None
+
+        id_by_lower: dict[str, str] = {}
+        lang_matches: list[str] = []
+        default_id: Optional[str] = None
+        lang_aliases = {lang.lower(), YARNGPT_LANG_NAMES.get(lang.lower(), "")}
+
+        for entry in catalogue:
+            vid = self._voice_id(entry)
+            if not vid:
+                continue
+            id_by_lower[vid.lower()] = vid
+            if entry.get("default") is True and default_id is None:
+                default_id = vid
+
+            entry_langs = entry.get("languages") or entry.get("language") or []
+            if isinstance(entry_langs, str):
+                entry_langs = [entry_langs]
+            normalized_langs = {str(x).strip().lower() for x in entry_langs}
+            if normalized_langs & lang_aliases:
+                lang_matches.append(vid)
+
+        preferred = DEFAULT_VOICE_MAP.get(lang, [])
+        ordered_prefs = preferred[take_idx:] + preferred[:take_idx]
+        for pref in ordered_prefs:
+            if pref.lower() in id_by_lower:
+                return id_by_lower[pref.lower()]
+
+        if lang_matches:
+            return lang_matches[take_idx % len(lang_matches)]
+
+        return default_id
+
+    def synthesize_prepare(
+        self,
+        text: str,
+        *,
+        voice: Optional[str],
+        output_format: str = "opus",
+    ) -> bytes:
+        clean_text = strip_placeholder_prefix(text)
+        body: dict[str, str] = {
+            "text": clean_text,
+            "output_format": output_format,
+        }
+        if voice:
+            body["voice"] = voice
+
+        prep_resp: Optional[httpx.Response] = None
+        for attempt in range(2):
+            prep_resp = self.auth_client.post(
+                f"{self.base_url}/api/v1/tts/prepare",
+                headers=self._auth_headers({"Content-Type": "application/json"}),
+                json=body,
+            )
+            if prep_resp.status_code in {500, 502, 503, 504} and attempt == 0:
+                self.sleep_fn(1.5)
+                continue
+            if prep_resp.status_code == 429 and attempt == 0:
+                self.sleep_fn(_retry_delay_seconds(prep_resp))
+                continue
+            break
+
+        assert prep_resp is not None
+        if prep_resp.status_code >= 400:
+            raise _extract_error(prep_resp)
+
+        prep_data = prep_resp.json()
+        stream_path = str(prep_data.get("stream_url") or "")
+        if not stream_path:
+            ticket = prep_data.get("ticket", "")
+            stream_path = f"/api/v1/tts/stream/{ticket}"
+        stream_url = stream_path if stream_path.startswith("http") else f"{self.base_url}{stream_path}"
+
+        for attempt in range(2):
+            audio_resp = self.public_client.get(stream_url)
+            if audio_resp.status_code == 503 and attempt == 0:
+                self.sleep_fn(_retry_delay_seconds(audio_resp, default=2.0))
+                continue
+            if audio_resp.status_code >= 400:
+                raise _extract_error(audio_resp)
+            if audio_resp.headers.get("X-Yarn-Partial") == "1":
+                raise YarnGPTAPIError("Stream returned partial audio (X-Yarn-Partial: 1)")
+            if len(audio_resp.content.strip()) <= 64:
+                raise YarnGPTAPIError("Stream returned empty or truncated audio bytes")
+            return audio_resp.content
+
+        raise YarnGPTAPIError("Failed to fetch prepared audio stream")
+
+    def synthesize_job(
+        self,
+        text: str,
+        *,
+        voice: Optional[str],
+        output_format: str = "mp3",
+        idempotency_key: str,
+    ) -> bytes:
+        job_format = "mp3" if output_format == "opus" else output_format
+        clean_text = strip_placeholder_prefix(text)
+        safe_idem = re.sub(r"[^A-Za-z0-9_-]", "-", idempotency_key)[:64]
+
+        body: dict[str, str] = {
+            "text": clean_text,
+            "output_format": job_format,
+        }
+        if voice:
+            body["voice"] = voice
+
+        post_resp: Optional[httpx.Response] = None
+        for attempt in range(3):
+            post_resp = self.auth_client.post(
+                f"{self.base_url}/api/v1/tts",
+                headers=self._auth_headers(
+                    {
+                        "Content-Type": "application/json",
+                        "Idempotency-Key": safe_idem,
+                    }
+                ),
+                json=body,
+            )
+            if post_resp.status_code in {409, 500, 502, 503, 504} and attempt < 2:
+                self.sleep_fn(1.5)
+                continue
+            if post_resp.status_code == 429 and attempt < 2:
+                self.sleep_fn(_retry_delay_seconds(post_resp))
+                continue
+            break
+
+        assert post_resp is not None
+        if post_resp.status_code >= 400:
+            raise _extract_error(post_resp)
+
+        job_id = post_resp.json()["job_id"]
+        delay = 1.0
+        for _ in range(45):
+            status_resp = self.auth_client.get(
+                f"{self.base_url}/api/v1/status/{job_id}",
+                headers=self._auth_headers(),
+            )
+            if status_resp.status_code >= 400:
+                raise _extract_error(status_resp)
+            st_data = status_resp.json()
+            state = st_data.get("status")
+            if state == "completed":
+                audio_url = st_data.get("audio_url")
+                if not audio_url:
+                    raise YarnGPTAPIError(f"Job {job_id} completed without audio_url")
+                dl = self.public_client.get(audio_url)
+                if dl.status_code >= 400:
+                    raise _extract_error(dl)
+                if len(dl.content.strip()) <= 64:
+                    raise YarnGPTAPIError(f"Job {job_id} audio_url returned empty body")
+                return dl.content
+            if state == "failed":
+                msg = st_data.get("user_message") or st_data.get("message") or "TTS job failed"
+                raise YarnGPTAPIError(f"Job {job_id} failed: {msg}")
+            self.sleep_fn(delay)
+            delay = min(5.0, delay * 1.4)
+
+        raise YarnGPTAPIError(f"Timed out waiting for TTS job {job_id}")
 
 
 def normalize_waveform(samples: np.ndarray, target_peak: float = 0.85) -> np.ndarray:
@@ -116,7 +415,7 @@ def synthesize_demo_chunk(chunk: str, lang: str, take_idx: int, sample_rate: int
 
 
 def build_yarngpt_synthesizer() -> Callable[[str, str, str], tuple[np.ndarray, int]]:
-    """Load YarnGPT model (saheedniyi/YarnGPT2b or yarngpt package) for GPU inference."""
+    """Load YarnGPT model (saheedniyi/YarnGPT2b or yarngpt package) for local/Colab GPU inference."""
     try:
         from yarngpt import generate_speech  # type: ignore
 
@@ -200,7 +499,6 @@ def export_audio_file(
         finally:
             tmp_path.unlink(missing_ok=True)
 
-    # Local no-ffmpeg fallback: write compact 8 kHz mono PCM WAV (< 40 KB)
     out_path = target_dir / f"{base_name}.wav"
     if sample_rate > 8000 and len(normalized) > 16:
         step = max(1, sample_rate // 8000)
@@ -228,9 +526,8 @@ def render_text_to_audio(
     take_suffix = f"_take{take_idx + 1}" if take_idx > 0 else ""
     base_name = f"{intent_key}_{kind}_{digest}{take_suffix}"
 
-    silence_samples = 0
     sr = 16000 if demo_synth else 24000
-    silence_len = int(sr * 0.25)  # 250 ms inter-sentence silence
+    silence_len = int(sr * 0.25)
 
     joined: list[np.ndarray] = []
     for i, chunk in enumerate(chunks):
@@ -243,12 +540,67 @@ def render_text_to_audio(
         joined.append(seg)
         if i < len(chunks) - 1:
             joined.append(np.zeros(silence_len, dtype=np.float32))
-            silence_samples += silence_len
 
     waveform = np.concatenate(joined) if joined else np.zeros(int(sr * 0.3), dtype=np.float32)
     out_file = export_audio_file(waveform, sr, out_root / lang, base_name, use_ffmpeg=use_ffmpeg)
     url = f"/static/audio/{lang}/{out_file.name}"
     return url, out_file
+
+
+def render_text_via_api(
+    client: YarnGPTAPIClient,
+    catalogue: list[dict],
+    text: str,
+    lang: str,
+    intent_key: str,
+    kind: str,
+    take_idx: int,
+    out_root: Path,
+    api_mode: str,
+    output_format: str,
+) -> tuple[str, Path, Optional[str]]:
+    digest = text_hash(text)
+    take_suffix = f"_take{take_idx + 1}" if take_idx > 0 else ""
+    effective_format = "mp3" if (api_mode == "job" and output_format == "opus") else output_format
+    ext = API_FORMAT_TO_EXT.get(effective_format, "ogg")
+    base_name = f"{intent_key}_{kind}_{digest}{take_suffix}"
+    target_dir = out_root / lang
+    target_dir.mkdir(parents=True, exist_ok=True)
+    out_file = target_dir / f"{base_name}.{ext}"
+
+    voice_id = client.resolve_voice(lang, take_idx, catalogue)
+    if api_mode == "job":
+        audio_bytes = client.synthesize_job(
+            text,
+            voice=voice_id,
+            output_format=effective_format,
+            idempotency_key=f"hy-{base_name}",
+        )
+    else:
+        audio_bytes = client.synthesize_prepare(
+            text,
+            voice=voice_id,
+            output_format=effective_format,
+        )
+
+    out_file.write_bytes(audio_bytes)
+    url = f"/static/audio/{lang}/{out_file.name}"
+    return url, out_file, voice_id
+
+
+def _target_exists_for_digest(
+    existing_url: Optional[str],
+    digest: str,
+    out_root: Path,
+    lang: str,
+    expected_ext: Optional[str],
+) -> bool:
+    if not existing_url or digest not in existing_url:
+        return False
+    if expected_ext and not existing_url.endswith(f".{expected_ext}"):
+        return False
+    filename = existing_url.rsplit("/", 1)[-1]
+    return (out_root / lang / filename).exists()
 
 
 def run_generation(
@@ -258,145 +610,271 @@ def run_generation(
     lang_filter: Optional[str] = None,
     takes: int = 1,
     demo_synth: bool = False,
+    use_api: bool = False,
+    api_mode: str = "prepare",
+    output_format: str = "opus",
+    api_client: Optional[YarnGPTAPIClient] = None,
 ) -> dict:
     has_ffmpeg = bool(shutil.which("ffmpeg"))
-    yarngpt_fn = None if demo_synth else build_yarngpt_synthesizer()
+    yarngpt_fn = None
+    catalogue: list[dict] = []
+    owns_client = False
+
+    if use_api:
+        if api_client is None:
+            settings = get_settings()
+            api_client = YarnGPTAPIClient(
+                api_key=settings.YARNGPT_API_KEY,
+                base_url=settings.YARNGPT_BASE_URL,
+            )
+            owns_client = True
+        catalogue = api_client.list_voices()
+        effective_format = "mp3" if (api_mode == "job" and output_format == "opus") else output_format
+        expected_ext: Optional[str] = API_FORMAT_TO_EXT.get(effective_format, "ogg")
+    elif not demo_synth:
+        yarngpt_fn = build_yarngpt_synthesizer()
+        expected_ext = "ogg" if has_ffmpeg else "wav"
+    else:
+        expected_ext = "ogg" if has_ffmpeg else "wav"
 
     created_files: list[Path] = []
 
-    faqs = {f.id: f for f in session.exec(select(FAQItem)).all()}
-    tr_query = select(Translation)
-    if lang_filter:
-        tr_query = tr_query.where(Translation.lang == lang_filter)
-    translations = session.exec(tr_query).all()
+    try:
+        faqs = {f.id: f for f in session.exec(select(FAQItem)).all()}
+        tr_query = select(Translation)
+        if lang_filter:
+            tr_query = tr_query.where(Translation.lang == lang_filter)
+        translations = session.exec(tr_query).all()
 
-    for tr in translations:
-        faq = faqs.get(tr.faq_id)
-        if not faq:
-            continue
-        voices = DEFAULT_VOICE_MAP.get(tr.lang, ["idera"])
+        for tr in translations:
+            faq = faqs.get(tr.faq_id)
+            if not faq:
+                continue
+            voices = DEFAULT_VOICE_MAP.get(tr.lang, ["idera"])
 
-        # Question audio
-        q_digest = text_hash(tr.question_text)
-        needs_q = (
-            not only_missing
-            or not tr.question_audio_url
-            or q_digest not in tr.question_audio_url
-            or tr.regen_requested
-        )
-        if needs_q:
-            q_url, q_path = render_text_to_audio(
-                tr.question_text,
-                tr.lang,
-                faq.intent_key,
-                "question",
-                voices[0],
-                0,
-                out_root,
-                demo_synth,
-                yarngpt_fn,
-                has_ffmpeg,
-            )
-            tr.question_audio_url = q_url
-            created_files.append(q_path)
-
-        # Answer audio (supports multiple takes for language reviewer selection)
-        a_digest = text_hash(tr.answer_text)
-        needs_a = (
-            not only_missing
-            or not tr.answer_audio_url
-            or a_digest not in tr.answer_audio_url
-            or tr.regen_requested
-        )
-        if needs_a:
-            take_urls: list[str] = []
-            for t_idx in range(max(1, takes)):
-                voice = voices[t_idx % len(voices)]
-                a_url, a_path = render_text_to_audio(
-                    tr.answer_text,
-                    tr.lang,
-                    faq.intent_key,
-                    "answer",
-                    voice,
-                    t_idx,
-                    out_root,
-                    demo_synth,
-                    yarngpt_fn,
-                    has_ffmpeg,
+            # Question audio
+            q_digest = text_hash(tr.question_text)
+            needs_q = (
+                not only_missing
+                or tr.regen_requested
+                or not _target_exists_for_digest(
+                    tr.question_audio_url, q_digest, out_root, tr.lang, expected_ext
                 )
-                take_urls.append(a_url)
-                created_files.append(a_path)
-            tr.answer_audio_url = take_urls[0]
-            tr.audio_takes_json = json.dumps(take_urls)
-            tr.voice_name = voices[0]
-            tr.regen_requested = False
-            tr.updated_at = utc_now()
-            session.add(tr)
-
-    # System messages
-    msg_query = select(SystemMessage)
-    if lang_filter:
-        msg_query = msg_query.where(SystemMessage.lang == lang_filter)
-    sys_msgs = session.exec(msg_query).all()
-    for msg in sys_msgs:
-        voices = DEFAULT_VOICE_MAP.get(msg.lang, ["idera"])
-        m_digest = text_hash(msg.text)
-        needs_m = not only_missing or not msg.audio_url or m_digest not in msg.audio_url
-        if needs_m:
-            m_url, m_path = render_text_to_audio(
-                msg.text,
-                msg.lang,
-                f"sys_{msg.key}",
-                "prompt",
-                voices[0],
-                0,
-                out_root,
-                demo_synth,
-                yarngpt_fn,
-                has_ffmpeg,
             )
-            msg.audio_url = m_url
-            session.add(msg)
-            created_files.append(m_path)
+            if needs_q:
+                if use_api:
+                    assert api_client is not None
+                    q_url, q_path, _ = render_text_via_api(
+                        api_client,
+                        catalogue,
+                        tr.question_text,
+                        tr.lang,
+                        faq.intent_key,
+                        "question",
+                        0,
+                        out_root,
+                        api_mode,
+                        output_format,
+                    )
+                else:
+                    q_url, q_path = render_text_to_audio(
+                        tr.question_text,
+                        tr.lang,
+                        faq.intent_key,
+                        "question",
+                        voices[0],
+                        0,
+                        out_root,
+                        demo_synth,
+                        yarngpt_fn,
+                        has_ffmpeg,
+                    )
+                tr.question_audio_url = q_url
+                created_files.append(q_path)
 
-    session.commit()
+            # Answer audio (supports multiple takes)
+            a_digest = text_hash(tr.answer_text)
+            needs_a = (
+                not only_missing
+                or tr.regen_requested
+                or not _target_exists_for_digest(
+                    tr.answer_audio_url, a_digest, out_root, tr.lang, expected_ext
+                )
+            )
+            if needs_a:
+                take_urls: list[str] = []
+                used_voice: Optional[str] = voices[0]
+                for t_idx in range(max(1, takes)):
+                    if use_api:
+                        assert api_client is not None
+                        a_url, a_path, resolved_v = render_text_via_api(
+                            api_client,
+                            catalogue,
+                            tr.answer_text,
+                            tr.lang,
+                            faq.intent_key,
+                            "answer",
+                            t_idx,
+                            out_root,
+                            api_mode,
+                            output_format,
+                        )
+                        if t_idx == 0:
+                            used_voice = resolved_v or "api-default"
+                    else:
+                        voice = voices[t_idx % len(voices)]
+                        a_url, a_path = render_text_to_audio(
+                            tr.answer_text,
+                            tr.lang,
+                            faq.intent_key,
+                            "answer",
+                            voice,
+                            t_idx,
+                            out_root,
+                            demo_synth,
+                            yarngpt_fn,
+                            has_ffmpeg,
+                        )
+                        if t_idx == 0:
+                            used_voice = voice
+                    take_urls.append(a_url)
+                    created_files.append(a_path)
+                tr.answer_audio_url = take_urls[0]
+                tr.audio_takes_json = json.dumps(take_urls)
+                tr.voice_name = used_voice
+                tr.regen_requested = False
+                tr.updated_at = utc_now()
+                session.add(tr)
+
+        # System messages
+        msg_query = select(SystemMessage)
+        if lang_filter:
+            msg_query = msg_query.where(SystemMessage.lang == lang_filter)
+        sys_msgs = session.exec(msg_query).all()
+        for msg in sys_msgs:
+            voices = DEFAULT_VOICE_MAP.get(msg.lang, ["idera"])
+            m_digest = text_hash(msg.text)
+            needs_m = not only_missing or not _target_exists_for_digest(
+                msg.audio_url, m_digest, out_root, msg.lang, expected_ext
+            )
+            if needs_m:
+                if use_api:
+                    assert api_client is not None
+                    m_url, m_path, _ = render_text_via_api(
+                        api_client,
+                        catalogue,
+                        msg.text,
+                        msg.lang,
+                        f"sys_{msg.key}",
+                        "prompt",
+                        0,
+                        out_root,
+                        api_mode,
+                        output_format,
+                    )
+                else:
+                    m_url, m_path = render_text_to_audio(
+                        msg.text,
+                        msg.lang,
+                        f"sys_{msg.key}",
+                        "prompt",
+                        voices[0],
+                        0,
+                        out_root,
+                        demo_synth,
+                        yarngpt_fn,
+                        has_ffmpeg,
+                    )
+                msg.audio_url = m_url
+                session.add(msg)
+                created_files.append(m_path)
+
+        session.commit()
+    finally:
+        if owns_client and api_client is not None:
+            api_client.close()
 
     total_bytes = sum(p.stat().st_size for p in created_files if p.exists())
     count = len(created_files)
     avg_kb = (total_bytes / count / 1024.0) if count else 0.0
-    summary = {
+    return {
         "files_created": count,
         "total_kb": round(total_bytes / 1024.0, 2),
         "average_kb": round(avg_kb, 2),
-        "ffmpeg_opus": has_ffmpeg,
-        "demo_synth": demo_synth,
+        "mode": "api" if use_api else ("demo_synth" if demo_synth else "local_gpu"),
+        "format": expected_ext,
     }
-    return summary
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Batch-generate audio clips with YarnGPT (or --demo-synth).")
-    parser.add_argument("--only-missing", action="store_true", help="Skip items whose hashed audio already exists.")
+    parser = argparse.ArgumentParser(
+        description="Batch-generate audio clips with YarnGPT API, local/Colab YarnGPT GPU, or --demo-synth."
+    )
+    parser.add_argument("--only-missing", action="store_true", help="Skip items whose hashed target audio already exists.")
     parser.add_argument("--lang", choices=["en", "yo", "ig"], default=None, help="Filter to a single language.")
     parser.add_argument("--takes", type=int, default=1, help="Number of voice takes per answer.")
     parser.add_argument(
+        "--api",
+        action="store_true",
+        help="Synthesise using the hosted YarnGPT REST API (requires YARNGPT_API_KEY).",
+    )
+    parser.add_argument(
+        "--api-mode",
+        choices=["prepare", "job"],
+        default="prepare",
+        help="YarnGPT API flow: 'prepare' (streaming ticket, supports opus) or 'job' (async polling, mp3/wav).",
+    )
+    parser.add_argument(
+        "--format",
+        choices=["opus", "mp3", "wav"],
+        default="opus",
+        help="Output audio format for --api mode (default: opus -> .ogg).",
+    )
+    parser.add_argument(
+        "--list-voices",
+        action="store_true",
+        help="Fetch and print the live voice catalogue from GET /api/v1/voices, then exit.",
+    )
+    parser.add_argument(
         "--demo-synth",
         action="store_true",
-        help="Synthesise local playable demo audio clips without GPU/YarnGPT.",
+        help="Synthesise local playable demo audio clips without API or GPU.",
     )
     args = parser.parse_args()
 
     settings = get_settings()
+
+    if args.list_voices:
+        client = YarnGPTAPIClient(api_key=settings.YARNGPT_API_KEY, base_url=settings.YARNGPT_BASE_URL)
+        try:
+            voices = client.list_voices()
+            print(json.dumps(voices, indent=2, ensure_ascii=False))
+        finally:
+            client.close()
+        return
+
+    use_api = args.api or (not args.demo_synth and bool(settings.YARNGPT_API_KEY and settings.YARNGPT_API_KEY != "TODO"))
+    if args.demo_synth:
+        use_api = False
+
     init_db(engine)
-    with Session(engine) as session:
-        summary = run_generation(
-            session,
-            out_root=settings.static_audio_dir,
-            only_missing=args.only_missing,
-            lang_filter=args.lang,
-            takes=args.takes,
-            demo_synth=args.demo_synth,
-        )
+    try:
+        with Session(engine) as session:
+            summary = run_generation(
+                session,
+                out_root=settings.static_audio_dir,
+                only_missing=args.only_missing,
+                lang_filter=args.lang,
+                takes=args.takes,
+                demo_synth=args.demo_synth,
+                use_api=use_api,
+                api_mode=args.api_mode,
+                output_format=args.format,
+            )
+    except (YarnGPTAPIError, ValueError) as exc:
+        print(f"Error: {exc}", file=sys.stderr)
+        sys.exit(1)
+
     print(f"Audio generation complete: {summary}")
 
 

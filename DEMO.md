@@ -8,6 +8,9 @@ Follow this step-by-step script for the **ITDC 2026** live demonstration (plus o
 # Terminal 1 — Backend API (from backend/)
 cd backend
 python -m scripts.seed --demo
+# Either use real YarnGPT API voices (requires YARNGPT_API_KEY in .env):
+#   python -m scripts.generate_audio --api --only-missing
+# Or use local zero-key demo tone synthesis:
 python -m scripts.generate_audio --demo-synth --takes 2
 uvicorn app.main:app --host 127.0.0.1 --port 8000
 
