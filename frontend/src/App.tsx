@@ -27,8 +27,8 @@ import type {
   TopicSummary,
   UnsureCandidate
 } from "./types";
-import { BrandLogo } from "./components/BrandSvg";
 import { DemoBanner } from "./components/DemoBanner";
+import { SiteHeader, type NavRoute } from "./components/SiteHeader";
 import { LandingPage } from "./components/landing/LandingPage";
 import { LanguagePicker } from "./components/LanguagePicker";
 import { HomeView } from "./components/HomeView";
@@ -41,7 +41,7 @@ import { CheckCircleIcon, VolumeIcon, VolumeMutedIcon, WifiOffIcon } from "./com
 
 const AdminPortal = lazy(() => import("./components/AdminPortal"));
 
-type RouteMode = "landing" | "app" | "admin";
+type RouteMode = NavRoute;
 
 type Screen =
   | { name: "welcome" }
@@ -90,6 +90,9 @@ function parseLocationRoute(hasSavedLang: boolean): { mode: RouteMode; initialSc
   if (pathname.startsWith("/admin")) {
     return { mode: "admin", initialScreen: { name: "home" } };
   }
+  if (pathname.startsWith("/about")) {
+    return { mode: "about", initialScreen: { name: "home" } };
+  }
   if (pathname.startsWith("/app")) {
     const params = new URLSearchParams(window.location.search);
     const topicSlug = params.get("topic");
@@ -98,7 +101,7 @@ function parseLocationRoute(hasSavedLang: boolean): { mode: RouteMode; initialSc
       return { mode: "app", initialScreen: { name: "topic", slug: topicSlug } };
     }
     if (viewParam === "about") {
-      return { mode: "app", initialScreen: { name: "about" } };
+      return { mode: "about", initialScreen: { name: "home" } };
     }
     if (viewParam === "welcome") {
       return { mode: "app", initialScreen: { name: "welcome" } };
@@ -150,6 +153,7 @@ export function App() {
   const [demoMode, setDemoMode] = useState<boolean>(false);
   const [contentReviewed, setContentReviewed] = useState<boolean>(true);
   const [metaReviewers, setMetaReviewers] = useState<{
+    updated?: string;
     clinical?: string;
     language?: string;
   }>({});
@@ -289,6 +293,7 @@ export function App() {
           setContentReviewed(false);
         }
         setMetaReviewers({
+          updated: m.content_last_updated,
           clinical: m.clinical_reviewers,
           language: m.language_reviewers
         });
@@ -357,6 +362,60 @@ export function App() {
     };
   }, [lang, routeMode]);
 
+  // Translate open Answer screen in-place whenever language switches
+  const openAnswerFaqId = screen.name === "answer" ? screen.payload.faq_id : null;
+  const openAnswerLang = screen.name === "answer" ? screen.payload.lang : null;
+  useEffect(() => {
+    if (routeMode !== "app" || openAnswerFaqId === null || openAnswerLang === lang) {
+      return;
+    }
+    let active = true;
+    const cached = getCachedBundle(lang);
+    if (cached) {
+      for (const tp of cached.topics) {
+        const hit = tp.items.find((i) => i.faq_id === openAnswerFaqId);
+        if (hit) {
+          const disc = cached.system_messages?.disclaimer;
+          setScreen({
+            name: "answer",
+            payload: {
+              faq_id: hit.faq_id,
+              intent_key: hit.intent_key,
+              topic_slug: tp.slug,
+              topic_name: tp.name,
+              lang,
+              question: hit.question,
+              answer_text: hit.answer_text,
+              question_audio_url: hit.question_audio_url,
+              answer_audio_url: hit.answer_audio_url,
+              source_reference: hit.source_reference,
+              disclaimer_text: disc?.text,
+              disclaimer_audio_url: disc?.audio_url ?? null,
+              demo_mode: cached.demo_mode,
+              log_id: null
+            }
+          });
+          break;
+        }
+      }
+    }
+    if (!isOffline) {
+      fetchAnswer(openAnswerFaqId, lang, false)
+        .then((fresh) => {
+          if (!active) return;
+          setScreen((curr) =>
+            curr.name === "answer" && curr.payload.faq_id === openAnswerFaqId
+              ? { name: "answer", payload: fresh }
+              : curr
+          );
+        })
+        .catch(() => {});
+    }
+    return () => {
+      active = false;
+    };
+  }, [isOffline, lang, openAnswerFaqId, openAnswerLang, routeMode]);
+
   const persistLang = (nextLang: Lang) => {
     setLang(nextLang);
     setHasChosenLang(true);
@@ -368,39 +427,41 @@ export function App() {
     }
   };
 
+  // In-place language switch across Landing, App, About, and Staff Sign In
   const handleSelectLanguage = (nextLang: Lang) => {
+    audio.stop();
     persistLang(nextLang);
-    if (routeMode === "app") {
-      setScreen({ name: "home" });
-    }
   };
 
-  const handleOpenAppFromLanding = (topicSlug?: string, view?: "home" | "about") => {
-    persistLang(lang);
-    let targetPath = "/app";
+  const navigateToRoute = (route: NavRoute, topicSlug?: string) => {
+    audio.stop();
+    let targetPath = "/";
     let nextScreen: Screen = { name: "home" };
-    if (topicSlug) {
-      targetPath = `/app?topic=${encodeURIComponent(topicSlug)}`;
-      nextScreen = { name: "topic", slug: topicSlug };
-    } else if (view === "about") {
-      targetPath = "/app?view=about";
-      nextScreen = { name: "about" };
+    if (route === "app") {
+      persistLang(lang);
+      targetPath = topicSlug ? `/app?topic=${encodeURIComponent(topicSlug)}` : "/app";
+      nextScreen = topicSlug ? { name: "topic", slug: topicSlug } : { name: "home" };
+    } else if (route === "about") {
+      targetPath = "/about";
+    } else if (route === "admin") {
+      targetPath = "/admin";
     }
     if (typeof window !== "undefined") {
       window.history.pushState({}, "", targetPath);
-      window.scrollTo({ top: 0, behavior: "auto" });
+      try {
+        window.scrollTo({ top: 0, behavior: "auto" });
+      } catch {
+        // Ignore in jsdom
+      }
     }
-    setRouteMode("app");
-    setScreen(nextScreen);
+    setRouteMode(route);
+    if (route === "app") {
+      setScreen(nextScreen);
+    }
   };
 
-  const handleNavigateLanding = () => {
-    audio.stop();
-    if (typeof window !== "undefined") {
-      window.history.pushState({}, "", "/");
-      window.scrollTo({ top: 0, behavior: "auto" });
-    }
-    setRouteMode("landing");
+  const handleOpenAppFromLanding = (topicSlug?: string) => {
+    navigateToRoute("app", topicSlug);
   };
 
   const handleToggleAutoplay = () => {
@@ -470,15 +531,30 @@ export function App() {
     return (
       <Suspense fallback={<div className="p-6 text-ink">{t(lang, "loading")}</div>}>
         <AdminPortal
-          onExit={() => {
-            if (typeof window !== "undefined" && window.location.pathname.startsWith("/admin")) {
-              window.history.pushState({}, "", "/app");
-            }
-            setRouteMode("app");
-            setScreen(hasChosenLang ? { name: "home" } : { name: "welcome" });
-          }}
+          lang={lang}
+          onSelectLang={handleSelectLanguage}
+          onNavigateRoute={(route) => navigateToRoute(route)}
+          onExit={() => navigateToRoute("app")}
         />
       </Suspense>
+    );
+  }
+
+  if (routeMode === "about") {
+    return (
+      <AboutView
+        lang={lang}
+        meta={
+          bundle?.meta || {
+            content_last_updated: metaReviewers.updated || "2026-11-16",
+            clinical_reviewers: metaReviewers.clinical || "Dr. Adebayo O. & Clinical Review Team",
+            language_reviewers:
+              metaReviewers.language || "Yorùbá & Nigerian Pidgin Linguistic Team"
+          }
+        }
+        onSelectLang={handleSelectLanguage}
+        onNavigateRoute={(route) => navigateToRoute(route)}
+      />
     );
   }
 
@@ -493,6 +569,7 @@ export function App() {
         languageReviewers={metaReviewers.language}
         onSelectLang={handleSelectLanguage}
         onOpenApp={handleOpenAppFromLanding}
+        onNavigateRoute={(route) => navigateToRoute(route)}
       />
     );
   }
@@ -519,100 +596,16 @@ export function App() {
 
   return (
     <div className="min-h-screen bg-ground text-ink flex flex-col">
-      <header className="bg-viridian text-white border-b border-viridian-hover">
-        <div className="max-w-3xl mx-auto px-4 min-h-[56px] py-2 flex flex-wrap items-center justify-between gap-2">
-          <button
-            type="button"
-            onClick={() => {
-              audio.stop();
-              setScreen(hasChosenLang ? { name: "home" } : { name: "welcome" });
-            }}
-            aria-label={t(lang, "appName")}
-            className="min-h-[48px] px-2 flex items-center gap-2 rounded-lg hover:bg-viridian-hover transition-colors"
-          >
-            <BrandLogo variant="onGreen" markSize="w-7 h-7" textSize="text-lg" />
-          </button>
-
-          <div className="flex items-center gap-1.5">
-            <div
-              className="flex items-center rounded-full bg-viridian-hover p-1"
-              role="group"
-              aria-label={t(lang, "welcomeTitle")}
-            >
-              {(["yo", "pcm", "en"] as Lang[]).map((code) => (
-                <button
-                  key={code}
-                  type="button"
-                  onClick={() => handleSelectLanguage(code)}
-                  aria-label={code === "pcm" ? "Nigerian Pidgin" : code.toUpperCase()}
-                  aria-pressed={lang === code}
-                  className={`min-h-[40px] min-w-[40px] px-2.5 rounded-full text-xs font-bold uppercase transition-colors ${
-                    lang === code
-                      ? "bg-hy-amber text-hy-ink"
-                      : "text-hy-cream hover:text-white"
-                  }`}
-                >
-                  {code === "pcm" ? "PIDGIN" : code}
-                </button>
-              ))}
-            </div>
-
-            <button
-              type="button"
-              onClick={handleToggleAutoplay}
-              aria-label={autoplayEnabled ? t(lang, "autoplayOn") : t(lang, "autoplayOff")}
-              title={autoplayEnabled ? t(lang, "autoplayOn") : t(lang, "autoplayOff")}
-              className="min-h-[48px] min-w-[48px] px-2.5 rounded-lg hover:bg-viridian-hover flex items-center justify-center transition-colors"
-            >
-              {autoplayEnabled ? (
-                <VolumeIcon className="w-5 h-5" />
-              ) : (
-                <VolumeMutedIcon className="w-5 h-5 text-hy-cream/70" />
-              )}
-            </button>
-
-            <button
-              type="button"
-              onClick={handleNavigateLanding}
-              aria-label={t(lang, "navLanding")}
-              className="min-h-[48px] px-3 rounded-lg text-sm font-semibold hover:bg-viridian-hover transition-colors"
-            >
-              {t(lang, "navLanding")}
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                audio.stop();
-                setScreen({ name: "about" });
-              }}
-              aria-label={t(lang, "aboutLink")}
-              className="min-h-[48px] px-3 rounded-lg text-sm font-semibold hover:bg-viridian-hover transition-colors"
-            >
-              {t(lang, "aboutLink")}
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                audio.stop();
-                if (typeof window !== "undefined") {
-                  window.history.pushState({}, "", "/admin");
-                }
-                setRouteMode("admin");
-              }}
-              aria-label={t(lang, "staffLink")}
-              className="min-h-[48px] px-3 rounded-lg text-sm font-semibold text-hy-cream hover:text-white hover:bg-viridian-hover transition-colors"
-            >
-              {t(lang, "staffLink")}
-            </button>
-          </div>
-        </div>
-      </header>
+      <SiteHeader
+        activeRoute="app"
+        lang={lang}
+        onSelectLang={handleSelectLanguage}
+        onNavigate={(route) => navigateToRoute(route)}
+      />
 
       {demoMode && <DemoBanner lang={lang} />}
 
-      <div className="bg-subtle border-b border-seam px-4 py-1.5 text-xs font-medium text-ink-muted">
+      <div className="bg-subtle border-b border-seam px-4 py-1 text-xs font-medium text-ink-muted">
         <div className="max-w-3xl mx-auto flex items-center justify-between gap-2">
           <span className="inline-flex items-center gap-1.5">
             {isOffline ? (
@@ -632,6 +625,20 @@ export function App() {
               </>
             )}
           </span>
+
+          <button
+            type="button"
+            onClick={handleToggleAutoplay}
+            aria-label={autoplayEnabled ? t(lang, "autoplayOn") : t(lang, "autoplayOff")}
+            className="min-h-[40px] px-2.5 rounded-full hover:bg-white text-ink inline-flex items-center gap-1.5 font-semibold transition-colors"
+          >
+            {autoplayEnabled ? (
+              <VolumeIcon className="w-4 h-4 text-viridian" />
+            ) : (
+              <VolumeMutedIcon className="w-4 h-4 text-ink-muted" />
+            )}
+            <span>{autoplayEnabled ? t(lang, "autoplayOn") : t(lang, "autoplayOff")}</span>
+          </button>
         </div>
       </div>
 
@@ -641,7 +648,10 @@ export function App() {
             currentLang={hasChosenLang ? lang : null}
             welcomeAudioByLang={welcomeAudioByLang}
             consentAudioByLang={consentAudioByLang}
-            onSelect={handleSelectLanguage}
+            onSelect={(nextLang) => {
+              persistLang(nextLang);
+              setScreen({ name: "home" });
+            }}
             onPlayClip={(url) => audio.playSequence([url])}
           />
         )}
@@ -731,15 +741,14 @@ export function App() {
             lang={lang}
             meta={
               bundle?.meta || {
-                content_last_updated: "2026-11-16",
+                content_last_updated: metaReviewers.updated || "2026-11-16",
                 clinical_reviewers: metaReviewers.clinical || "Dr. Adebayo O. & Clinical Review Team",
-                language_reviewers: metaReviewers.language || "Yorùbá & Nigerian Pidgin Linguistic Team"
+                language_reviewers:
+                  metaReviewers.language || "Yorùbá & Nigerian Pidgin Linguistic Team"
               }
             }
-            onBack={() => {
-              audio.stop();
-              setScreen({ name: "home" });
-            }}
+            onSelectLang={handleSelectLanguage}
+            onNavigateRoute={(route) => navigateToRoute(route)}
           />
         )}
       </div>

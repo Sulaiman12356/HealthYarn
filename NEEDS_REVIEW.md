@@ -111,3 +111,29 @@ Every Pidgin and Yorùbá string drafted for `Sections A–I`, topic labels, con
 | `closingSub` | Ask your first question now. It takes ten seconds. | Ask your first question now. E go take ten seconds. | Béèrè ìbéèrè àkọ́kọ́ rẹ báyìí. Kò ju ìṣẹ́jú-àáyá mẹ́wàá lọ. |
 | `footerDisclaimer` | HealthYarn gives general health information only. It is not a substitute for a doctor, nurse or pharmacist. In an emergency, go to the nearest health facility. | HealthYarn dey give general health information only. E no dey replace doctor, nurse or pharmacist. For emergency, go nearest hospital or clinic sharp-sharp. | HealthYarn ń fúnni ní ìmọ̀ràn ìlera gbogbogbò nìkan. Kò rọ́pò dókítà, nọ́ọ̀sì tàbí oníṣẹ́ oògùn. Nígbà pàjáwìrì, lọ sí ilé ìwòsàn tó súnmọ́ ọ. |
 | `footerCredits` | Voices by Spitch & YarnGPT. Built for the NCS IT Development Contest 2026. | Voices by Spitch & YarnGPT. Built for the NCS IT Development Contest 2026. | Ohùn láti ọwọ́ Spitch àti YarnGPT. A kọ́ ọ fún ìdíje NCS IT Development Contest 2026. |
+
+---
+
+## Unified Navigation, About Page & Staff Login
+
+| Key | English | Nigerian Pidgin (`pcm`) — Draft | Yorùbá (`yo`) — Draft |
+| --- | --- | --- | --- |
+| `navOverview` | Overview | Overview | Àkópọ̀ |
+| `navVoiceApp` | Voice App | Voice App | Ohùn |
+| `navAbout` | About | About | Nípa |
+| `navStaff` | Staff | Staff | Òṣìṣẹ́ |
+| `aboutPillarsTitle` | Three promises behind every screen | Three things we promise you | Ìlérí mẹ́ta tí ó dúró lórí ojú-ewé kọ̀ọ̀kan |
+| `aboutPillar1Title` | Your language | Your language | Èdè rẹ |
+| `aboutPillar1Body` | Yorùbá, Nigerian Pidgin, and English spoken naturally—the way people actually talk at home. | Yorùbá, Nigerian Pidgin, and English wey people really dey talk for house every day. | Yorùbá, Nigerian Pidgin, àti Gẹ̀ẹ́sì bí ènìyàn ṣe ń sọ ọ́ nílé lójoojúmọ́. |
+| `aboutPillar2Title` | Your voice | Your voice | Ohùn rẹ |
+| `aboutPillar2Body` | No reading required and no typing needed. Speak your question out loud and listen calmly. | You no need sabi read or type at all. Just hold mic talk your mind and listen well. | Kò nílò kí o mọ̀ ọ́n kọ tàbí kà. Sọ ìbéèrè rẹ sókè kí o sì fetísílẹ̀. |
+| `aboutPillar3Title` | Checked by people | Real people check am | Ènìyàn ló yẹ̀ ẹ́ wò |
+| `aboutPillar3Body` | Every answer is written from WHO and Nigeria FMOH guidance and checked by clinical and language reviewers. | Every answer follow WHO and Nigeria health guide, and doctor plus language worker check am before e go out. | Àwọn oníṣẹ́ ìṣègùn àti àwọn olùtúmọ̀ èdè ló ń ṣàyẹ̀wò gbogbo ìdáhùn láti inú ìlànà WHO àti FMOH. |
+| `aboutPipelineHeading` | How every answer gets approved | How every answer dey pass check | Ọ̀nà tí ìdáhùn kọ̀ọ̀kan gbà ṣáájú ìtẹ̀jáde |
+| `aboutStage1` | 1. Drafted from medical guides | 1. Follow medical guide write am | 1. Kíkọ láti ìwé ìlànà ìṣègùn |
+| `aboutStage2` | 2. Checked by clinician | 2. Doctor or nurse check am | 2. Àyẹ̀wò oníṣẹ́ ìṣègùn |
+| `aboutStage3` | 3. Checked by native speaker | 3. Native speaker check language | 3. Àyẹ̀wò ọmọ ìbílẹ̀ èdè |
+| `aboutStage4` | 4. Published & voiced offline | 4. Publish & record Nigerian voice | 4. Ìtẹ̀jáde & ohùn Nàìjíríà |
+| `aboutStackHeading` | Voice & matching stack | Voice & search tools wey dey power am | Àwọn irinṣẹ́ ohùn àti ìṣàwárí |
+| `showPassword` | Show password | Show password | Fi ọ̀rọ̀ aṣínà hàn |
+| `hidePassword` | Hide password | Hide password | Pa ọ̀rọ̀ aṣínà mọ́ |

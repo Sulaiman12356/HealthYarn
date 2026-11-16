@@ -1,5 +1,9 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { ArrowLeftIcon } from "./Icons";
+import { t } from "../i18n";
+import type { Lang } from "../types";
+import { BrandLogo } from "./BrandSvg";
+import { SiteHeader, type NavRoute } from "./SiteHeader";
+import { CheckCircleIcon, EyeIcon, EyeOffIcon, ShieldCheckIcon } from "./Icons";
 
 interface AdminUser {
   id: number;
@@ -82,15 +86,24 @@ const STATUS_BADGE: Record<string, string> = {
 
 interface AdminPortalProps {
   onExit: () => void;
+  onNavigateRoute?: (route: NavRoute) => void;
+  lang?: Lang;
+  onSelectLang?: (lang: Lang) => void;
 }
 
-export const AdminPortal: React.FC<AdminPortalProps> = ({ onExit }) => {
+export const AdminPortal: React.FC<AdminPortalProps> = ({
+  onExit,
+  onNavigateRoute,
+  lang = "en",
+  onSelectLang = () => {}
+}) => {
   const [user, setUser] = useState<AdminUser | null>(null);
   const [csrfToken, setCsrfToken] = useState<string>("");
   const [checkingSession, setCheckingSession] = useState(true);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
 
   const [tab, setTab] = useState<"content" | "redflags" | "stats" | "users">("content");
@@ -313,86 +326,230 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onExit }) => {
     );
   }
 
+  const navigateTo = (route: NavRoute) => {
+    if (onNavigateRoute) {
+      onNavigateRoute(route);
+      return;
+    }
+    onExit();
+  };
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-hy-cream text-hy-ink flex flex-col">
+        <SiteHeader
+          activeRoute="admin"
+          lang={lang}
+          onSelectLang={onSelectLang}
+          onNavigate={navigateTo}
+        />
+
+        <main className="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-8 sm:py-12 flex items-center">
+          <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+            {/* Left Governance Panel */}
+            <aside className="lg:col-span-6 bg-hy-green text-white rounded-card p-7 sm:p-8 shadow-soft flex flex-col justify-between gap-6">
+              <div>
+                <div className="mb-5">
+                  <BrandLogo variant="onGreen" markSize="w-9 h-9" textSize="text-xl" />
+                </div>
+                <h1 className="text-2xl sm:text-3xl font-extrabold leading-tight mb-3">
+                  Clinical &amp; Language Governance Portal
+                </h1>
+                <p className="text-base text-hy-cream leading-relaxed prose-measure mb-6">
+                  Every HealthYarn question, translation, and voice clip passes four-eyes human
+                  review before public citizens ever hear it.
+                </p>
+
+                <ul className="space-y-3 text-sm sm:text-base text-hy-cream">
+                  <li className="flex items-start gap-2.5">
+                    <CheckCircleIcon className="w-5 h-5 text-hy-amber shrink-0 mt-0.5" />
+                    <span>
+                      <strong className="text-white">Content Editor:</strong> drafts &amp; updates
+                      WHO/FMOH FAQ answers and resets modified items to draft.
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <CheckCircleIcon className="w-5 h-5 text-hy-amber shrink-0 mt-0.5" />
+                    <span>
+                      <strong className="text-white">Clinical Reviewer:</strong> verifies medical
+                      accuracy and approves English source copy &amp; red-flag rules.
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <CheckCircleIcon className="w-5 h-5 text-hy-amber shrink-0 mt-0.5" />
+                    <span>
+                      <strong className="text-white">Language Reviewer:</strong> checks Yorùbá tone
+                      marks and everyday Nigerian Pidgin phrasing before audio take selection.
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <ShieldCheckIcon className="w-5 h-5 text-hy-amber shrink-0 mt-0.5" />
+                    <span>
+                      <strong className="text-white">Admin Guardrail:</strong> publishes verified
+                      guidance and blocks unreviewed or placeholder copy.
+                    </span>
+                  </li>
+                </ul>
+              </div>
+
+              <div className="pt-4 border-t border-white/15 flex flex-wrap gap-3 text-sm font-bold">
+                <button
+                  type="button"
+                  onClick={() => navigateTo("landing")}
+                  className="min-h-[44px] px-4 rounded-full bg-hy-forest text-hy-cream hover:bg-white hover:text-hy-forest transition-colors"
+                >
+                  ← {t(lang, "navOverview")}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => navigateTo("app")}
+                  className="min-h-[44px] px-4 rounded-full bg-hy-amber text-hy-ink hover:bg-amber-hover transition-colors"
+                >
+                  {t(lang, "navVoiceApp")}
+                </button>
+              </div>
+            </aside>
+
+            {/* Right Accessible Sign In Form */}
+            <section className="lg:col-span-6 bg-white border border-seam rounded-card p-7 sm:p-8 shadow-soft flex flex-col justify-center">
+              <form onSubmit={handleLogin} className="space-y-5">
+                <div>
+                  <h2 className="text-2xl font-extrabold text-hy-ink">Staff Sign In</h2>
+                  <p className="text-sm text-hy-muted mt-1">
+                    Sign in with your assigned clinical, language, or administrator account.
+                  </p>
+                </div>
+
+                {authError && (
+                  <div
+                    role="alert"
+                    className="bg-crimson-soft text-crimson border border-crimson rounded-lg p-3.5 text-sm font-semibold"
+                  >
+                    {authError}
+                  </div>
+                )}
+
+                <div>
+                  <label
+                    htmlFor="admin-email"
+                    className="block text-sm font-bold text-hy-ink mb-1.5"
+                  >
+                    Work email
+                  </label>
+                  <input
+                    id="admin-email"
+                    type="email"
+                    autoComplete="username"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="name@healthyarn.ng"
+                    className="w-full min-h-[48px] px-3.5 rounded-lg bg-ground border border-seam text-hy-ink placeholder:text-hy-muted"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="admin-password"
+                    className="block text-sm font-bold text-hy-ink mb-1.5"
+                  >
+                    Password
+                  </label>
+                  <div className="relative flex items-center">
+                    <input
+                      id="admin-password"
+                      type={showPassword ? "text" : "password"}
+                      autoComplete="current-password"
+                      required
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="w-full min-h-[48px] pl-3.5 pr-12 rounded-lg bg-ground border border-seam text-hy-ink"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword((prev) => !prev)}
+                      aria-label={showPassword ? t(lang, "hidePassword") : t(lang, "showPassword")}
+                      className="absolute right-1 min-w-[44px] min-h-[44px] rounded-lg text-hy-muted hover:text-hy-green flex items-center justify-center"
+                    >
+                      {showPassword ? (
+                        <EyeOffIcon className="w-5 h-5" />
+                      ) : (
+                        <EyeIcon className="w-5 h-5" />
+                      )}
+                    </button>
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full min-h-[50px] rounded-full bg-hy-green text-white font-extrabold hover:bg-hy-forest transition-colors"
+                >
+                  Sign in
+                </button>
+              </form>
+            </section>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-ground text-ink">
       <header className="bg-viridian text-white border-b border-viridian-hover">
-        <div className="max-w-6xl mx-auto px-4 min-h-[56px] py-2 flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
+        <div className="max-w-6xl mx-auto px-4 min-h-[60px] py-2 flex flex-wrap items-center justify-between gap-3">
+          <div className="flex flex-wrap items-center gap-3">
             <button
               type="button"
-              onClick={onExit}
-              className="min-h-[44px] px-3 rounded-lg bg-viridian-hover text-white text-sm font-semibold inline-flex items-center gap-1.5"
+              onClick={() => navigateTo("landing")}
+              aria-label={t(lang, "appName")}
+              className="min-h-[44px] inline-flex items-center rounded-lg pr-2 hover:bg-viridian-hover transition-colors"
             >
-              <ArrowLeftIcon className="w-4 h-4" />
-              <span>Public App</span>
+              <BrandLogo variant="onGreen" markSize="w-7 h-7" textSize="text-lg" />
             </button>
-            <span className="font-bold text-lg">HealthYarn Staff Portal</span>
-          </div>
-          {user && (
-            <div className="flex items-center gap-3 text-sm">
-              <span className="text-emerald-100">
-                {user.name} (<span className="font-bold text-white">{user.role}</span>)
-              </span>
+            <span className="rounded-full bg-viridian-hover px-3 py-1 text-xs font-extrabold text-hy-cream">
+              Staff Portal
+            </span>
+            <nav aria-label="Quick site links" className="flex items-center gap-1 text-sm">
               <button
                 type="button"
-                onClick={handleLogout}
-                className="min-h-[44px] px-3 rounded-lg bg-white text-viridian font-bold text-sm"
+                onClick={() => navigateTo("landing")}
+                className="min-h-[40px] px-3 rounded-full text-hy-cream hover:bg-viridian-hover hover:text-white font-semibold"
               >
-                Log out
+                {t(lang, "navOverview")}
               </button>
-            </div>
-          )}
+              <button
+                type="button"
+                onClick={() => navigateTo("app")}
+                className="min-h-[40px] px-3 rounded-full text-hy-cream hover:bg-viridian-hover hover:text-white font-semibold"
+              >
+                {t(lang, "navVoiceApp")}
+              </button>
+              <button
+                type="button"
+                onClick={() => navigateTo("about")}
+                className="min-h-[40px] px-3 rounded-full text-hy-cream hover:bg-viridian-hover hover:text-white font-semibold"
+              >
+                {t(lang, "navAbout")}
+              </button>
+            </nav>
+          </div>
+          <div className="flex items-center gap-3 text-sm">
+            <span className="text-hy-cream">
+              {user.name} (<span className="font-bold text-white">{user.role}</span>)
+            </span>
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="min-h-[44px] px-4 rounded-full bg-white text-viridian font-bold text-sm hover:bg-hy-sand transition-colors"
+            >
+              Log out
+            </button>
+          </div>
         </div>
       </header>
 
-      {!user ? (
-        <main className="max-w-md mx-auto px-4 py-12">
-          <form
-            onSubmit={handleLogin}
-            className="bg-surface border border-seam rounded-2xl p-6 shadow-sm space-y-4"
-          >
-            <h1 className="text-2xl font-bold text-ink">Staff Sign In</h1>
-            {authError && (
-              <div role="alert" className="bg-crimson-soft text-crimson border border-crimson rounded-lg p-3 text-sm font-semibold">
-                {authError}
-              </div>
-            )}
-            <div>
-              <label htmlFor="admin-email" className="block text-sm font-semibold text-ink mb-1">
-                Email
-              </label>
-              <input
-                id="admin-email"
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full min-h-[48px] px-3 rounded-lg bg-ground border border-seam text-ink"
-              />
-            </div>
-            <div>
-              <label htmlFor="admin-password" className="block text-sm font-semibold text-ink mb-1">
-                Password
-              </label>
-              <input
-                id="admin-password"
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full min-h-[48px] px-3 rounded-lg bg-ground border border-seam text-ink"
-              />
-            </div>
-            <button
-              type="submit"
-              className="w-full min-h-[48px] rounded-xl bg-viridian text-white font-bold hover:bg-viridian-hover transition-colors"
-            >
-              Sign in
-            </button>
-          </form>
-        </main>
-      ) : (
-        <main className="max-w-6xl mx-auto px-4 py-6 space-y-6">
+      <main className="max-w-6xl mx-auto px-4 py-6 space-y-6">
           <nav className="flex flex-wrap gap-2 border-b border-seam pb-3" aria-label="Staff navigation">
             {(
               [
@@ -954,7 +1111,6 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onExit }) => {
             </div>
           )}
         </main>
-      )}
     </div>
   );
 };

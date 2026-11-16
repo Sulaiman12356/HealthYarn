@@ -1,7 +1,8 @@
 import React, { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { t } from "../../i18n";
 import type { Lang } from "../../types";
-import { BrandLogo, HeroPhoneMockup, SoundWaveDivider } from "../BrandSvg";
+import { HeroPhoneMockup, SoundWaveDivider } from "../BrandSvg";
+import { SiteHeader, type NavRoute } from "../SiteHeader";
 import { CheckCircleIcon, MicIcon, PauseIcon, PlayIcon, VolumeIcon } from "../Icons";
 
 const LandingSections = lazy(() => import("./LandingSections"));
@@ -14,14 +15,9 @@ export interface LandingPageProps {
   clinicalReviewers?: string;
   languageReviewers?: string;
   onSelectLang: (lang: Lang) => void;
-  onOpenApp: (topicSlug?: string, view?: "home" | "about") => void;
+  onOpenApp: (topicSlug?: string) => void;
+  onNavigateRoute: (route: NavRoute) => void;
 }
-
-const LANG_CHIPS: Array<{ code: Lang; label: string }> = [
-  { code: "en", label: "English" },
-  { code: "pcm", label: "Pidgin" },
-  { code: "yo", label: "Yorùbá" }
-];
 
 export const LandingPage: React.FC<LandingPageProps> = ({
   lang,
@@ -31,7 +27,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   clinicalReviewers,
   languageReviewers,
   onSelectLang,
-  onOpenApp
+  onOpenApp,
+  onNavigateRoute
 }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [playingSampleLang, setPlayingSampleLang] = useState<Lang | null>(null);
@@ -129,54 +126,15 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
   return (
     <div id="top" className="min-h-screen bg-hy-cream text-hy-ink flex flex-col">
-      {/* Top Bar */}
-      <header className="sticky top-0 z-30 bg-hy-cream border-b border-seam">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 min-h-[60px] py-2 flex flex-wrap items-center justify-between gap-2 sm:gap-3">
-          <a
-            href="#top"
-            aria-label={t(lang, "appName")}
-            className="min-h-[48px] inline-flex items-center rounded-lg pr-2 order-1"
-          >
-            <BrandLogo variant="brand" markSize="w-8 h-8 sm:w-9 sm:h-9" textSize="text-lg sm:text-xl" />
-          </a>
-
-          <div
-            className="order-3 sm:order-2 w-full sm:w-auto sm:ml-auto flex items-center rounded-full bg-hy-sand border border-seam p-1"
-            role="group"
-            aria-label={t(lang, "langSwitchLabel")}
-          >
-            {LANG_CHIPS.map((chip) => {
-              const selected = lang === chip.code;
-              return (
-                <button
-                  key={chip.code}
-                  type="button"
-                  onClick={() => onSelectLang(chip.code)}
-                  aria-pressed={selected}
-                  className={`flex-1 sm:flex-initial min-h-[44px] sm:min-h-[40px] px-3 sm:px-4 rounded-full text-sm font-bold transition-colors ${
-                    selected
-                      ? "bg-hy-green text-white"
-                      : "text-hy-ink hover:bg-white/70"
-                  }`}
-                >
-                  {chip.label}
-                </button>
-              );
-            })}
-          </div>
-
-          <button
-            type="button"
-            onClick={() => {
-              stopPlayback();
-              onOpenApp();
-            }}
-            className="order-2 sm:order-3 min-h-[48px] px-4 sm:px-5 rounded-full bg-hy-green text-white text-sm font-bold hover:bg-hy-forest transition-colors whitespace-nowrap"
-          >
-            {t(lang, "navOpenApp")}
-          </button>
-        </div>
-      </header>
+      <SiteHeader
+        activeRoute="landing"
+        lang={lang}
+        onSelectLang={onSelectLang}
+        onNavigate={(route) => {
+          stopPlayback();
+          onNavigateRoute(route);
+        }}
+      />
 
       <main>
         {/* Hero Section */}
@@ -298,9 +256,13 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             clinicalReviewers={clinicalReviewers}
             languageReviewers={languageReviewers}
             onSelectLang={onSelectLang}
-            onOpenApp={(topicSlug, view) => {
+            onOpenApp={(topicSlug) => {
               stopPlayback();
-              onOpenApp(topicSlug, view);
+              onOpenApp(topicSlug);
+            }}
+            onNavigateRoute={(route) => {
+              stopPlayback();
+              onNavigateRoute(route);
             }}
             onToggleSampleLang={handleToggleSample}
           />

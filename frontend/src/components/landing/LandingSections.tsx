@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { t } from "../../i18n";
 import type { Lang } from "../../types";
 import { BrandLogo, SoundWaveMotif, StepIllustration } from "../BrandSvg";
+import type { NavRoute } from "../SiteHeader";
 import {
   AlertTriangleIcon,
   CheckCircleIcon,
@@ -23,7 +24,8 @@ export interface LandingSectionsProps {
   clinicalReviewers?: string;
   languageReviewers?: string;
   onSelectLang: (lang: Lang) => void;
-  onOpenApp: (topicSlug?: string, view?: "home" | "about") => void;
+  onOpenApp: (topicSlug?: string) => void;
+  onNavigateRoute: (route: NavRoute) => void;
   onToggleSampleLang: (targetLang: Lang) => void;
 }
 
@@ -70,6 +72,7 @@ export const LandingSections: React.FC<LandingSectionsProps> = ({
   languageReviewers,
   onSelectLang,
   onOpenApp,
+  onNavigateRoute,
   onToggleSampleLang
 }) => {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
@@ -486,7 +489,7 @@ export const LandingSections: React.FC<LandingSectionsProps> = ({
             <nav aria-label="Footer navigation" className="flex flex-wrap items-center gap-2">
               <button
                 type="button"
-                onClick={() => onOpenApp(undefined, "about")}
+                onClick={() => onNavigateRoute("about")}
                 className="min-h-[48px] px-3 text-sm font-semibold text-hy-cream hover:text-white underline"
               >
                 {t(lang, "aboutLink")}
@@ -503,6 +506,13 @@ export const LandingSections: React.FC<LandingSectionsProps> = ({
               >
                 {t(lang, "footerContactLink")}
               </a>
+              <button
+                type="button"
+                onClick={() => onNavigateRoute("admin")}
+                className="min-h-[48px] px-3 text-sm font-semibold text-hy-cream hover:text-white underline"
+              >
+                {t(lang, "navStaff")}
+              </button>
               <button
                 type="button"
                 onClick={() => onOpenApp()}

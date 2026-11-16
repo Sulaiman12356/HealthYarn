@@ -35,8 +35,14 @@ export async function fetchTopics(lang: Lang): Promise<{ demo_mode: boolean; top
   return res.json();
 }
 
-export async function fetchAnswer(faqId: number, lang: Lang): Promise<AnswerPayload> {
-  const res = await fetch(`/api/answers/${faqId}?lang=${encodeURIComponent(lang)}`);
+export async function fetchAnswer(
+  faqId: number,
+  lang: Lang,
+  recordTap: boolean = true
+): Promise<AnswerPayload> {
+  const res = await fetch(
+    `/api/answers/${faqId}?lang=${encodeURIComponent(lang)}&record_tap=${recordTap}`
+  );
   if (!res.ok) {
     throw new Error("Failed to fetch answer");
   }

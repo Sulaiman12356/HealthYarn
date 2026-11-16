@@ -131,16 +131,23 @@ describe("HealthYarn Landing & App Core Flows", () => {
           );
         }
         if (url.includes("/api/answers/9")) {
+          const isYo = url.includes("lang=yo");
           return new Response(
             JSON.stringify({
               faq_id: 9,
               intent_key: "ors_how_to_prepare",
-              lang: "en",
-              question: MOCK_BUNDLE.topics[0].items[0].question,
-              answer_text: MOCK_BUNDLE.topics[0].items[0].answer_text,
-              question_audio_url: "/static/audio/en/ors_q.ogg",
-              answer_audio_url: "/static/audio/en/ors_a.ogg",
-              disclaimer_text: "General health information only.",
+              lang: isYo ? "yo" : "en",
+              question: isYo
+                ? "Báwo ni mo ṣe lè pò omi iyọ̀ ORS?"
+                : MOCK_BUNDLE.topics[0].items[0].question,
+              answer_text: isYo
+                ? "Pò àpò ORS kan sínú omi mímọ́ lítà kan."
+                : MOCK_BUNDLE.topics[0].items[0].answer_text,
+              question_audio_url: isYo ? "/static/audio/yo/ors_q.ogg" : "/static/audio/en/ors_q.ogg",
+              answer_audio_url: isYo ? "/static/audio/yo/ors_a.ogg" : "/static/audio/en/ors_a.ogg",
+              disclaimer_text: isYo
+                ? "Ìmọ̀ràn ìlera gbogbogbò nìkan."
+                : "General health information only.",
               disclaimer_audio_url: "/static/audio/en/disclaimer.ogg",
               log_id: 42
             }),
@@ -316,9 +323,59 @@ describe("HealthYarn Landing & App Core Flows", () => {
       vi.fn(async () => new Response('{"detail":"Unsupported language"}', { status: 400 }))
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "Nigerian Pidgin" }));
+    fireEvent.click(screen.getAllByRole("button", { name: "Pidgin" })[0]);
     await waitFor(() => {
       expect(screen.queryByRole("button", { name: /Child Diarrhoea & ORS/i })).toBeNull();
+    });
+  });
+
+  it("navigates across Overview (/), Voice App (/app), About (/about), and Staff Sign In (/admin) via unified navbar", async () => {
+    render(<App />);
+    expect(
+      await screen.findByText("Ask in your language. Hear an answer you can trust.")
+    ).toBeInTheDocument();
+
+    fireEvent.click(screen.getAllByRole("button", { name: "About" })[0]);
+    expect(window.location.pathname).toBe("/about");
+    expect(await screen.findByText("How every answer gets approved")).toBeInTheDocument();
+    expect(screen.getByText(/Spitch Speech AI:/i)).toBeInTheDocument();
+    expect(screen.getByText(/YarnGPT \(Saheed Azeez\):/i)).toBeInTheDocument();
+
+    fireEvent.click(screen.getAllByRole("button", { name: "Staff" })[0]);
+    expect(window.location.pathname).toBe("/admin");
+    expect(await screen.findByText("Staff Sign In")).toBeInTheDocument();
+    expect(
+      screen.getByText("Clinical & Language Governance Portal")
+    ).toBeInTheDocument();
+    // Password toggle works cleanly and no hardcoded demo password is shown on screen
+    const pwInput = screen.getByLabelText("Password") as HTMLInputElement;
+    expect(pwInput.type).toBe("password");
+    fireEvent.click(screen.getByRole("button", { name: "Show password" }));
+    expect(pwInput.type).toBe("text");
+    expect(document.body.textContent).not.toMatch(/HealthYarnAdmin2026/);
+
+    fireEvent.click(screen.getAllByRole("button", { name: "Voice App" })[0]);
+    expect(window.location.pathname).toBe("/app");
+  });
+
+  it("translates an open answer in-place when switching language in the /app navbar", async () => {
+    window.history.pushState({}, "", "/app");
+    localStorage.setItem("healthyarn_lang", "en");
+
+    render(<App />);
+    const topicBtn = await screen.findByRole("button", { name: /Child Diarrhoea & ORS/i });
+    fireEvent.click(topicBtn);
+
+    const qBtn = await screen.findByRole("button", {
+      name: /Open answer: How do I prepare ORS/i
+    });
+    fireEvent.click(qBtn);
+    expect(await screen.findByText("Mix one sachet in 1L clean water.")).toBeInTheDocument();
+
+    // Switch to Yorùbá inside the open Answer screen -> translates in-place without kicking back to Home
+    fireEvent.click(screen.getAllByRole("button", { name: "Yorùbá" })[0]);
+    await waitFor(() => {
+      expect(screen.getByText("Pò àpò ORS kan sínú omi mímọ́ lítà kan.")).toBeInTheDocument();
     });
   });
 });
