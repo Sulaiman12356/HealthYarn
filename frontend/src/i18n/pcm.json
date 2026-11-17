@@ -175,5 +175,10 @@
   "footerPrivacyLink": "Privacy",
   "footerContactLink": "Contact",
   "footerDisclaimer": "HealthYarn dey give general health information only. E no dey replace doctor, nurse or pharmacist. For emergency, go nearest hospital or clinic sharp-sharp.",
-  "footerCredits": "Voices by Spitch & YarnGPT. Built for the NCS IT Development Contest 2026."
+  "footerCredits": "Voices by Spitch & YarnGPT. Built for the NCS IT Development Contest 2026.",
+  "releaseToSend": "Leave button make e send",
+  "preparingMic": "Dey open mic…",
+  "holdTooShort": "Hold the button down as you dey talk, then leave am.",
+  "micPermissionDenied": "Browser block microphone access. Abeg allow mic permission or type/check topics under.",
+  "micNotSupported": "Microphone recording no dey work inside dis browser."
 }

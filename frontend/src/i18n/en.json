@@ -175,5 +175,10 @@
   "footerPrivacyLink": "Privacy",
   "footerContactLink": "Contact",
   "footerDisclaimer": "HealthYarn gives general health information only. It is not a substitute for a doctor, nurse or pharmacist. In an emergency, go to the nearest health facility.",
-  "footerCredits": "Voices by Spitch & YarnGPT. Built for the NCS IT Development Contest 2026."
+  "footerCredits": "Voices by Spitch & YarnGPT. Built for the NCS IT Development Contest 2026.",
+  "releaseToSend": "Release button to send",
+  "preparingMic": "Opening microphone…",
+  "holdTooShort": "Hold the button while speaking, then release.",
+  "micPermissionDenied": "Microphone access was blocked. Allow microphone permission in your browser settings or type/browse topics below.",
+  "micNotSupported": "Microphone recording is not available in this browser."
 }

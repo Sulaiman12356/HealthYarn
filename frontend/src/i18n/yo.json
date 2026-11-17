@@ -175,5 +175,10 @@
   "footerPrivacyLink": "Ààbò",
   "footerContactLink": "Ìkànnì",
   "footerDisclaimer": "HealthYarn ń fúnni ní ìmọ̀ràn ìlera gbogbogbò nìkan. Kò rọ́pò dókítà, nọ́ọ̀sì tàbí oníṣẹ́ oògùn. Nígbà pàjáwìrì, lọ sí ilé ìwòsàn tó súnmọ́ ọ.",
-  "footerCredits": "Ohùn láti ọwọ́ Spitch àti YarnGPT. A kọ́ ọ fún ìdíje NCS IT Development Contest 2026."
+  "footerCredits": "Ohùn láti ọwọ́ Spitch àti YarnGPT. A kọ́ ọ fún ìdíje NCS IT Development Contest 2026.",
+  "releaseToSend": "Tu bọ́tìnì láti fi ránṣẹ́",
+  "preparingMic": "Ń ṣí gbohùngbohùn…",
+  "holdTooShort": "Di bọ́tìnì náà mú nígbà tí o bá ń sọ̀rọ̀, lẹ́yìn náà kí o tu ú.",
+  "micPermissionDenied": "Ìwọlé sí gbohùngbohùn kò ṣí. Jọ̀wọ́ fún ní àṣẹ nínú ètò aṣàwákiri rẹ tàbí yan àkòrí ìsàlẹ̀.",
+  "micNotSupported": "Ìgbohùn sílẹ̀ kò sí nínú aṣàwákiri yìí."
 }

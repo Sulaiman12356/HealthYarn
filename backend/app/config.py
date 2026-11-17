@@ -31,7 +31,7 @@ class Settings(BaseSettings):
     ALLOWED_ORIGINS: str = "http://localhost:5173,http://127.0.0.1:5173"
     MAX_AUDIO_SECONDS: int = 15
     MAX_AUDIO_BYTES: int = 1_048_576  # 1 MB
-    STT_TIMEOUT_SECONDS: float = 8.0
+    STT_TIMEOUT_SECONDS: float = 12.0
     LOG_UNMATCHED_TEXT: bool = False
     DEMO_MODE: bool = False
     CONTENT_REVIEWED: bool = True

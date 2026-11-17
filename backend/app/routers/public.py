@@ -45,13 +45,17 @@ router = APIRouter(prefix="/api", tags=["public"])
 SUPPORTED_LANGS = {"en", "yo", "pcm"}
 ALLOWED_AUDIO_MIMES = {
     "audio/webm",
+    "video/webm",
     "audio/ogg",
     "audio/wav",
     "audio/x-wav",
     "audio/wave",
     "audio/mp4",
+    "audio/x-m4a",
+    "audio/aac",
     "audio/mpeg",
     "audio/mp3",
+    "audio/flac",
     "application/ogg",
 }
 

@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
+export type MicErrorCode = "too_short" | "permission_denied" | "not_supported" | null;
+
 function playTone(startHz: number, endHz: number) {
   try {
     const AudioCtx =
@@ -30,14 +32,17 @@ export function useVoiceRecorder(
   onRecorded: (blob: Blob, durationSeconds: number) => void,
   maxSeconds: number = 15
 ) {
+  const [isInitializing, setIsInitializing] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [recordingSeconds, setRecordingSeconds] = useState(0);
-  const [micError, setMicError] = useState<string | null>(null);
+  const [micErrorCode, setMicErrorCode] = useState<MicErrorCode>(null);
 
   const recorderRef = useRef<MediaRecorder | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const chunksRef = useRef<BlobPart[]>([]);
   const timerRef = useRef<number | null>(null);
+  const isStartingRef = useRef(false);
+  const pendingStopRef = useRef(false);
   const cancelledRef = useRef(false);
   const startedAtRef = useRef<number>(0);
 
@@ -54,10 +59,23 @@ export function useVoiceRecorder(
   }, []);
 
   const stopRecording = useCallback(() => {
+    // If pointer was released while getUserMedia was still resolving, abort cleanly on arrival
+    if (isStartingRef.current) {
+      pendingStopRef.current = true;
+      return;
+    }
     const rec = recorderRef.current;
     if (rec && rec.state !== "inactive") {
       cancelledRef.current = false;
+      pendingStopRef.current = false;
       playTone(880, 587);
+      try {
+        if (typeof rec.requestData === "function" && rec.state === "recording") {
+          rec.requestData();
+        }
+      } catch {
+        // requestData may be unsupported on some mock/mobile implementations
+      }
       rec.stop();
     }
     setIsRecording(false);
@@ -65,10 +83,12 @@ export function useVoiceRecorder(
 
   const cancelRecording = useCallback(() => {
     cancelledRef.current = true;
+    pendingStopRef.current = false;
+    setIsInitializing(false);
     const rec = recorderRef.current;
     if (rec && rec.state !== "inactive") {
       rec.stop();
-    } else {
+    } else if (!isStartingRef.current) {
       cleanupTracks();
     }
     setIsRecording(false);
@@ -76,24 +96,52 @@ export function useVoiceRecorder(
   }, [cleanupTracks]);
 
   const startRecording = useCallback(async () => {
-    setMicError(null);
+    if (isStartingRef.current || recorderRef.current) {
+      return;
+    }
+    setMicErrorCode(null);
+
     if (
       typeof navigator === "undefined" ||
       !navigator.mediaDevices ||
       !navigator.mediaDevices.getUserMedia ||
       typeof MediaRecorder === "undefined"
     ) {
-      setMicError("Microphone recording is not available in this browser.");
+      setMicErrorCode("not_supported");
       return;
     }
 
+    isStartingRef.current = true;
+    pendingStopRef.current = false;
+    cancelledRef.current = false;
+    setIsInitializing(true);
+
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      isStartingRef.current = false;
+      setIsInitializing(false);
+
+      if (cancelledRef.current) {
+        stream.getTracks().forEach((tr) => tr.stop());
+        return;
+      }
+      if (pendingStopRef.current) {
+        stream.getTracks().forEach((tr) => tr.stop());
+        pendingStopRef.current = false;
+        setMicErrorCode("too_short");
+        return;
+      }
+
       streamRef.current = stream;
       chunksRef.current = [];
-      cancelledRef.current = false;
 
-      const preferredTypes = ["audio/webm;codecs=opus", "audio/webm", "audio/ogg;codecs=opus", "audio/ogg"];
+      const preferredTypes = [
+        "audio/webm;codecs=opus",
+        "audio/webm",
+        "audio/ogg;codecs=opus",
+        "audio/ogg",
+        "audio/mp4"
+      ];
       const mimeType = preferredTypes.find((m) => MediaRecorder.isTypeSupported?.(m)) || "";
       const recorder = mimeType
         ? new MediaRecorder(stream, { mimeType })
@@ -106,19 +154,21 @@ export function useVoiceRecorder(
       };
 
       recorder.onstop = () => {
-        const elapsed = Math.min(
-          maxSeconds,
-          Math.max(0.2, (Date.now() - startedAtRef.current) / 1000)
-        );
+        const rawElapsed = (Date.now() - startedAtRef.current) / 1000;
+        const elapsed = Math.min(maxSeconds, Math.max(0.2, rawElapsed));
         const chunks = [...chunksRef.current];
-        const finalType = recorder.mimeType || "audio/webm";
+        const finalType = recorder.mimeType || mimeType || "audio/webm";
         chunksRef.current = [];
         cleanupTracks();
         setIsRecording(false);
         setRecordingSeconds(0);
 
-        if (!cancelledRef.current && chunks.length > 0) {
+        if (!cancelledRef.current) {
           const blob = new Blob(chunks, { type: finalType });
+          if (chunks.length === 0 || blob.size === 0 || rawElapsed < 0.25) {
+            setMicErrorCode("too_short");
+            return;
+          }
           onRecorded(blob, Number(elapsed.toFixed(2)));
         }
       };
@@ -138,22 +188,27 @@ export function useVoiceRecorder(
         }
       }, 250);
     } catch {
+      isStartingRef.current = false;
+      pendingStopRef.current = false;
+      setIsInitializing(false);
       cleanupTracks();
       setIsRecording(false);
-      setMicError("Microphone access denied or unavailable.");
+      setMicErrorCode("permission_denied");
     }
   }, [cleanupTracks, maxSeconds, onRecorded, stopRecording]);
 
   useEffect(() => {
     return () => {
+      cancelledRef.current = true;
       cleanupTracks();
     };
   }, [cleanupTracks]);
 
   return {
+    isInitializing,
     isRecording,
     recordingSeconds,
-    micError,
+    micErrorCode,
     startRecording,
     stopRecording,
     cancelRecording

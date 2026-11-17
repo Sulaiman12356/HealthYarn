@@ -137,3 +137,15 @@ Every Pidgin and Yorùbá string drafted for `Sections A–I`, topic labels, con
 | `aboutStackHeading` | Voice & matching stack | Voice & search tools wey dey power am | Àwọn irinṣẹ́ ohùn àti ìṣàwárí |
 | `showPassword` | Show password | Show password | Fi ọ̀rọ̀ aṣínà hàn |
 | `hidePassword` | Hide password | Hide password | Pa ọ̀rọ̀ aṣínà mọ́ |
+
+---
+
+## Hold-to-Talk Voice Prompts
+
+| Key | English | Nigerian Pidgin (`pcm`) — Draft | Yorùbá (`yo`) — Draft |
+| --- | --- | --- | --- |
+| `releaseToSend` | Release button to send | Leave button make e send | Tu bọ́tìnì láti fi ránṣẹ́ |
+| `preparingMic` | Opening microphone… | Dey open mic… | Ń ṣí gbohùngbohùn… |
+| `holdTooShort` | Hold the button while speaking, then release. | Hold the button down as you dey talk, then leave am. | Di bọ́tìnì náà mú nígbà tí o bá ń sọ̀rọ̀, lẹ́yìn náà kí o tu ú. |
+| `micPermissionDenied` | Microphone access was blocked. Allow microphone permission in your browser settings or type/browse topics below. | Browser block microphone access. Abeg allow mic permission or type/check topics under. | Ìwọlé sí gbohùngbohùn kò ṣí. Jọ̀wọ́ fún ní àṣẹ nínú ètò aṣàwákiri rẹ tàbí yan àkòrí ìsàlẹ̀. |
+| `micNotSupported` | Microphone recording is not available in this browser. | Microphone recording no dey work inside dis browser. | Ìgbohùn sílẹ̀ kò sí nínú aṣàwákiri yìí. |

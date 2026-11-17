@@ -81,7 +81,11 @@ class SpitchSTT(STTProvider):
         def _call_sync() -> str:
             client = Spitch(api_key=self.api_key)
             api_lang = "en" if lang == "pcm" else lang
-            resp = client.speech.transcribe(language=api_lang, content=audio_bytes)
+            upload_name = filename.strip() if filename and filename.strip() else "audio.webm"
+            resp = client.speech.transcribe(
+                language=api_lang,
+                content=(upload_name, audio_bytes),
+            )
             text = getattr(resp, "text", "") or ""
             return text.strip()
 

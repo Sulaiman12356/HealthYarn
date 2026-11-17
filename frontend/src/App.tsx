@@ -662,11 +662,25 @@ export function App() {
             topics={topics}
             loading={loading}
             isOffline={isOffline}
+            isInitializing={recorder.isInitializing}
             isRecording={recorder.isRecording}
             recordingSeconds={recorder.recordingSeconds}
             isSubmittingVoice={isSubmittingVoice}
-            voiceError={voiceError || recorder.micError}
-            onStartRecording={recorder.startRecording}
+            voiceError={
+              voiceError ||
+              (recorder.micErrorCode === "too_short"
+                ? t(lang, "holdTooShort")
+                : recorder.micErrorCode === "permission_denied"
+                ? t(lang, "micPermissionDenied")
+                : recorder.micErrorCode === "not_supported"
+                ? t(lang, "micNotSupported")
+                : null)
+            }
+            onStartRecording={() => {
+              audio.stop();
+              setVoiceError(null);
+              recorder.startRecording();
+            }}
             onStopRecording={recorder.stopRecording}
             onCancelRecording={recorder.cancelRecording}
             onSubmitTypedText={handleTypedQuestion}

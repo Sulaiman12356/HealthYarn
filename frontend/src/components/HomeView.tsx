@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { t } from "../i18n";
 import type { Lang, TopicSummary } from "../types";
 import { ChevronRightIcon, MicIcon, TopicIcon, WifiOffIcon } from "./Icons";
@@ -8,6 +8,7 @@ interface HomeViewProps {
   topics: TopicSummary[];
   loading: boolean;
   isOffline: boolean;
+  isInitializing?: boolean;
   isRecording: boolean;
   recordingSeconds: number;
   isSubmittingVoice: boolean;
@@ -24,6 +25,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
   topics,
   loading,
   isOffline,
+  isInitializing = false,
   isRecording,
   recordingSeconds,
   isSubmittingVoice,
@@ -35,17 +37,74 @@ export const HomeView: React.FC<HomeViewProps> = ({
   onSelectTopic
 }) => {
   const [tapMode, setTapMode] = useState(false);
+  const [holdingGesture, setHoldingGesture] = useState(false);
   const [typedQuery, setTypedQuery] = useState("");
+  const holdingRef = useRef(false);
 
   const remaining = Math.max(0, 15 - recordingSeconds);
+  const activeVoiceCapture = isRecording || isInitializing;
+
+  const finishHold = useCallback(() => {
+    if (!holdingRef.current) return;
+    holdingRef.current = false;
+    setHoldingGesture(false);
+    onStopRecording();
+  }, [onStopRecording]);
+
+  const abortHold = useCallback(() => {
+    if (!holdingRef.current) return;
+    holdingRef.current = false;
+    setHoldingGesture(false);
+    onCancelRecording();
+  }, [onCancelRecording]);
+
+  // Listen at window level while holding so releasing outside the mic circle still sends cleanly
+  useEffect(() => {
+    if (!holdingGesture) return;
+    const handlePointerUp = () => finishHold();
+    const handlePointerCancel = () => abortHold();
+    window.addEventListener("pointerup", handlePointerUp);
+    window.addEventListener("pointercancel", handlePointerCancel);
+    window.addEventListener("blur", handlePointerCancel);
+    return () => {
+      window.removeEventListener("pointerup", handlePointerUp);
+      window.removeEventListener("pointercancel", handlePointerCancel);
+      window.removeEventListener("blur", handlePointerCancel);
+    };
+  }, [abortHold, finishHold, holdingGesture]);
 
   const handleMicTap = () => {
     if (isOffline || isSubmittingVoice) return;
-    if (isRecording) {
+    if (activeVoiceCapture) {
       onStopRecording();
     } else {
       onStartRecording();
     }
+  };
+
+  const handlePointerDown = (e: React.PointerEvent<HTMLButtonElement>) => {
+    if (tapMode || isOffline || isSubmittingVoice || activeVoiceCapture) return;
+    if (e.button !== undefined && e.button !== 0 && e.pointerType === "mouse") return;
+    holdingRef.current = true;
+    setHoldingGesture(true);
+    try {
+      e.currentTarget.setPointerCapture?.(e.pointerId);
+    } catch {
+      // Ignore synthetic PointerEvents without active pointerId
+    }
+    onStartRecording();
+  };
+
+  const handlePointerUp = (e: React.PointerEvent<HTMLButtonElement>) => {
+    if (tapMode) return;
+    try {
+      if (e.currentTarget.hasPointerCapture?.(e.pointerId)) {
+        e.currentTarget.releasePointerCapture(e.pointerId);
+      }
+    } catch {
+      // Ignore
+    }
+    finishHold();
   };
 
   return (
@@ -63,77 +122,106 @@ export const HomeView: React.FC<HomeViewProps> = ({
               {t(lang, "micNeedsInternet")}
             </p>
           </div>
-        ) : isRecording ? (
-          <div className="py-2 flex flex-col items-center gap-4">
-            <div className="relative flex items-center justify-center">
-              <div className="w-36 h-36 rounded-full bg-hy-amber/25 border-2 border-hy-amber flex flex-col items-center justify-center animate-pulse">
-                <MicIcon className="w-10 h-10 text-hy-ink mb-1" />
-                <span className="text-2xl font-bold text-hy-ink tabular-nums">
-                  {remaining}s
-                </span>
-              </div>
-            </div>
-            <div>
-              <h1 className="text-xl font-bold text-ink">{t(lang, "listeningTitle")}</h1>
-              <p className="text-sm text-ink-muted mt-1">{t(lang, "listeningHint")}</p>
-            </div>
-            <div className="flex items-center gap-3 mt-1">
-              <button
-                type="button"
-                onClick={onStopRecording}
-                aria-label={t(lang, "tapToStop")}
-                className="min-h-[52px] px-6 py-3 rounded-full bg-viridian text-white font-bold hover:bg-viridian-hover transition-colors"
-              >
-                {t(lang, "tapToStop")}
-              </button>
-              <button
-                type="button"
-                onClick={onCancelRecording}
-                aria-label={t(lang, "cancel")}
-                className="min-h-[52px] px-5 py-3 rounded-full bg-ground border border-seam text-ink font-semibold hover:bg-subtle transition-colors"
-              >
-                {t(lang, "cancel")}
-              </button>
-            </div>
-          </div>
         ) : (
           <div className="flex flex-col items-center gap-4">
+            {/* Keep a single mic button mounted across idle & recording so pointerup never drops mid-hold */}
             <button
               type="button"
               disabled={isSubmittingVoice}
-              onPointerDown={!tapMode ? onStartRecording : undefined}
-              onPointerUp={!tapMode ? onStopRecording : undefined}
-              onPointerCancel={!tapMode ? onCancelRecording : undefined}
+              aria-pressed={activeVoiceCapture}
+              onPointerDown={handlePointerDown}
+              onPointerUp={handlePointerUp}
+              onPointerCancel={!tapMode ? abortHold : undefined}
+              onContextMenu={(e) => {
+                if (!tapMode) e.preventDefault();
+              }}
               onClick={tapMode ? handleMicTap : undefined}
               onKeyDown={(e) => {
-                if (!tapMode && (e.key === " " || e.key === "Enter")) {
+                if (!tapMode && !e.repeat && (e.key === " " || e.key === "Enter")) {
                   e.preventDefault();
                   handleMicTap();
                 }
               }}
-              aria-label={tapMode ? t(lang, "tapToStart") : t(lang, "holdToSpeak")}
-              className="w-36 h-36 rounded-full bg-hy-amber text-hy-ink border-2 border-hy-ink/10 shadow-md hover:bg-amber-hover active:scale-95 transition-transform flex flex-col items-center justify-center gap-1.5 disabled:opacity-60 select-none touch-none"
-            >
-              <MicIcon className="w-11 h-11" />
-              <span className="text-xs font-extrabold px-2 leading-tight">
-                {isSubmittingVoice
-                  ? t(lang, "processingVoice")
+              aria-label={
+                isRecording
+                  ? t(lang, "tapToStop")
                   : tapMode
                   ? t(lang, "tapToStart")
-                  : t(lang, "holdToSpeak")}
-              </span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setTapMode((v) => !v)}
-              aria-label={tapMode ? t(lang, "switchHoldMode") : t(lang, "switchTapMode")}
-              className="min-h-[48px] px-4 py-2 rounded-lg text-sm font-semibold text-viridian hover:bg-viridian-soft transition-colors"
+                  : t(lang, "holdToSpeak")
+              }
+              className={`w-36 h-36 rounded-full flex flex-col items-center justify-center gap-1.5 disabled:opacity-60 select-none touch-none transition-all ${
+                isRecording
+                  ? "bg-hy-amber/25 text-hy-ink border-2 border-hy-amber animate-pulse scale-105 shadow-lg"
+                  : isInitializing
+                  ? "bg-hy-amber/60 text-hy-ink border-2 border-hy-amber shadow-md"
+                  : "bg-hy-amber text-hy-ink border-2 border-hy-ink/10 shadow-md hover:bg-amber-hover active:scale-95"
+              }`}
             >
-              {tapMode ? t(lang, "switchHoldMode") : t(lang, "switchTapMode")}
+              <MicIcon className={isRecording ? "w-10 h-10" : "w-11 h-11"} />
+              {isRecording ? (
+                <span className="text-2xl font-bold text-hy-ink tabular-nums leading-none">
+                  {remaining}s
+                </span>
+              ) : (
+                <span className="text-xs font-extrabold px-2 leading-tight">
+                  {isSubmittingVoice
+                    ? t(lang, "processingVoice")
+                    : isInitializing
+                    ? t(lang, "preparingMic")
+                    : tapMode
+                    ? t(lang, "tapToStart")
+                    : t(lang, "holdToSpeak")}
+                </span>
+              )}
             </button>
 
-            {voiceError && (
+            {activeVoiceCapture ? (
+              <div className="flex flex-col items-center gap-3">
+                <div>
+                  <h1 className="text-xl font-bold text-ink">
+                    {isInitializing ? t(lang, "preparingMic") : t(lang, "listeningTitle")}
+                  </h1>
+                  <p className="text-sm text-ink-muted mt-1">
+                    {!tapMode && holdingGesture ? t(lang, "releaseToSend") : t(lang, "listeningHint")}
+                  </p>
+                </div>
+                <div className="flex items-center gap-3">
+                  {(tapMode || !holdingGesture) && (
+                    <button
+                      type="button"
+                      onClick={onStopRecording}
+                      aria-label={t(lang, "tapToStop")}
+                      className="min-h-[52px] px-6 py-3 rounded-full bg-viridian text-white font-bold hover:bg-viridian-hover transition-colors"
+                    >
+                      {t(lang, "tapToStop")}
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      holdingRef.current = false;
+                      setHoldingGesture(false);
+                      onCancelRecording();
+                    }}
+                    aria-label={t(lang, "cancel")}
+                    className="min-h-[52px] px-5 py-3 rounded-full bg-ground border border-seam text-ink font-semibold hover:bg-subtle transition-colors"
+                  >
+                    {t(lang, "cancel")}
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setTapMode((v) => !v)}
+                aria-label={tapMode ? t(lang, "switchHoldMode") : t(lang, "switchTapMode")}
+                className="min-h-[48px] px-4 py-2 rounded-lg text-sm font-semibold text-viridian hover:bg-viridian-soft transition-colors"
+              >
+                {tapMode ? t(lang, "switchHoldMode") : t(lang, "switchTapMode")}
+              </button>
+            )}
+
+            {voiceError && !activeVoiceCapture && (
               <div
                 role="alert"
                 className="w-full text-left bg-ochre-bg border border-ochre-border text-ochre rounded-xl p-4 text-sm font-medium"
@@ -142,7 +230,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
               </div>
             )}
 
-            {onSubmitTypedText && (
+            {onSubmitTypedText && !activeVoiceCapture && (
               <form
                 onSubmit={(e) => {
                   e.preventDefault();

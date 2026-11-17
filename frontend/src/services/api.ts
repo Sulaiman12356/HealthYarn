@@ -85,7 +85,14 @@ export async function askVoice(
   durationSeconds: number
 ): Promise<AskResponse> {
   const form = new FormData();
-  const ext = audioBlob.type.includes("ogg") ? "ogg" : "webm";
+  const mime = (audioBlob.type || "").toLowerCase();
+  const ext = mime.includes("ogg")
+    ? "ogg"
+    : mime.includes("mp4") || mime.includes("m4a") || mime.includes("aac")
+    ? "mp4"
+    : mime.includes("wav")
+    ? "wav"
+    : "webm";
   form.append("audio", audioBlob, `question.${ext}`);
   form.append("lang", lang);
   form.append("duration_seconds", String(durationSeconds));
@@ -94,7 +101,16 @@ export async function askVoice(
     body: form
   });
   if (!res.ok) {
-    throw new Error("Voice upload failed");
+    let detail = "Voice upload failed";
+    try {
+      const errBody = (await res.json()) as { detail?: string };
+      if (typeof errBody?.detail === "string" && errBody.detail.trim()) {
+        detail = errBody.detail.trim();
+      }
+    } catch {
+      // Ignore non-JSON error body
+    }
+    throw new Error(detail);
   }
   return res.json();
 }

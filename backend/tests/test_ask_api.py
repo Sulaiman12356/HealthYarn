@@ -95,3 +95,35 @@ def test_privacy_20_queries_leave_zero_audio_and_zero_transcripts(client, seeded
     assert len(logs) == 20
     for log_row in logs:
         assert log_row.unmatched_text is None
+
+
+def test_spitch_stt_passes_filename_tuple(monkeypatch):
+    import asyncio
+    import sys
+    import types
+    from app.services.stt import SpitchSTT
+
+    captured = {}
+
+    class FakeResp:
+        text = "  how i go mix ors water  "
+
+    class FakeSpeech:
+        def transcribe(self, *, language, content):
+            captured["language"] = language
+            captured["content"] = content
+            return FakeResp()
+
+    class FakeSpitch:
+        def __init__(self, api_key):
+            captured["api_key"] = api_key
+            self.speech = FakeSpeech()
+
+    monkeypatch.setitem(sys.modules, "spitch", types.SimpleNamespace(Spitch=FakeSpitch))
+    provider = SpitchSTT(api_key="test-key", timeout_seconds=5.0)
+    result = asyncio.run(provider.transcribe(b"webm-bytes", "pcm", filename="question.webm"))
+
+    assert result == "how i go mix ors water"
+    assert captured["language"] == "en"
+    assert captured["content"] == ("question.webm", b"webm-bytes")
+

@@ -378,4 +378,124 @@ describe("HealthYarn Landing & App Core Flows", () => {
       expect(screen.getByText("Pò àpò ORS kan sínú omi mímọ́ lítà kan.")).toBeInTheDocument();
     });
   });
+
+  it("completes Hold-to-Talk flow on pointerDown -> pointerUp and handles quick-release before getUserMedia", async () => {
+    window.history.pushState({}, "", "/app");
+    localStorage.setItem("healthyarn_lang", "en");
+
+    let askUploads = 0;
+    const stopTrack = vi.fn();
+    let resolveMic: ((stream: MediaStream) => void) | null = null;
+
+    class MockMediaRecorder {
+      static isTypeSupported(mime: string) {
+        return mime.startsWith("audio/webm");
+      }
+      mimeType = "audio/webm;codecs=opus";
+      state: RecordingState = "inactive";
+      ondataavailable: ((ev: { data: Blob }) => void) | null = null;
+      onstop: (() => void) | null = null;
+      start() {
+        this.state = "recording";
+      }
+      requestData() {
+        this.ondataavailable?.({ data: new Blob([new Uint8Array(512)], { type: this.mimeType }) });
+      }
+      stop() {
+        this.state = "inactive";
+        this.ondataavailable?.({ data: new Blob([new Uint8Array(512)], { type: this.mimeType }) });
+        this.onstop?.();
+      }
+    }
+
+    vi.stubGlobal("MediaRecorder", MockMediaRecorder);
+    vi.stubGlobal("navigator", {
+      onLine: true,
+      mediaDevices: {
+        getUserMedia: vi.fn(
+          () =>
+            new Promise<MediaStream>((resolve) => {
+              resolveMic = resolve;
+            })
+        )
+      }
+    });
+
+    const baseFetch = globalThis.fetch as ReturnType<typeof vi.fn>;
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+        const url = String(input);
+        if (url === "/api/ask" && init?.method === "POST") {
+          askUploads += 1;
+          return new Response(
+            JSON.stringify({
+              type: "answer",
+              faq_id: 9,
+              question: "How do I prepare ORS for my child?",
+              answer_text: "Mix one sachet in 1L clean water.",
+              answer_audio_url: "/static/audio/en/ors_a.ogg",
+              disclaimer_text: "General health information only.",
+              disclaimer_audio_url: "/static/audio/en/disclaimer.ogg",
+              source_reference: "WHO ORS Guide",
+              confidence: 0.91,
+              log_id: 55
+            }),
+            { status: 200 }
+          );
+        }
+        return baseFetch(input, init);
+      })
+    );
+
+    render(<App />);
+    const holdBtn = await screen.findByRole("button", { name: "Hold to speak" });
+
+    // 1. Quick release while getUserMedia is still pending -> stops mic stream cleanly & asks user to hold
+    fireEvent.pointerDown(holdBtn, { pointerId: 1, button: 0 });
+    expect(
+      await screen.findByRole("heading", { name: "Opening microphone…" })
+    ).toBeInTheDocument();
+    fireEvent.pointerUp(holdBtn, { pointerId: 1 });
+    await act(async () => {
+      resolveMic?.({ getTracks: () => [{ stop: stopTrack }] } as unknown as MediaStream);
+    });
+    expect(stopTrack).toHaveBeenCalledTimes(1);
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Hold the button while speaking, then release."
+    );
+    expect(askUploads).toBe(0);
+
+    // 2. Proper Hold -> Speak (>300ms) -> Release on the kept button -> uploads audio & opens answer
+    const micReady = () =>
+      ({ getTracks: () => [{ stop: stopTrack }] }) as unknown as MediaStream;
+    (navigator.mediaDevices.getUserMedia as ReturnType<typeof vi.fn>).mockImplementationOnce(() =>
+      Promise.resolve(micReady())
+    );
+
+    const origNow = Date.now;
+    let fakeNow = 1_000_000;
+    vi.spyOn(Date, "now").mockImplementation(() => fakeNow);
+
+    try {
+      await act(async () => {
+        fireEvent.pointerDown(screen.getByRole("button", { name: "Hold to speak" }), {
+          pointerId: 2,
+          button: 0
+        });
+      });
+
+      expect(await screen.findByText("Release button to send")).toBeInTheDocument();
+      fakeNow += 1200;
+
+      await act(async () => {
+        fireEvent.pointerUp(window);
+      });
+
+      expect(askUploads).toBe(1);
+      expect(await screen.findByText("Mix one sachet in 1L clean water.")).toBeInTheDocument();
+    } finally {
+      Date.now = origNow;
+    }
+  });
 });
