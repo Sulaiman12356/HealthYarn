@@ -239,7 +239,7 @@ def seed_database(
     meta_entries = {
         "demo_mode": "true" if (demo and any_placeholder_present) else "false",
         "content_last_updated": utc_now().strftime("%Y-%m-%d"),
-        "clinical_reviewers": "Dr. Adebayo O. & Clinical Review Team",
+        "clinical_reviewers": "Clinical Review Team",
         "language_reviewers": "Yorùbá & Nigerian Pidgin Linguistic Team",
     }
     for k, v in meta_entries.items():
