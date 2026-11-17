@@ -1,6 +1,7 @@
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import App from "../App";
+import { AboutView } from "../components/AboutView";
 import { RedFlagAlertView } from "../components/RedFlagAlertView";
 import { AnswerView } from "../components/AnswerView";
 
@@ -337,9 +338,12 @@ describe("HealthYarn Landing & App Core Flows", () => {
 
     fireEvent.click(screen.getAllByRole("button", { name: "About" })[0]);
     expect(window.location.pathname).toBe("/about");
-    expect(await screen.findByText("How every answer gets approved")).toBeInTheDocument();
-    expect(screen.getByText(/Spitch Speech AI:/i)).toBeInTheDocument();
-    expect(screen.getByText(/YarnGPT \(Saheed Azeez\):/i)).toBeInTheDocument();
+    expect(await screen.findByText("Why we made HealthYarn")).toBeInTheDocument();
+    expect(
+      screen.getByText("Every answer passes through people before it reaches you.")
+    ).toBeInTheDocument();
+    expect(screen.getByText(/YarnGPT by Saheed Azeez/i)).toBeInTheDocument();
+    expect(screen.getByText(/Spitch Speech AI/i)).toBeInTheDocument();
 
     fireEvent.click(screen.getAllByRole("button", { name: "Staff" })[0]);
     expect(window.location.pathname).toBe("/admin");
@@ -497,5 +501,118 @@ describe("HealthYarn Landing & App Core Flows", () => {
     } finally {
       Date.now = origNow;
     }
+  });
+
+  it("renders /about across all 3 languages, hides empty config blocks, gates CONTENT_REVIEWED, and routes to /credits & /privacy", async () => {
+    window.history.pushState({}, "", "/about");
+    render(<App />);
+
+    // Default empty config hides Section 5 ("Who made HealthYarn") & empty review date
+    expect(await screen.findByText("Why we made HealthYarn")).toBeInTheDocument();
+    expect(screen.queryByText("Who made HealthYarn")).toBeNull();
+    expect(screen.queryByText(/Content last reviewed:/i)).toBeNull();
+    expect(screen.getByText("Checked by a doctor, nurse or pharmacist")).toBeInTheDocument();
+
+    // Section 1 read-aloud button plays pre-synthesised Spitch audio clip
+    fireEvent.click(
+      screen.getByRole("button", { name: /Listen to this section aloud: Why we made HealthYarn/i })
+    );
+    expect(playedUrls).toContain("/static/audio/about/en/section_1.ogg");
+
+    // Exact Pidgin & Yorùbá opening strings
+    fireEvent.click(screen.getAllByRole("button", { name: "Pidgin" })[0]);
+    expect(await screen.findByText("Why we make HealthYarn")).toBeInTheDocument();
+    expect(
+      screen.getByText("Better health information no suppose depend on how well you sabi read English.")
+    ).toBeInTheDocument();
+
+    fireEvent.click(screen.getAllByRole("button", { name: "Yorùbá" })[0]);
+    expect(await screen.findByText("Ìdí tí a fi ṣe HealthYarn")).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "Ìmọ̀ nípa ìlerà tó dára kò gbọ́dọ̀ sínúù bí o ṣe mọ̀ èdè Gẹ̀ẹ́sì kà tó."
+      )
+    ).toBeInTheDocument();
+
+    // Navigate to /credits & /privacy inside app
+    fireEvent.click(screen.getAllByRole("button", { name: "English" })[0]);
+    fireEvent.click(await screen.findByRole("button", { name: /Full credits and licences/i }));
+    expect(window.location.pathname).toBe("/credits");
+    expect(await screen.findByText("Full Credits & Licences")).toBeInTheDocument();
+
+    fireEvent.click(screen.getAllByRole("button", { name: "Privacy" })[0]);
+    expect(window.location.pathname).toBe("/privacy");
+    expect(await screen.findByText("Privacy Notice (NDPA 2023)")).toBeInTheDocument();
+  });
+
+  it("renders populated AboutConfig team/reviewers/institution/date and gates clinical phrasing when contentReviewed=false", () => {
+    const { rerender } = render(
+      <AboutView
+        lang="en"
+        contentReviewed={true}
+        config={{
+          team: [
+            { name: "Adaeze Okonkwo", role: "Backend Engineer", contribution: "API & matching" },
+            {
+              name: "Tunde Bakare",
+              role: "UI Designer",
+              contribution: "Voice interface",
+              photo: "/static/tunde.jpg"
+            }
+          ],
+          reviewers: [
+            {
+              name: "Dr. Bisi Adeyemi",
+              profession: "Pharmacist",
+              reviewed: "Medicine safety answers",
+              date: "2026-11-16"
+            }
+          ],
+          institution: "University of Lagos",
+          sttProvider: "Spitch Speech AI",
+          contactEmail: "team@example.org",
+          contentLastReviewed: "2026-11-16",
+          licensesRepoUrl: ""
+        }}
+        onSelectLang={vi.fn()}
+        onNavigateRoute={vi.fn()}
+      />
+    );
+
+    expect(screen.getByText("Who made HealthYarn")).toBeInTheDocument();
+    expect(screen.getByText("AO")).toBeInTheDocument();
+    expect(screen.getByAltText("Tunde Bakare")).toBeInTheDocument();
+    expect(screen.getByText("Pharmacist")).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "Built by students at University of Lagos for the Nigeria Computer Society IT Development Contest 2026."
+      )
+    ).toBeInTheDocument();
+    expect(screen.getByText("Content last reviewed: 2026-11-16")).toBeInTheDocument();
+    expect(screen.getByText("Checked by a doctor, nurse or pharmacist")).toBeInTheDocument();
+
+    rerender(
+      <AboutView
+        lang="en"
+        contentReviewed={false}
+        config={{
+          team: [{ name: "Adaeze Okonkwo", role: "Engineer", contribution: "API" }],
+          reviewers: [
+            { name: "Dr. Bisi Adeyemi", profession: "Pharmacist", reviewed: "Drafts", date: "2026-11-16" }
+          ],
+          institution: "",
+          sttProvider: "Spitch Speech AI",
+          contactEmail: "team@example.org",
+          contentLastReviewed: "2026-11-16",
+          licensesRepoUrl: ""
+        }}
+        onSelectLang={vi.fn()}
+        onNavigateRoute={vi.fn()}
+      />
+    );
+
+    expect(screen.queryByText("Checked by a doctor, nurse or pharmacist")).toBeNull();
+    expect(screen.queryByText(/Content last reviewed:/i)).toBeNull();
+    expect(screen.queryByText("Pharmacist")).toBeNull();
   });
 });

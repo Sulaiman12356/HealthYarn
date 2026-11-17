@@ -37,6 +37,7 @@ import { AnswerView } from "./components/AnswerView";
 import { UnsureView } from "./components/UnsureView";
 import { RedFlagAlertView } from "./components/RedFlagAlertView";
 import { AboutView } from "./components/AboutView";
+import { DocView } from "./components/DocView";
 import { CheckCircleIcon, VolumeIcon, VolumeMutedIcon, WifiOffIcon } from "./components/Icons";
 
 const AdminPortal = lazy(() => import("./components/AdminPortal"));
@@ -92,6 +93,12 @@ function parseLocationRoute(hasSavedLang: boolean): { mode: RouteMode; initialSc
   }
   if (pathname.startsWith("/about")) {
     return { mode: "about", initialScreen: { name: "home" } };
+  }
+  if (pathname.startsWith("/privacy")) {
+    return { mode: "privacy", initialScreen: { name: "home" } };
+  }
+  if (pathname.startsWith("/credits") || pathname.startsWith("/licenses")) {
+    return { mode: "credits", initialScreen: { name: "home" } };
   }
   if (pathname.startsWith("/app")) {
     const params = new URLSearchParams(window.location.search);
@@ -445,6 +452,10 @@ export function App() {
       targetPath = "/about";
     } else if (route === "admin") {
       targetPath = "/admin";
+    } else if (route === "privacy") {
+      targetPath = "/privacy";
+    } else if (route === "credits") {
+      targetPath = "/credits";
     }
     if (typeof window !== "undefined") {
       window.history.pushState({}, "", targetPath);
@@ -544,14 +555,23 @@ export function App() {
     return (
       <AboutView
         lang={lang}
-        meta={
-          bundle?.meta || {
-            content_last_updated: metaReviewers.updated || "2026-11-16",
-            clinical_reviewers: metaReviewers.clinical || "Dr. Adebayo O. & Clinical Review Team",
-            language_reviewers:
-              metaReviewers.language || "Yorùbá & Nigerian Pidgin Linguistic Team"
-          }
-        }
+        contentReviewed={contentReviewed}
+        clinicalReviewers={metaReviewers.clinical}
+        languageReviewers={metaReviewers.language}
+        onSelectLang={handleSelectLanguage}
+        onNavigateRoute={(route) => navigateToRoute(route)}
+      />
+    );
+  }
+
+  if (routeMode === "privacy" || routeMode === "credits") {
+    return (
+      <DocView
+        doc={routeMode}
+        lang={lang}
+        contentReviewed={contentReviewed}
+        clinicalReviewers={metaReviewers.clinical}
+        languageReviewers={metaReviewers.language}
         onSelectLang={handleSelectLanguage}
         onNavigateRoute={(route) => navigateToRoute(route)}
       />
@@ -753,14 +773,9 @@ export function App() {
         {screen.name === "about" && (
           <AboutView
             lang={lang}
-            meta={
-              bundle?.meta || {
-                content_last_updated: metaReviewers.updated || "2026-11-16",
-                clinical_reviewers: metaReviewers.clinical || "Dr. Adebayo O. & Clinical Review Team",
-                language_reviewers:
-                  metaReviewers.language || "Yorùbá & Nigerian Pidgin Linguistic Team"
-              }
-            }
+            contentReviewed={contentReviewed}
+            clinicalReviewers={metaReviewers.clinical}
+            languageReviewers={metaReviewers.language}
             onSelectLang={handleSelectLanguage}
             onNavigateRoute={(route) => navigateToRoute(route)}
           />

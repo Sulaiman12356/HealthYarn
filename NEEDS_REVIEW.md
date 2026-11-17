@@ -149,3 +149,31 @@ Every Pidgin and Yorùbá string drafted for `Sections A–I`, topic labels, con
 | `holdTooShort` | Hold the button while speaking, then release. | Hold the button down as you dey talk, then leave am. | Di bọ́tìnì náà mú nígbà tí o bá ń sọ̀rọ̀, lẹ́yìn náà kí o tu ú. |
 | `micPermissionDenied` | Microphone access was blocked. Allow microphone permission in your browser settings or type/browse topics below. | Browser block microphone access. Abeg allow mic permission or type/check topics under. | Ìwọlé sí gbohùngbohùn kò ṣí. Jọ̀wọ́ fún ní àṣẹ nínú ètò aṣàwákiri rẹ tàbí yan àkòrí ìsàlẹ̀. |
 | `micNotSupported` | Microphone recording is not available in this browser. | Microphone recording no dey work inside dis browser. | Ìgbohùn sílẹ̀ kò sí nínú aṣàwákiri yìí. |
+
+---
+
+## Redesigned `/about` Page (`pcm` & `yo` Drafts — Sections 1 Opening Strings Supplied by User)
+
+| Key | English (Final) | Nigerian Pidgin (`pcm`) — Draft | Yorùbá (`yo`) — Draft |
+| --- | --- | --- | --- |
+| `aboutReadAloudPlay` | Listen to this section aloud | Listen to dis part | Gbọ́ apá yìí sókè |
+| `aboutReadAloudPause` | Pause section audio | Stop audio | Dá ohùn apá yìí dúró |
+| `aboutSec2Title` | Our story | How everything start | Ìtàn wa |
+| `aboutSec2Body` | In many Nigerian homes, the person caring for a sick child or an ageing parent speaks Pidgin or Yoruba every day, but the clinic leaflet, the medicine label and the health advert are in formal English. Doctors are few and busy, so there is rarely time to ask questions. We built HealthYarn so that anyone can ask a health question the way they would ask a trusted neighbour, out loud and in their own words, and hear an answer they can understand and trust. | For plenty Nigerian house, person wey dey take care of sick pikin or mama and papa wey don old dey talk Pidgin or Yoruba every day, but hospital paper, medicine label, and health advert dey inside big English. Doctors small and dem busy well-well, so time no always dey to ask question. We build HealthYarn so anybody fit ask health question the way dem go ask trusted neighbour, talk am loud for their own words, and hear answer wey dem understand and fit trust. | Nínú ọ̀pọ̀ ilé Nàìjíríà, ẹni tí ó ń tọ́jú ọmọ tó ṣàìsàn tàbí òbí tó ti dàgbà máa ń sọ Pidgin tàbí Yorùbá lójoojúmọ́, ṣùgbọ́n ìwé ìléwọ́ ilé ìwòsàn, àkọlé oògùn àti ìkéde ìlera wà ní èdè Gẹ̀ẹ́sì gíga. Àwọn dókítà kéré, iṣẹ́ wọn sì pọ̀, nítorí náà kì í fi bẹ́ẹ̀ sí àkókò láti béèrè ìbéèrè. A ṣe HealthYarn kí ẹnikẹ́ni lè béèrè ìbéèrè ìlera bíi ẹni ń bá aládùúgbò tó ṣeé gbẹ́kẹ̀lé sọ̀rọ̀, sókè ní ọ̀rọ̀ tirẹ̀, kí ó sì gbọ́ ìdáhùn tó yé e tí ó sì lè gbẹ́kẹ̀lé. |
+| `aboutSec2Quote` | If you can send a voice note, you can use HealthYarn. | If you fit send voice note, you fit use HealthYarn. | Tí o bá lè fi ìránṣẹ́ ohùn ránṣẹ́, o lè lo HealthYarn. |
+| `aboutSec3Title` | Every answer passes through people before it reaches you. | Every answer dey pass through real people hand before e reach you. | Gbogbo ìdáhùn máa ń gba ọwọ́ ènìyàn kọjá kí ó tó dé ọ̀dọ̀ rẹ. |
+| `aboutSec3Step1..4` | WHO/FMOH English -> Clinical review -> Pidgin/Yoruba native check -> Voiced & listened | Simple English guide -> Doctor/nurse/pharmacist check -> Pidgin/Yoruba check -> Record & listen | Gẹ̀ẹ́sì rọrùn WHO/FMOH -> Dókítà/nọ́ọ̀sì -> Pidgin/Yorùbá ọmọ ìbílẹ̀ -> Ohùn & àtúngbọ́ |
+| `aboutSec3Note` | The app only chooses from these approved answers. It never writes its own medical advice. When it isn't sure what you asked, it tells you. | Dis app dey pick only from these confirmed answers. E no dey use AI cook up any medical advice by itself. If e no sure wetin you ask, e go tell you straight. | Ètò yìí máa ń yan látinú àwọn ìdáhùn tí a ti fọwọ́ sí wọ̀nyí nìkan. Kì í kọ ìmọ̀ràn ìṣègùn fúnra rẹ̀ láé. Tí kò bá dá a lójú ohun tí o béèrè, á sọ fún ọ. |
+| `aboutSec4Title` | What HealthYarn will and won't do | Wetin HealthYarn go do and wetin e no go do | Ohun tí HealthYarn yóò ṣe àti ohun tí kò ní ṣe |
+| `aboutSec4Emergency` | In an emergency, don't wait for an app. Go to the nearest health facility. | For emergency, no wait for app. Go nearest hospital or health centre straight. | Nígbà pàjáwìrì, má ṣe dúró de ètò kankan. Lọ sí ilé ìwòsàn tó súnmọ́ ọ lẹ́sẹ̀kẹsẹ̀. |
+| `aboutSec5Title` | Who made HealthYarn | People wey build HealthYarn | Àwọn tó ṣe HealthYarn |
+| `aboutSec6Title` | Built with, and thanks to | Tools wey we take build am, and thank you | Àwọn irinṣẹ́ tí a lò, àti ọpẹ́ |
+| `aboutSec7Title` | Your privacy | Your privacy | Ààbò ìpamọ́ rẹ |
+| `aboutSec8Title` | What's next | Wetin dey come next | Ohun tó kàn |
+| `aboutSec8Body` | We started with five topics and three languages. Next we want to add Igbo and Hausa, more topics such as immunisation and nutrition, a WhatsApp version, and a phone line for people without smartphones. We also want to test HealthYarn with a primary health care centre. | We start with five health topics and three languages. Next we want add Igbo and Hausa, put more topics like immunisation and good food, add WhatsApp version, and phone call line for people wey no get smartphone. We also want test HealthYarn with primary health care centre. | A bẹ̀rẹ̀ pẹ̀lú àkòrí márùn-ún àti èdè mẹ́ta. Lọ́jọ́ iwájú, a fẹ́ fi èdè Igbo àti Hausa kún un, àwọn àkòrí míràn bíi abẹ́rẹ́ àjẹsára àti oúnjẹ tó ṣara lóore, ẹ̀dà WhatsApp, àti ìlà ìpè fún àwọn tí kò ní fóònù alágbèéká. A tún fẹ́ dán HealthYarn wò pẹ̀lú ilé ìwòsàn ìpìlẹ̀ kan. |
+| `aboutSec9Title` | Health worker, translator or partner? Let's yarn. | You be health worker, translator or partner? Make we yarn. | Òṣìṣẹ́ ìlera, olùtúmọ̀ èdè tàbí alábàáṣepọ̀? Jẹ́ ká sọ̀rọ̀. |
+| `aboutSec9AskBtn` | Ask a question now | Ask question now | Béèrè ìbéèrè báyìí |
+| `aboutSec9ReviewedPrefix` | Content last reviewed: | Last time wey dem check answers: | Ìgbà tí a ṣe àyẹ̀wò àkóónú kẹ́yìn: |
+| `docBackAbout` | Back to About | Go back About | Padà sí Nípa |
+| `privacyDocTitle` | Privacy Notice (NDPA 2023) | Full Privacy Notice (NDPA 2023) | Àkọsílẹ̀ Ààbò (NDPA 2023) |
+| `creditsDocTitle` | Full Credits & Licences | Full Credits & Licences | Àwọn Ìdúpẹ́ & Ìwé Àṣẹ |

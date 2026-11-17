@@ -12,10 +12,10 @@ HealthYarn is built on strict data minimisation aligned with the **Nigeria Data 
 2. **Public User Accounts & Tracking**
    - Public users do **not** create accounts, sign in, or receive tracking cookies.
    - HealthYarn includes **zero third-party analytics SDKs, ad trackers, or external font tracking beacons**.
-   - Your chosen language (`yo`, `ig`, `en`), autoplay preference, and offline topic bundle are saved locally on your own device (`localStorage` and Browser Cache Storage).
+   - Your chosen language (`yo`, `pcm`, `en`), autoplay preference, and offline topic bundle are saved locally on your own device (`localStorage` and Browser Cache Storage).
 
 3. **Anonymous Query Logs (`query_logs`)**
-   - Each query records only: language (`yo`/`ig`/`en`), input mode (`voice`/`tap`), matched FAQ ID (if any), similarity score, outcome (`answer`/`unsure`/`red_flag`/`error`), optional thumbs rating (`1` or `-1`), and timestamp.
+   - Each query records only: language (`yo`/`pcm`/`en`), input mode (`voice`/`tap`), matched FAQ ID (if any), similarity score, outcome (`answer`/`unsure`/`red_flag`/`error`), optional thumbs rating (`1` or `-1`), and timestamp.
    - `query_logs` **never** stores IP addresses, device IDs, phone numbers, user names, or audio files.
    - By default (`LOG_UNMATCHED_TEXT=false`), not even the transcribed text of `unsure` queries is stored.
 

@@ -115,6 +115,14 @@ export const CheckCircleIcon: React.FC<IconProps> = ({ className = "w-5 h-5" }) 
   </svg>
 );
 
+export const XCircleIcon: React.FC<IconProps> = ({ className = "w-5 h-5" }) => (
+  <svg viewBox="0 0 24 24" className={className} {...baseProps}>
+    <circle cx="12" cy="12" r="10" />
+    <path d="m15 9-6 6" />
+    <path d="m9 9 6 6" />
+  </svg>
+);
+
 export const PlayIcon: React.FC<IconProps> = ({ className = "w-5 h-5" }) => (
   <svg viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden="true">
     <path d="M7 5.25c0-.98 1.08-1.57 1.91-1.05l10.22 6.75c.75.49.75 1.61 0 2.1L8.91 19.8C8.08 20.32 7 19.73 7 18.75V5.25Z" />
@@ -145,6 +153,13 @@ export const LockIcon: React.FC<IconProps> = ({ className = "w-5 h-5" }) => (
   <svg viewBox="0 0 24 24" className={className} {...baseProps}>
     <rect width="16" height="11" x="4" y="11" rx="2" />
     <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+  </svg>
+);
+
+export const UserIcon: React.FC<IconProps> = ({ className = "w-5 h-5" }) => (
+  <svg viewBox="0 0 24 24" className={className} {...baseProps}>
+    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+    <circle cx="12" cy="7" r="4" />
   </svg>
 );
 

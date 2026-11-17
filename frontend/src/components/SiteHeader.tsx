@@ -3,7 +3,7 @@ import { t } from "../i18n";
 import type { Lang } from "../types";
 import { BrandLogo } from "./BrandSvg";
 
-export type NavRoute = "landing" | "app" | "about" | "admin";
+export type NavRoute = "landing" | "app" | "about" | "admin" | "privacy" | "credits";
 
 export interface SiteHeaderProps {
   activeRoute: NavRoute;
