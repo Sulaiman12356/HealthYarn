@@ -251,12 +251,10 @@ export function useVoiceRecorder(
             setMicErrorCode("too_short");
             return;
           }
-          if (rawElapsed < MIN_ASR_SECONDS) {
-            const padded = await padShortBlobToWav(blob, MIN_ASR_SECONDS);
-            if (padded) {
-              onRecorded(padded.blob, Math.min(maxSeconds, padded.durationSeconds));
-              return;
-            }
+          const wavConverted = await padShortBlobToWav(blob, MIN_ASR_SECONDS);
+          if (wavConverted) {
+            onRecorded(wavConverted.blob, Math.min(maxSeconds, wavConverted.durationSeconds));
+            return;
           }
           onRecorded(blob, Number(elapsed.toFixed(2)));
         }

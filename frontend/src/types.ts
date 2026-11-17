@@ -108,6 +108,7 @@ export type AskResponse =
     }
   | {
       type: "unsure";
+      heard_text?: string | null;
       message_text?: string;
       message_audio_url?: string | null;
       candidates: UnsureCandidate[];

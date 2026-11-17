@@ -245,6 +245,7 @@ def _run_safety_and_matching(
     )
     return {
         "type": "unsure",
+        "heard_text": text.strip(),
         "message_text": unsure_msg.text
         if unsure_msg
         else "I am not completely sure what you asked. Did you mean one of these three questions?",

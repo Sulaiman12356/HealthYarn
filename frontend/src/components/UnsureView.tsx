@@ -5,6 +5,7 @@ import { ArrowLeftIcon, ChevronRightIcon, VolumeIcon } from "./Icons";
 
 interface UnsureViewProps {
   lang: Lang;
+  heardText?: string | null;
   messageText: string;
   messageAudioUrl: string | null;
   candidates: UnsureCandidate[];
@@ -16,6 +17,7 @@ interface UnsureViewProps {
 
 export const UnsureView: React.FC<UnsureViewProps> = ({
   lang,
+  heardText,
   messageText,
   messageAudioUrl,
   candidates,
@@ -70,9 +72,15 @@ export const UnsureView: React.FC<UnsureViewProps> = ({
           )}
         </div>
 
-        <p className="text-ink-muted prose-measure mb-5">
+        <p className="text-ink-muted prose-measure mb-4">
           {messageText || t(lang, "unsureHint")}
         </p>
+
+        {heardText && (
+          <p className="inline-block text-sm font-medium text-ink bg-ground border border-seam rounded-lg px-3 py-1.5 mb-4">
+            “{heardText}”
+          </p>
+        )}
 
         <p className="text-sm font-semibold text-ochre bg-ochre-bg border border-ochre-border rounded-lg px-3.5 py-2.5 mb-5">
           {t(lang, "unsureHint")}

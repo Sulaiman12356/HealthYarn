@@ -51,6 +51,7 @@ type Screen =
   | { name: "answer"; payload: AnswerPayload }
   | {
       name: "unsure";
+      heardText?: string | null;
       messageText: string;
       messageAudioUrl: string | null;
       candidates: UnsureCandidate[];
@@ -229,6 +230,7 @@ export function App() {
       if (res.type === "unsure") {
         setScreen({
           name: "unsure",
+          heardText: res.heard_text ?? null,
           messageText: res.message_text || t(lang, "unsureTitle"),
           messageAudioUrl: res.message_audio_url ?? null,
           candidates: res.candidates
@@ -757,6 +759,7 @@ export function App() {
         {screen.name === "unsure" && (
           <UnsureView
             lang={lang}
+            heardText={screen.heardText}
             messageText={screen.messageText}
             messageAudioUrl={screen.messageAudioUrl}
             candidates={screen.candidates}

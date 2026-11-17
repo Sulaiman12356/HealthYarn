@@ -42,3 +42,21 @@ def test_high_threshold_forces_unsure(seeded_session):
 
     res = matcher.match("mix salt packet for baby", lang="en", threshold=0.99, margin=0.03)
     assert res.outcome == "unsure"
+
+
+def test_natural_spoken_phrasings_match_expected_faq(seeded_session):
+    matcher = FAQMatcher(disable_heavy=True)
+    matcher.build_index(seeded_session)
+    faq_by_key = {f.intent_key: f.id for f in seeded_session.exec(select(FAQItem)).all()}
+
+    cases = [
+        ("en", "how should i store medicine", "medicine_safe_storage_children"),
+        ("en", "where do i keep drugs away from children", "medicine_safe_storage_children"),
+        ("en", "can i stop my bp tablets when i feel fine", "hypertension_daily_medication"),
+        ("pcm", "where i go keep medicine make pikin no touch am", "medicine_safe_storage_children"),
+    ]
+    for lang, query, expected_key in cases:
+        res = matcher.match(query, lang=lang, threshold=0.62, margin=0.03)
+        assert res.outcome == "answer", f"Expected answer for '{query}', got {res}"
+        assert res.faq_id == faq_by_key[expected_key]
+
