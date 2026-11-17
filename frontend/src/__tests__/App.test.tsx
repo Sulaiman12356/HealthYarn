@@ -4,6 +4,7 @@ import App from "../App";
 import { AboutView } from "../components/AboutView";
 import { RedFlagAlertView } from "../components/RedFlagAlertView";
 import { AnswerView } from "../components/AnswerView";
+import { encodeMonoWav } from "../hooks/useVoiceRecorder";
 
 const MOCK_BUNDLE = {
   lang: "en",
@@ -614,5 +615,13 @@ describe("HealthYarn Landing & App Core Flows", () => {
     expect(screen.queryByText("Checked by a doctor, nurse or pharmacist")).toBeNull();
     expect(screen.queryByText(/Content last reviewed:/i)).toBeNull();
     expect(screen.queryByText("Pharmacist")).toBeNull();
+  });
+
+  it("pads short mono audio via encodeMonoWav to >= 2.2s WAV for YarnGPT ASR", async () => {
+    const halfSecond = new Float32Array(8000);
+    const wavBlob = encodeMonoWav(halfSecond, 16000, 2.2, 16000);
+    expect(wavBlob.type).toBe("audio/wav");
+    // 44-byte RIFF header + 2.2s * 16000Hz * 2 bytes = 70444 bytes
+    expect(wavBlob.size).toBe(70444);
   });
 });

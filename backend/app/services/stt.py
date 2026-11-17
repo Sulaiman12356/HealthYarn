@@ -3,9 +3,20 @@
 from __future__ import annotations
 
 import asyncio
+import time
+import uuid
 from abc import ABC, abstractmethod
+from typing import Optional
+
+import httpx
 
 from app.config import Settings
+
+YARNGPT_ASR_LANG_MAP: dict[str, str] = {
+    "en": "english",
+    "yo": "yoruba",
+    "pcm": "pidgin",
+}
 
 
 class STTError(Exception):
@@ -63,6 +74,100 @@ class MockSTT(STTProvider):
         phrase = choices[self._counter % len(choices)]
         self._counter += 1
         return phrase
+
+
+def _infer_audio_mime(filename: str) -> str:
+    lower = (filename or "").strip().lower()
+    if lower.endswith(".ogg"):
+        return "audio/ogg"
+    if lower.endswith(".wav"):
+        return "audio/wav"
+    if lower.endswith(".mp4") or lower.endswith(".m4a"):
+        return "audio/mp4"
+    if lower.endswith(".mp3"):
+        return "audio/mpeg"
+    if lower.endswith(".flac"):
+        return "audio/flac"
+    return "audio/webm"
+
+
+class YarnGPTSTT(STTProvider):
+    """YarnGPT Speech-to-Text provider supporting Nigerian English, Pidgin, and Yorùbá."""
+
+    def __init__(
+        self,
+        api_key: str,
+        base_url: str = "https://api.yarngpt.ai",
+        timeout_seconds: float = 15.0,
+        poll_interval_seconds: float = 0.4,
+        transport: Optional[httpx.AsyncBaseTransport] = None,
+    ) -> None:
+        self.api_key = api_key.strip()
+        self.base_url = base_url.rstrip("/")
+        self.timeout_seconds = timeout_seconds
+        self.poll_interval_seconds = poll_interval_seconds
+        self._transport = transport
+
+    async def transcribe(self, audio_bytes: bytes, lang: str, filename: str = "audio.webm") -> str:
+        if not audio_bytes:
+            raise STTError("Empty audio buffer")
+        if not self.api_key or self.api_key == "TODO":
+            raise STTError("YARNGPT_API_KEY is not configured")
+
+        upload_name = filename.strip() if filename and filename.strip() else "audio.webm"
+        mime = _infer_audio_mime(upload_name)
+        api_lang = YARNGPT_ASR_LANG_MAP.get(lang.strip().lower(), "english")
+        headers = {"Authorization": f"Bearer {self.api_key}"}
+
+        deadline = time.monotonic() + self.timeout_seconds
+        try:
+            async with httpx.AsyncClient(
+                base_url=self.base_url,
+                timeout=self.timeout_seconds,
+                transport=self._transport,
+            ) as client:
+                up = await client.post(
+                    "/api/v1/asr",
+                    headers={**headers, "Idempotency-Key": uuid.uuid4().hex},
+                    files={"file": (upload_name, audio_bytes, mime)},
+                    data={"language": api_lang},
+                )
+                if up.status_code >= 400:
+                    raise STTError(f"YarnGPT ASR upload failed ({up.status_code}): {up.text[:240]}")
+
+                payload = up.json()
+                if payload.get("status") == "completed" and payload.get("transcript"):
+                    return str(payload["transcript"]).strip()
+
+                job_id = payload.get("job_id") or payload.get("id")
+                if not job_id:
+                    raise STTError("YarnGPT ASR response missing job_id")
+
+                while time.monotonic() < deadline:
+                    await asyncio.sleep(self.poll_interval_seconds)
+                    poll = await client.get(f"/api/v1/asr/{job_id}", headers=headers)
+                    if poll.status_code >= 400:
+                        raise STTError(
+                            f"YarnGPT ASR poll failed ({poll.status_code}): {poll.text[:240]}"
+                        )
+                    st = poll.json()
+                    status = str(st.get("status") or "").lower()
+                    if status in ("completed", "succeeded"):
+                        text = str(st.get("transcript") or "").strip()
+                        if not text:
+                            raise STTError("YarnGPT ASR returned empty transcript")
+                        return text
+                    if status in ("failed", "error"):
+                        code = st.get("error_code") or "ASR_FAILED"
+                        raise STTError(f"YarnGPT ASR failed ({code})")
+
+                raise STTTimeoutError("YarnGPT ASR polling timed out")
+        except STTError:
+            raise
+        except httpx.TimeoutException as exc:
+            raise STTTimeoutError("YarnGPT STT request timed out") from exc
+        except Exception as exc:
+            raise STTError(f"YarnGPT STT failed: {exc}") from exc
 
 
 class SpitchSTT(STTProvider):
@@ -134,8 +239,35 @@ class HFSTT(STTProvider):
         return text
 
 
+class FallbackSTT(STTProvider):
+    """Tries primary STT provider and transparently falls back on any STTError."""
+
+    def __init__(self, primary: STTProvider, fallback: STTProvider) -> None:
+        self.primary = primary
+        self.fallback = fallback
+
+    async def transcribe(self, audio_bytes: bytes, lang: str, filename: str = "audio.webm") -> str:
+        try:
+            return await self.primary.transcribe(audio_bytes, lang, filename=filename)
+        except STTError:
+            return await self.fallback.transcribe(audio_bytes, lang, filename=filename)
+
+
 def get_stt_provider(settings: Settings) -> STTProvider:
     provider = settings.STT_PROVIDER.strip().lower()
+    if provider == "yarngpt":
+        primary = YarnGPTSTT(
+            api_key=settings.YARNGPT_API_KEY,
+            base_url=settings.YARNGPT_BASE_URL,
+            timeout_seconds=settings.STT_TIMEOUT_SECONDS,
+        )
+        spitch_key = (settings.SPITCH_API_KEY or "").strip()
+        if spitch_key and spitch_key != "TODO":
+            return FallbackSTT(
+                primary=primary,
+                fallback=SpitchSTT(api_key=spitch_key, timeout_seconds=settings.STT_TIMEOUT_SECONDS),
+            )
+        return primary
     if provider == "spitch":
         return SpitchSTT(api_key=settings.SPITCH_API_KEY, timeout_seconds=settings.STT_TIMEOUT_SECONDS)
     if provider == "hf":

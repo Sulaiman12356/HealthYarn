@@ -140,13 +140,14 @@ export const DocView: React.FC<DocViewProps> = ({
                 <ul className="list-disc pl-5 space-y-2 text-hy-muted">
                   <li>
                     <strong className="text-hy-ink">YarnGPT (Saheed Azeez / saheedniyi02):</strong>{" "}
-                    Offline batch Nigerian-accented Text-to-Speech synthesis (
+                    Nigerian Speech-to-Text (<code className="text-hy-ink">/api/v1/asr</code>) and
+                    offline batch Nigerian-accented Text-to-Speech synthesis (
                     <code className="text-hy-ink">YarnGPT2b</code>, Apache-2.0 / model terms).
                   </li>
                   <li>
                     <strong className="text-hy-ink">Spitch Speech AI (spitch):</strong>{" "}
-                    West African Speech-to-Text (<code className="text-hy-ink">STTProvider</code>)
-                    and native Nigerian TTS voices (<code className="text-hy-ink">sade</code>,{" "}
+                    West African Speech-to-Text (<code className="text-hy-ink">STTProvider</code>{" "}
+                    fallback) and native Nigerian TTS voices (<code className="text-hy-ink">sade</code>,{" "}
                     <code className="text-hy-ink">ufoma</code>,{" "}
                     <code className="text-hy-ink">remi</code>) via the MIT Python SDK.
                   </li>

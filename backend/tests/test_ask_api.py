@@ -127,3 +127,69 @@ def test_spitch_stt_passes_filename_tuple(monkeypatch):
     assert captured["language"] == "en"
     assert captured["content"] == ("question.webm", b"webm-bytes")
 
+
+def test_yarngpt_stt_maps_languages_and_polls_job():
+    import asyncio
+    import json
+    import httpx
+    from app.services.stt import YarnGPTSTT
+
+    seen = {"posts": [], "polls": 0}
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        if request.method == "POST" and request.url.path == "/api/v1/asr":
+            body_text = request.content.decode("latin1", errors="ignore")
+            seen["posts"].append((request.headers.get("Idempotency-Key"), body_text))
+            return httpx.Response(202, json={"job_id": "job-123", "status": "queued"})
+        if request.method == "GET" and request.url.path == "/api/v1/asr/job-123":
+            seen["polls"] += 1
+            if seen["polls"] == 1:
+                return httpx.Response(200, json={"job_id": "job-123", "status": "processing"})
+            return httpx.Response(
+                200,
+                json={
+                    "job_id": "job-123",
+                    "status": "completed",
+                    "transcript": "  how i go mix ors water  ",
+                },
+            )
+        return httpx.Response(404, json={"detail": "not found"})
+
+    provider = YarnGPTSTT(
+        api_key="test-key",
+        timeout_seconds=5.0,
+        poll_interval_seconds=0.01,
+        transport=httpx.MockTransport(handler),
+    )
+    out = asyncio.run(provider.transcribe(b"RIFF....", "pcm", filename="question.wav"))
+    assert out == "how i go mix ors water"
+    assert seen["polls"] == 2
+    assert seen["posts"][0][0]  # Idempotency-Key sent
+    assert "pidgin" in seen["posts"][0][1]
+
+
+def test_yarngpt_stt_error_triggers_fallback_stt():
+    import asyncio
+    import httpx
+    from app.services.stt import FallbackSTT, STTProvider, YarnGPTSTT
+
+    def fail_handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(402, json={"error": {"code": "QUOTA_EXCEEDED"}})
+
+    class StubFallback(STTProvider):
+        async def transcribe(self, audio_bytes: bytes, lang: str, filename: str = "audio.webm") -> str:
+            return f"fallback:{lang}:{filename}"
+
+    combo = FallbackSTT(
+        primary=YarnGPTSTT(
+            api_key="k",
+            timeout_seconds=5.0,
+            poll_interval_seconds=0.01,
+            transport=httpx.MockTransport(fail_handler),
+        ),
+        fallback=StubFallback(),
+    )
+    out = asyncio.run(combo.transcribe(b"audio", "yo", filename="q.ogg"))
+    assert out == "fallback:yo:q.ogg"
+
+

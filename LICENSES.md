@@ -3,8 +3,8 @@
 HealthYarn respectfully credits the following open-source models, APIs, and software packages:
 
 ## AI Models & Speech Services
-- **YarnGPT (`saheedniyi/YarnGPT2b` / `yarngpt`)** — Created by **Saheed Azeez** (`saheedniyi02`). Used offline via batch synthesis (`backend/scripts/generate_audio.py --api` / Colab) to turn pre-approved health guidance into Nigerian-voiced audio clips (including `idera`). Refer to the Hugging Face model card and repository licence (`Apache-2.0` / model terms).
-- **Spitch Speech AI (`spitch`)** — West African ASR (`STTProvider`) and TTS (`sade`, `ufoma`, `remi`) for Yorùbá, Nigerian Pidgin, and Nigerian English (`MIT` Python SDK; API governed by Spitch Terms).
+- **YarnGPT (`saheedniyi/YarnGPT2b` / `yarngpt`)** — Created by **Saheed Azeez** (`saheedniyi02`). Used for Nigerian Speech-to-Text (`STTProvider` via `/api/v1/asr`) and offline batch Nigerian-voiced Text-to-Speech (`idera`, `wura`, `YarnGPT2b`, Apache-2.0 / model terms).
+- **Spitch Speech AI (`spitch`)** — West African ASR (`STTProvider` fallback) and TTS (`sade`, `ufoma`, `remi`) for Yorùbá, Nigerian Pidgin, and Nigerian English (`MIT` Python SDK; API governed by Spitch Terms).
 - **LaBSE (`sentence-transformers/LaBSE`)** — Language-agnostic BERT Sentence Embedding model (`Apache-2.0`).
 
 ## Backend Dependencies

@@ -19,7 +19,7 @@ class Settings(BaseSettings):
     )
 
     DATABASE_URL: str = f"sqlite:///{(BASE_DIR / 'healthyarn.db').as_posix()}"
-    STT_PROVIDER: str = "mock"  # spitch | mock | hf
+    STT_PROVIDER: str = "mock"  # yarngpt | spitch | mock | hf
     SPITCH_API_KEY: str = ""
     YARNGPT_API_KEY: str = ""
     YARNGPT_BASE_URL: str = "https://api.yarngpt.ai"
@@ -31,7 +31,7 @@ class Settings(BaseSettings):
     ALLOWED_ORIGINS: str = "http://localhost:5173,http://127.0.0.1:5173"
     MAX_AUDIO_SECONDS: int = 15
     MAX_AUDIO_BYTES: int = 1_048_576  # 1 MB
-    STT_TIMEOUT_SECONDS: float = 12.0
+    STT_TIMEOUT_SECONDS: float = 15.0
     LOG_UNMATCHED_TEXT: bool = False
     DEMO_MODE: bool = False
     CONTENT_REVIEWED: bool = True
